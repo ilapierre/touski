@@ -1,0 +1,28 @@
+[project]
+name = "touski"
+version = "0.1.0"
+description = "Application de gestion de l'inventaire de la cuisine."
+authors = [
+  { name = "Gaëlle Juteau", email = "2515105@cmontmorency.qc.ca" },
+  { name = "Thien Kim Nguyen", email = "2396044@cmontmorency.qc.ca" },
+  { name = "Naïka Alceus", email = "2396941@cmontmorency.qc.ca" },
+  { name = "Ian Lapierre", email = "2207635@cmontmorency.qc.ca" }
+]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.142.2",
+    "pytest>=9.1.1",
+    "sqlalchemy>=2.1.1",
+]
+
+[project.urls]
+Depot = "https://github.com/ilapierre/touski"
+
+[project.scripts]
+touski = "touski:main"
+
+[build-system]
+requires = ["uv_build>=0.12.21,<0.13.0"]
+build-backend = "uv_build"
