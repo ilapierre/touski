@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy import DateTime, Enum, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from touski.models.base import Base
-from touski.models.groups import Group
+from touski.db.database import Base
+from .groups import Group
 from enum import Enum as PyEnum
 
 

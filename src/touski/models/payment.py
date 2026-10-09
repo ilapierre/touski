@@ -1,11 +1,10 @@
-from datetime import datetime
 from decimal import Decimal
 from enum import Enum as PyEnum
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, DECIMAL
+from sqlalchemy import Enum, ForeignKey, Integer, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column
-from touski.models.base import Base
-from touski.models.subscriptions import Subscription
-from touski.models.users import User
+from touski.db.database import Base
+from .subscriptions import Subscription
+from .users import User
 
 
 class PaymentStatus(PyEnum):

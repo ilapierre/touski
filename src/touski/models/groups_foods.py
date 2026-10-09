@@ -1,8 +1,8 @@
 from sqlalchemy import DateTime, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column
-from touski.models.base import Base
-from touski.models.food import Food
-from touski.models.groups import Group
+from touski.db.database import Base
+from .foods import Food
+from .groups import Group
 from datetime import datetime
 
 

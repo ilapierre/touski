@@ -1,8 +1,8 @@
 from sqlalchemy import ForeignKey, Integer, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column
-from touski.models.base import Base
-from touski.models.users import User
-from touski.models.groups import Group
+from touski.db.database import Base
+from .users import User
+from .groups import Group
 from enum import Enum as PyEnum
 
 

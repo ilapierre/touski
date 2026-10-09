@@ -1,9 +1,9 @@
 from decimal import Decimal
 from sqlalchemy import ForeignKey, Integer, String, DECIMAL
 from sqlalchemy.orm import Mapped, mapped_column
-from touski.models.base import Base
-from touski.models.food import Food
-from touski.models.recipes import Recipe
+from touski.db.database import Base
+from .foods import Food
+from .recipes import Recipe
 
 
 class RecipesFoods(Base):

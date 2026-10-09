@@ -1,8 +1,8 @@
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column
-from touski.models.base import Base
-from touski.models.recipes import Recipe
-from touski.models.groups import Group
+from touski.db.database import Base
+from .recipes import Recipe
+from .groups import Group
 
 
 class GroupeRecipe(Base):

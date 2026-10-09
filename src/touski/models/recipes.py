@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column
-from touski.models.base import Base
+from touski.db.database import Base
 
 
 class Recipe(Base):
