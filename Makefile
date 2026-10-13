@@ -2,7 +2,7 @@ run:
 	uv sync && uv run touski
 
 makemigrations:
-	uv run alembic revision --autogenerate -m "$(m)"
+	uv run alembic revision --autogenerate
 
 migrate:
 	uv run alembic upgrade head
