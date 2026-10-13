@@ -14,7 +14,7 @@ Toutes les tables héritent de `Base` (`src/touski/db/database.py`) et ont donc:
 > [!WARNING]  
 > Ce schéma doit être mis à jour.
 
-![Modèle d'objets](/assets/schema-bd.png)
+![Modèle d'objets](/docs/assets/schema-bd.png)
 
 ## Tables
 
