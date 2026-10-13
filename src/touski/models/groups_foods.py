@@ -14,4 +14,4 @@ class GroupFood(Base):
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey(Group.id))
     food_id: Mapped[int] = mapped_column(Integer, ForeignKey(Food.id))
 
-    expiry_date: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
