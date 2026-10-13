@@ -1,12 +1,9 @@
 import sys
-import os
-from dotenv import find_dotenv, load_dotenv
+from dotenv import find_dotenv, load_dotenv, get_key
 
-env_file = load_dotenv(find_dotenv())
-
-ENVIRONMENT = os.getenv("ENVIRONMENT")
-DATABASE_URL = os.getenv("DATABASE_URL")
-SECRET_KEY = os.getenv("SECRET_KEY")
+# Valider l'existence du fichier .env
+env_file = find_dotenv()
+load_dotenv(env_file)
 
 if not env_file:
     # TODO: Remplacer par un Logger
@@ -15,7 +12,12 @@ if not env_file:
     )
     sys.exit(1)
 
+# Variables d'environnement
+ENVIRONMENT = get_key(env_file, "ENVIRONMENT")
+DATABASE_URL = get_key(env_file, "DATABASE_URL")
+SECRET_KEY = get_key(env_file, "SECRET_KEY")
+
 if [var for var in [ENVIRONMENT, DATABASE_URL, SECRET_KEY] if var is None]:
     # TODO: Remplacer par un Logger
-    print("[ERREUR] Variable(s) d'environnement manquante: ENVIRONMENT, DATABASE_URL, SECRET_KEY")
+    print("[ERREUR] Variable(s) d'environnement manquantes")
     sys.exit(1)
