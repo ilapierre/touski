@@ -7,8 +7,10 @@ from touski.core.config import DATABASE_URL
 
 
 class Base(DeclarativeBase):
-    creation_date: Mapped[datetime] = mapped_column(DateTime)
-    modified_date: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now, onupdate=datetime.now
+    )
 
 
 engine = create_engine(
