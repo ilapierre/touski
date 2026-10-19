@@ -27,6 +27,6 @@ Les *langages*, qu'on a va pour faire cet logiciel, sont :
 
 * React
 
-<!-- <ins>Autres</ins> -->
+<!-- ### Autres -->
 <!-- Docker : ajouter après -->
 
