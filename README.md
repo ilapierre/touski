@@ -18,7 +18,7 @@ Voir les étapes d'installation [installation.md](/docs/installation.md)
 
 Les *langages*, qu'on a va pour faire cet logiciel, sont :
 
-**<ins>Backend</ins>**
+### Backend
 
 * Python
 * MySQL
