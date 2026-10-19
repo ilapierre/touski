@@ -23,7 +23,7 @@ Les *langages*, qu'on a va pour faire cet logiciel, sont :
 * Python
 * MySQL
 
-**<ins>Frontend</ins>**
+### Frontend
 
 * React
 
