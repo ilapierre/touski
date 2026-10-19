@@ -14,7 +14,7 @@ C'est un logiciel qui simplifie l'organisation virtuelle du réfrigérateur des 
 * [Nguyen, Thien Kim](https://github.com/thienkim26)
 
 ## Installation
-
+Voir les étapes d'installation [installation.md](/docs/installation.md)
 ## Construit avec
 
 Les *langages*, qu'on a va pour faire cet logiciel, sont :
