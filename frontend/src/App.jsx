@@ -1,15 +1,14 @@
-import './App.css'
+import { Route, Routes } from 'react-router'
+import TopBar from './components/TopBar'
+import Landing from './pages/Landing'
 
 function App() {
   return (
     <>
-      <header className="topbar">
-        <h1>Touski</h1>
-        <button type="button" className="login-button">
-          Connexion
-        </button>
-      </header>
-      <main></main>
+      <TopBar />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+      </Routes>
     </>
   )
 }
