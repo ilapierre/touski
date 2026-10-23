@@ -1,10 +1,7 @@
-from touski.db.utils import create_db
+from fastapi import FastAPI
+from touski.routers import users, recettes
 
+app = FastAPI(title="Touski API")
 
-def main():
-    print("[INFO] Démarrage de Touski...")
-    create_db()
-
-
-if __name__ == "__main__":
-    main()
+app.include_router(users.router)
+app.include_router(recettes.router)
