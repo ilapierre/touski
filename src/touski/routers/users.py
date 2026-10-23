@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+import APIRouter
 
 #ROUTE USER 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -27,3 +27,33 @@ def update_user(user_id: int):
 @router.delete("/{user_id}")
 def delete_user(user_id: int):
     return {"message": f"user {user_id} supprimé avec succès"}
+
+# ----------GROUPES DU USER----------#
+ 
+#get les groupes dont le user fait partie
+@router.get("/{user_id}/groupes")
+def list_groupes_user(user_id: int):
+    return []
+ 
+ 
+ # ----------ALLERGIES / RESTRICTIONS (AllergieUtilisateur)----------#
+ 
+#get allergies du user
+@router.get("/{user_id}/allergies")
+def list_allergies(user_id: int):
+    return []
+ 
+#ajouter une allergie / restriction
+@router.post("/{user_id}/allergies", status_code=201)
+def add_allergie(user_id: int):
+    return {"message": f"Allergie ajoutée au user {user_id}"}
+ 
+#modifier une allergie (note)
+@router.put("/{user_id}/allergies/{allergie_id}")
+def update_allergie(user_id: int, allergie_id: int):
+    return {"message": f"Allergie {allergie_id} mise à jour"}
+ 
+#retirer une allergie
+@router.delete("/{user_id}/allergies/{allergie_id}")
+def remove_allergie(user_id: int, allergie_id: int):
+    return {"message": f"Allergie {allergie_id} retirée du user {user_id}"}
