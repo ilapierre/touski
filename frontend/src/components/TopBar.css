@@ -1,0 +1,40 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 3.5rem;
+  border-bottom: 1px solid #d8dee4;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.login-button {
+  padding: 0.4rem 1rem;
+  border: 1px solid #1f2328;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background: #f0f2f4;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo {
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 8px;
+}
