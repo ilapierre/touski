@@ -1,4 +1,4 @@
-import APIRouter
+from fastapi import APIRouter
  
 #ROUTE ABONNEMENT IA
 router = APIRouter(prefix="/abonnements", tags=["abonnements"])

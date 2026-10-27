@@ -1,5 +1,8 @@
+run-dev:
+	uv sync && uv run fastapi dev src/touski/main.py --port 8080
+
 run-app:
-	uv sync && uv run touski
+	uv sync && uv run fastapi run src/touski/main.py --port 8080
 
 run-frontend:
 	cd frontend && npm install && npm run dev

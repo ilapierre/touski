@@ -1,4 +1,4 @@
-import APIRouter
+from fastapi import APIRouter
 
 #ROUTE RECETTES 
 router = APIRouter(prefix="/recettes", tags=["recettes"])
