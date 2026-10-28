@@ -58,11 +58,12 @@ def connexion(form: OAuth2PasswordRequestForm = Depends(), session: Session = De
  
 #déconnexion
 @router.post("/deconnexion")
-def deconnexion():
+def deconnexion(current_user: User = Depends(get_current_user)):
+    # Le frontend va supprimer le token
     return {"message": "Déconnecté avec succès"}
  
 #infos de l'utilisateur connecté
-@router.get("/moi")
-def get_moi():
-    return {}
+@router.get("/moi", response_model=UserOut)
+def get_moi(current_user: User = Depends(get_current_user)):
+    return current_user
  
