@@ -50,3 +50,26 @@ Les *langages*, qu'on va utiliser pour coder cet logiciel, sont :
 
  * Docker
 
+## React
+
+Le frontend de l'application est développé avec **REACT** (Vite).
+
+### Installation et lancement (local)
+
+Après avoir cloner le [git](https://github.com/ilapierre/touski.git) dans un dossier, il faut installer les fichiers avec les dépendances nécessaires. 
+
+```
+npm install
+```
+
+Pour mettre à jour, les installations des packages (facultatif): 
+
+```
+npm update --save
+```
+
+Pour exécuter le projet : 
+
+```
+npm run dev
+```
