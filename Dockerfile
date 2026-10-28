@@ -1,0 +1,13 @@
+FROM python:3.15
+
+WORKDIR /app
+
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD [ "python", "__init__.py"]
