@@ -8,7 +8,7 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
-     - mysql_data:/car/lib/mysql
+     - mysql_data:/var/lib/mysql
 
   backend:
     build: .
@@ -31,7 +31,7 @@ services:
     depends_on:
       - python_backend
     volumes:
-      - .:/app
+      - /app/node_modules
     stdin_open: true
     tty: true
     command: npm run start
