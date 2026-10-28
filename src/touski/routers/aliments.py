@@ -1,16 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from touski.db.database import get_session_dependency
+from touski.models import Food
 
 router = APIRouter(prefix="/aliments", tags=["aliments"])
 
-#get tous les aliments
+# GET tous les aliments
+# TODO: Paginer la liste d'aliments
 @router.get("/")
-def list_aliments():
-    return []
+def list_aliments(session=Depends(get_session_dependency)):
+    foods = session.query(Food).all()
+    return foods
 
-#recherche d'aliment par nom 
+
+# recherche d'aliment par nom
+# TODO: Paginer la liste d'aliments recherchés
 @router.get("/recherche")
-def rechercher_aliment(nom: str):
-    return {"recherche": nom, "resultats": []}
+def rechercher_aliment(nom: str, session=Depends(get_session_dependency)):
+    foods = session.query(Food).filter(Food.name.like(f"%{nom}%")).all()
+    return {"recherche": nom, "resultats": foods}
 
 #get aliment par id
 @router.get("/{aliment_id}")
