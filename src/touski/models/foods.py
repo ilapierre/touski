@@ -9,7 +9,8 @@ class Food(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
 
-    # Macros
+    image_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
     per: Mapped[str | None] = mapped_column(String(10), nullable=True)
     kcal: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
