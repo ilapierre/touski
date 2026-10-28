@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mysql:8.0
+    ports:
+     -'3307:3306'
+    container_name: mysql_db
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+     - mysql_data:/car/lib/mysql
+
+  backend:
+    build: .
+    container_name: python_backend
+    ports:
+      - '5000:5000'
+    environment:
+      - DB_HOST=db
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_ROOT_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - db
+
+  frontend:
+    image: node:16.3.0-alpine
+    container_name: react_frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      - python_backend
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    command: npm run start
+
+volumes:
+  mysql_data:
