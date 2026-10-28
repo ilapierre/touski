@@ -16,6 +16,23 @@ C'est un logiciel qui simplifie l'organisation virtuelle du réfrigérateur des 
 
 Voir les étapes d'installation [installation.md](/docs/installation.md)
 
+### Prérequis
+
+* Git
+* Docker
+
+### Lancement
+
+1. Cloné le dépôt Git
+2. Ouvrir **PowerShell** (Windows)
+3. 
+```
+cd /chemin/du/dossier
+
+Copy-Item .env.example .env
+```
+
+
 ## Construit avec
 
 Les *langages*, qu'on a va pour faire cet logiciel, sont :
