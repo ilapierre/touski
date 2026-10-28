@@ -27,13 +27,16 @@ def scrape_data(file_path: str, extract_size: int | None = None):
             else:
                 continue
 
+            image_url = extract_image_url(data)
+
             foods.append(
                 Food(
                     name=name,
+                    image_url=image_url,
                     **macros,
                 )
                 if macros
-                else Food(name=name)
+                else Food(name=name, image_url=image_url)
             )
 
             if extract_size:
@@ -58,6 +61,25 @@ def scrape_data(file_path: str, extract_size: int | None = None):
                 i += 1
 
         session.commit()
+
+
+def extract_image_url(data: dict, size: str = "400") -> str | None:
+    code = data.get("code")
+    front = data.get("images", {}).get("selected", {}).get("front")
+    if not code or not front:
+        return None
+
+    # Langue du produit en priorité, sinon la première disponible
+    image = front.get(data.get("lc")) or next(iter(front.values()), None)
+    if not image or "rev" not in image:
+        return None
+
+    # Le code est découpé en 3/3/3/reste (ex: 000/010/120/9159) quand il a plus de 8 chiffres
+    code = code.zfill(13)
+    path = "/".join([code[0:3], code[3:6], code[6:9], code[9:]]) if len(code) > 8 else code
+    lang = next(k for k, v in front.items() if v is image)
+
+    return f"https://images.openfoodfacts.org/images/products/{path}/front_{lang}.{image['rev']}.{size}.jpg"
 
 
 def extract_macros_old(nutriments: dict) -> dict:
