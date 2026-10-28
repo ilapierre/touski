@@ -19,7 +19,7 @@ Voir les étapes d'installation [installation.md](/docs/installation.md)
 ### Prérequis
 
 * Git
-* Docker
+* Docker Desktop
 
 ### Lancement
 
@@ -35,7 +35,7 @@ Copy-Item .env.example .env
 
 ## Construit avec
 
-Les *langages*, qu'on a va pour faire cet logiciel, sont :
+Les *langages*, qu'on va utiliser pour coder cet logiciel, sont :
 
 ### Backend
 
