@@ -49,9 +49,12 @@ def inscription(data: InscriptionIn, session: Session = Depends(get_session_depe
     return user
  
 #connexion (retournera un token)
-@router.post("/connexion")
-def connexion():
-    return {"access_token": "", "token_type": "bearer"}
+@router.post("/connexion", response_model=Token)
+def connexion(form: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session_dependency)):
+    user = session.scalar(select(User).where(User.email == form.username))
+    if not user or not verify_password(form.password, user.hashed_password):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Courriel ou mot de passe invalide", headers={"WWW-Authenticate": "bearer"})
+    return Token(access_token=create_access_token(user.id))
  
 #déconnexion
 @router.post("/deconnexion")
