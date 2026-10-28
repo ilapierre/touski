@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router'
 import TopBar from './components/TopBar'
+import Aliments from './pages/Aliments'
 import Landing from './pages/Landing'
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
       <TopBar />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/aliments" element={<Aliments />} />
       </Routes>
     </>
   )

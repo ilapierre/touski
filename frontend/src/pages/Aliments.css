@@ -1,0 +1,137 @@
+.aliments {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.aliments h2 {
+  margin: 0 0 1.5rem;
+}
+
+.aliments .status {
+  color: #57606a;
+}
+
+.aliments .status.error {
+  color: #cf222e;
+}
+
+.aliments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aliment-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e6e9ec;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgb(31 35 40 / 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.aliment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgb(31 35 40 / 0.1);
+}
+
+.aliment-image {
+  position: relative;
+  flex-shrink: 0;
+  height: 10rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f6f8fa, #e6e9ec);
+}
+
+.aliment-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aliment-image span {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #afb8c1;
+}
+
+.aliment-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.aliment-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.aliment-header h3 {
+  display: -webkit-box;
+  min-height: calc(2 * 1.3em);
+  margin: 0;
+  overflow: hidden;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.kcal-badge {
+  flex-shrink: 0;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: #1f2328;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.aliment-per {
+  min-height: 1.3em;
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #57606a;
+}
+
+.macros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin: auto 0 0;
+  padding-top: 1rem;
+}
+
+.macros div {
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: #f6f8fa;
+  text-align: center;
+}
+
+.macros dt {
+  font-size: 0.7rem;
+  color: #57606a;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.macros dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}
