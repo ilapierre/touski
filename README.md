@@ -79,3 +79,7 @@ Pour exécuter le projet :
 ```
 npm run dev
 ```
+
+## License
+
+Ce projet est sous licence [MIT](LICENSE).
