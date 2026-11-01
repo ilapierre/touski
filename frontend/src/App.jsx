@@ -1,6 +1,7 @@
-import { Route, Routes } from 'react-router'
-import TopBar from './components/TopBar'
-import Landing from './pages/Landing'
+import { Route, Routes } from "react-router";
+import TopBar from "./components/TopBar";
+import Landing from "./pages/Landing";
+import Connexion from "./pages/Connexion";
 
 function App() {
   return (
@@ -8,9 +9,10 @@ function App() {
       <TopBar />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/connexion" element={<Connexion />} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

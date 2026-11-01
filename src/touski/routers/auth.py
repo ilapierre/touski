@@ -28,12 +28,17 @@ class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
     
- 
+class InscriptionOut(BaseModel):
+    user: UserOut
+    access_token: str
+    token_type: str = "bearer"
+    
+    
 # ------ Route ------ #
 router = APIRouter(prefix="/auth", tags=["auth"])
  
 #inscription (création de compte)
-@router.post("/inscription", status_code=201, response_model=UserOut)
+@router.post("/inscription", status_code=201, response_model=InscriptionOut)
 def inscription(data: InscriptionIn, session: Session = Depends(get_session_dependency)):
     if session.scalar(select(User).where(User.email == data.email)):
         raise HTTPException(status.HTTP_409_CONFLICT, "Ce courriel est deja utilisé")
@@ -46,7 +51,9 @@ def inscription(data: InscriptionIn, session: Session = Depends(get_session_depe
     session.add(user)
     session.commit()
     session.refresh(user)
-    return user
+    
+    token = create_access_token(user.id)
+    return InscriptionOut(user=user, access_token=token)
  
 #connexion (retournera un token)
 @router.post("/connexion", response_model=Token)

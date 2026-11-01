@@ -8,19 +8,19 @@ from touski.models.users import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/connexion")
 
-def get_curent_user(
+def get_current_user(
     token: str = Depends(oauth2_scheme), 
     session: Session = Depends(get_session_dependency),
 ) ->User:
-    erreur = HTTPException(
+    error = HTTPException(
         status_code= status.HTTP_401_UNAUTHORIZED, 
-        detail="Jeton invalide ou exiré", 
+        detail="Jeton invalide ou expiré", 
         headers={"WWW-Authenticate": "Bearer"},
     )
     user_id = decode_access_token(token)
     if user_id is None:
-        raise erreur
+        raise error
     user = session.get(User, user_id)
     if user is None:
-        raise erreur
+        raise error
     return user

@@ -1,5 +1,5 @@
-import { Link } from 'react-router'
-import './TopBar.css'
+import { Link } from "react-router";
+import "./TopBar.css";
 
 function TopBar() {
   return (
@@ -8,11 +8,11 @@ function TopBar() {
         <img src="/touski-logo.png" alt="" className="logo" />
         <h1>Touski</h1>
       </Link>
-      <button type="button" className="login-button">
+      <Link to="/connexion" className="login-button">
         Connexion
-      </button>
+      </Link>
     </header>
-  )
+  );
 }
 
-export default TopBar
+export default TopBar;
