@@ -2,7 +2,7 @@ import "./Connexion.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "/api";
 
 function Connexion() {
   const [email, setEmail] = useState("");
