@@ -1,6 +1,5 @@
 from touski.db.database import get_session
 from touski.models import Food
-from pathlib import Path
 import argparse
 import json
 
@@ -76,7 +75,9 @@ def extract_image_url(data: dict, size: str = "400") -> str | None:
 
     # Le code est découpé en 3/3/3/reste (ex: 000/010/120/9159) quand il a plus de 8 chiffres
     code = code.zfill(13)
-    path = "/".join([code[0:3], code[3:6], code[6:9], code[9:]]) if len(code) > 8 else code
+    path = (
+        "/".join([code[0:3], code[3:6], code[6:9], code[9:]]) if len(code) > 8 else code
+    )
     lang = next(k for k, v in front.items() if v is image)
 
     return f"https://images.openfoodfacts.org/images/products/{path}/front_{lang}.{image['rev']}.{size}.jpg"
@@ -128,8 +129,10 @@ def extract_macros(nutrition: dict) -> dict | None:
     }
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Extraire des données de produits 'Open Food Facts' à partir d'un fichier JSONL")
+def main():
+    parser = argparse.ArgumentParser(
+        description="Extraire des données de produits 'Open Food Facts' à partir d'un fichier JSONL"
+    )
     parser.add_argument("-f", "--file", help="Le fichier à processer", required=True)
     parser.add_argument(
         "-m",
