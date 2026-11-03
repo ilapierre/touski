@@ -1,23 +1,41 @@
-from fastapi import APIRouter, Depends
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Query
 from touski.db.database import get_session_dependency
 from touski.models import Food
 
 router = APIRouter(prefix="/aliments", tags=["aliments"])
 
-# GET tous les aliments
-# TODO: Paginer la liste d'aliments
+# Pagination: nombre d'éléments à retourner et position de départ
+Limit = Annotated[int, Query(ge=1, le=100, description="Nombre max d'aliments")]
+Offset = Annotated[int, Query(ge=0, description="Nombre d'aliments à sauter")]
+
+
+# GET les aliments (paginés), avec le total pour calculer le nombre de pages
 @router.get("/")
-def list_aliments(session=Depends(get_session_dependency)):
-    foods = session.query(Food).all()
-    return foods
+def list_aliments(
+    limit: Limit = 50,
+    offset: Offset = 0,
+    session=Depends(get_session_dependency),
+):
+    query = session.query(Food)
+    total = query.count()
+    foods = query.order_by(Food.id).limit(limit).offset(offset).all()
+    return {"total": total, "resultats": foods}
 
 
-# recherche d'aliment par nom
-# TODO: Paginer la liste d'aliments recherchés
+# recherche d'aliment par nom (paginée)
 @router.get("/recherche")
-def rechercher_aliment(nom: str, session=Depends(get_session_dependency)):
-    foods = session.query(Food).filter(Food.name.like(f"%{nom}%")).all()
-    return {"recherche": nom, "resultats": foods}
+def rechercher_aliment(
+    nom: str,
+    limit: Limit = 50,
+    offset: Offset = 0,
+    session=Depends(get_session_dependency),
+):
+    query = session.query(Food).filter(Food.name.like(f"%{nom}%"))
+    total = query.count()
+    foods = query.order_by(Food.id).limit(limit).offset(offset).all()
+    return {"recherche": nom, "total": total, "resultats": foods}
 
 #get aliment par id
 @router.get("/{aliment_id}")
