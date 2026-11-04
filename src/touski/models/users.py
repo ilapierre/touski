@@ -10,6 +10,7 @@ class User(Base):
 
     name: Mapped[str] = mapped_column(String(30))
     email: Mapped[str] = mapped_column(String(50), unique=True)
+    hashed_password: Mapped[str] = mapped_column(String(255))
     # NOTE: Voir si on veut faire une table relationnelle
     # premium: Mapped[bool] = mapped_column(Boolean)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
