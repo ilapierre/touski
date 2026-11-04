@@ -42,21 +42,21 @@ def get_recette(recette_id: int):
 #----------INGRÉDIENTS (RecetteAliments)----------#
  
 #get ingrédients d'une recette
-@router.get("/{recette_id}/aliments")
+@router.get("/{recette_id}/foods")
 def list_ingredients(recette_id: int):
     return []
  
 #ajouter un ingrédient (quantité + unité)
-@router.post("/{recette_id}/aliments", status_code=201)
+@router.post("/{recette_id}/foods", status_code=201)
 def add_ingredient(recette_id: int):
     return {"message": f"Ingrédient ajouté à la recette {recette_id}"}
  
 #modifier un ingrédient (quantité, unité)
-@router.put("/{recette_id}/aliments/{aliment_id}")
-def update_ingredient(recette_id: int, aliment_id: int):
-    return {"message": f"Ingrédient {aliment_id} de la recette {recette_id} mis à jour"}
+@router.put("/{recette_id}/foods/{food_id}")
+def update_ingredient(recette_id: int, food_id: int):
+    return {"message": f"Ingrédient {food_id} de la recette {recette_id} mis à jour"}
  
 #retirer un ingrédient
-@router.delete("/{recette_id}/aliments/{aliment_id}")
-def remove_ingredient(recette_id: int, aliment_id: int):
-    return {"message": f"Ingrédient {aliment_id} retiré de la recette {recette_id}"}
+@router.delete("/{recette_id}/foods/{food_id}")
+def remove_ingredient(recette_id: int, food_id: int):
+    return {"message": f"Ingrédient {food_id} retiré de la recette {recette_id}"}

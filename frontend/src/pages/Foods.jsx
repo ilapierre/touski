@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './Aliments.css'
+import './Foods.css'
 
 const macros = [
   { key: 'proteins', label: 'Protéines' },
@@ -7,20 +7,20 @@ const macros = [
   { key: 'fat', label: 'Lipides' },
 ]
 
-function AlimentImage({ aliment }) {
+function FoodImage({ food }) {
   const [failed, setFailed] = useState(false)
 
   return (
-    <div className="aliment-image">
-      {aliment.image_url && !failed ? (
+    <div className="food-image">
+      {food.image_url && !failed ? (
         <img
-          src={aliment.image_url}
-          alt={aliment.name}
+          src={food.image_url}
+          alt={food.name}
           loading="lazy"
           onError={() => setFailed(true)}
         />
       ) : (
-        <span aria-hidden="true">{aliment.name?.charAt(0).toUpperCase()}</span>
+        <span aria-hidden="true">{food.name?.charAt(0).toUpperCase()}</span>
       )}
     </div>
   )
@@ -28,8 +28,8 @@ function AlimentImage({ aliment }) {
 
 const PAGE_SIZE = 24
 
-function Aliments() {
-  const [aliments, setAliments] = useState([])
+function Foods() {
+  const [foods, setFoods] = useState([])
   const [page, setPage] = useState(0)
   const [input, setInput] = useState('')
   const [query, setQuery] = useState('')
@@ -45,7 +45,7 @@ function Aliments() {
       offset: page * PAGE_SIZE,
     })
     if (query) params.set('nom', query)
-    const url = query ? '/api/aliments/recherche' : '/api/aliments/'
+    const url = query ? '/api/foods/recherche' : '/api/foods/'
 
     fetch(`${url}?${params}`, { signal: controller.signal })
       .then((res) => {
@@ -54,7 +54,7 @@ function Aliments() {
       })
       .then((data) => {
         setTotal(data.total)
-        setAliments(data.resultats)
+        setFoods(data.resultats)
         setLoading(false)
       })
       .catch((err) => {
@@ -109,7 +109,7 @@ function Aliments() {
   )
 
   return (
-    <main className="aliments">
+    <main className="foods">
       <h2>Aliments</h2>
       <form className="search" role="search" onSubmit={handleSearch}>
         <input
@@ -123,21 +123,21 @@ function Aliments() {
       </form>
       {loading && <p className="status">Chargement…</p>}
       {error && <p className="status error">Impossible de charger les aliments : {error}</p>}
-      {!loading && !error && aliments.length === 0 && (
+      {!loading && !error && foods.length === 0 && (
         <p className="status">
           {query ? `Aucun résultat pour « ${query} ».` : 'Aucun aliment pour le moment.'}
         </p>
       )}
-      <ul className="aliments-grid">
-        {aliments.map((a) => (
-          <li key={a.id} className="aliment-card">
-            <AlimentImage aliment={a} />
-            <div className="aliment-body">
-              <div className="aliment-header">
+      <ul className="foods-grid">
+        {foods.map((a) => (
+          <li key={a.id} className="food-card">
+            <FoodImage food={a} />
+            <div className="food-body">
+              <div className="food-header">
                 <h3 title={a.name}>{a.name}</h3>
                 {a.kcal != null && <span className="kcal-badge">{a.kcal} kcal</span>}
               </div>
-              <p className="aliment-per">{a.per && `pour ${a.per}`}</p>
+              <p className="food-per">{a.per && `pour ${a.per}`}</p>
               <dl className="macros">
                 {macros.map(({ key, label }) => (
                   <div key={key}>
@@ -155,4 +155,4 @@ function Aliments() {
   )
 }
 
-export default Aliments
+export default Foods
