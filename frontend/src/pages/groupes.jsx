@@ -1,5 +1,4 @@
-import { useState } from 'react';
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './groupes.css';
 
 const BACKEND_URL = "http://localhost:5000/";
