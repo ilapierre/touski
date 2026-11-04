@@ -9,7 +9,7 @@ function App() {
       <TopBar />
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/" element={<AjoutAliment />} />
+        <Route path="/addaliment" element={<AjoutAliment />} />
       </Routes>
     </>
   )

@@ -2,7 +2,7 @@ import './AjoutAliment.css';
 import { useState } from "react";
 import useParams from 'react-router-dom';
 
-const AjoutForm = () => {
+const AjoutAliment = () => {
     const { alimentId } = useParams();
     const [formData, setFormData] = useState({
         nom: "",
