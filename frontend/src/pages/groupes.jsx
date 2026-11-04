@@ -11,7 +11,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
     const peutGererLesRoles = isOwner;
 
     useEffect(() => {
-        fetch(`{BACKEND_URL}/groupes/${groupeId}/membres`)
+        fetch(`${BACKEND_URL}/groupes/${groupeId}/membres`)
             .then((res) => {
                 if(!res.ok) throw new Error("Erreur lors du chargement des membres");
                 return res.json();
@@ -28,7 +28,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
 
     const handleRoleChange = async (userId, newRole) => {
         try {
-            const response = await fetch(`/groupes/${groupeId}/membres/${userId}`, {
+            const response = await fetch(`${BACKEND_URL}/groupes/${groupeId}/membres`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json' },
                 body: JSON.stringify({ role: newRole}),
