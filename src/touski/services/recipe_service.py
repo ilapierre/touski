@@ -14,7 +14,7 @@ def fetch_mealdb_recipes(query: str) -> list[dict]:
     recipes = res.json().get("meals")
 
     if not recipes:
-        return [{}]
+        return []
 
     save_mealdb_recipes(recipes)
 

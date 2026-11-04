@@ -25,32 +25,46 @@ def list_recipes(
 
 # recherche recette par nom
 @router.get("/recherche")
-def search_recipe(query: str):
+def search_recipe(
+    query: str,
+    limit: Limit = 50,
+    offset: Offset = 0,
+    session=Depends(get_session_dependency),
+):
     # TODO: Add error handling
-    recipes = fetch_mealdb_recipes(query)
+    fetch_mealdb_recipes(query)
 
-    return {"recherche": query, "resultats": recipes}
- 
+    matches = session.query(Recipe).filter(Recipe.name.like(f"%{query}%"))
+    total = matches.count()
+    recipes = matches.order_by(Recipe.id).limit(limit).offset(offset).all()
+
+    return {"recherche": query, "total": total, "resultats": recipes}
+
+
 #post pour créer une recette
 @router.post("/", status_code=201)
 def create_recipe():
     return {"message": "Recette créée avec succès"}
+
 
 #modif une recette
 @router.put("/{recipe_id}")
 def update_recipe(recipe_id: int):
     return {"message": f"Recette {recipe_id} mise à jour avec succès"}
 
+
 #delete pour supprimer une recette
 @router.delete("/{recipe_id}")
 def delete_recipe(recipe_id: int):
     return {"message": f"Recette {recipe_id} supprimée avec succès"}
+
 
 #génération d'une recette par l'IA (abonnement requis)
 @router.post("/generer", status_code=201)
 def generate_recipe_ai():
     return {"message": "Recette générée par l'IA"}
  
+
 #get recette par id
 @router.get("/{recipe_id}")
 def get_recipe(recipe_id: int):
@@ -64,16 +78,19 @@ def get_recipe(recipe_id: int):
 def list_ingredients(recipe_id: int):
     return []
  
+
 #ajouter un ingrédient (quantité + unité)
 @router.post("/{recipe_id}/foods", status_code=201)
 def add_ingredient(recipe_id: int):
     return {"message": f"Ingrédient ajouté à la recette {recipe_id}"}
  
+
 #modifier un ingrédient (quantité, unité)
 @router.put("/{recipe_id}/foods/{food_id}")
 def update_ingredient(recipe_id: int, food_id: int):
     return {"message": f"Ingrédient {food_id} de la recette {recipe_id} mis à jour"}
  
+
 #retirer un ingrédient
 @router.delete("/{recipe_id}/foods/{food_id}")
 def remove_ingredient(recipe_id: int, food_id: int):
