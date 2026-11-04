@@ -7,7 +7,7 @@ class Food(Base):
     __tablename__ = "foods"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(30))
+    name: Mapped[str] = mapped_column(String(255))
 
     image_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
 

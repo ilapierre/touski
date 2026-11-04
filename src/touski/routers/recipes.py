@@ -2,6 +2,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 
 from touski.db.database import get_session_dependency
+from touski.models import Recipe
+from touski.services.recipe_service import fetch_mealdb_recipes
 
 # ROUTE RECETTES
 router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -12,17 +14,22 @@ Offset = Annotated[int, Query(ge=0, description="Nombre d'aliments à sauter")]
 # get toutes les recettes
 @router.get("/")
 def list_recipes(
-    limit: Limit = 50, offset: Offset = 0, session=Depends(get_session_dependency())
+    limit: Limit = 50, offset: Offset = 0, session=Depends(get_session_dependency)
 ):
-    query = session.query(Recet)
+    query = session.query(Recipe)
     total = query.count()
-    foods = query.order_by(Food.id).limit(limit).offset(offset).all()
-    return {"total": total, "resultats": foods}
+    recipes = query.order_by(Recipe.id).limit(limit).offset(offset).all()
 
-#recherhce recette par nom
+    return {"total": total, "resultats": recipes}
+
+
+# recherche recette par nom
 @router.get("/recherche")
-def search_recipe(nom: str):
-    return {"recherche": nom, "resultats": []}
+def search_recipe(query: str):
+    # TODO: Add error handling
+    recipes = fetch_mealdb_recipes(query)
+
+    return {"recherche": query, "resultats": recipes}
  
 #post pour créer une recette
 @router.post("/", status_code=201)
