@@ -2,63 +2,53 @@ import { useState } from 'react';
 // import { useState, useEffect } from 'react';
 import './groupes.css';
 
+const BACKEND_URL = "http://localhost:5000/";
+
 export default function Groupes({ groupeId = 1, isOwner = true}) {
-    const [membres, setMembres] = useState([
-        { id: 1, nom: 'Dupont, Jean', role: 'owner' },
-        { id: 2, nom: 'Tremblay, Sophie', role: 'privileged' },
-        { id: 3, nom: 'Martin, Luc', role: 'standart' }
-    ]);
-    // const [loading, setLoading] = useState(true);
-    // const[error, setError] = useState('');
+    const [membres, setMembres] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const[error, setError] = useState('');
 
     const peutGererLesRoles = isOwner;
 
-    // useEffect(() => {
-    //     fetch(`http://localhost:5000/groupes/${groupeId}/membres`)
-    //         .then((res) => {
-    //             if(!res.ok) throw new Error("Erreur lors du chargement des membres");
-    //             return res.json();
-    //         })
-    //         .then((data) => {
-    //             setMembres(data);
-    //             setLoading(false);
-    //         })
-    //         .catch((err) => {
-    //             setError(err.message);
-    //             setLoading(false);
-    //         });
-    // }, [groupeId]);
-
-    // const handleRoleChange = async (userId, newRole) => {
-    //     try {
-    //         const response = await fetch(`/groupes/${groupeId}/membres/${userId}`, {
-    //             method: 'PUT',
-    //             headers: {'Content-Type': 'application/json' },
-    //             body: JSON.stringify({ role: newRole}),
-    //         });
-
-    //         if (!response.ok) throw new Error("Échec de la mise à jour du rôle.");
-            
-    //         setMembres((prevMembres) =>
-    //             prevMembres.map((membre) =>
-    //                 membre.id === userId ? { ...membre, role: newRole} : membre
-    //             )
-    //         );
-    //     } catch(err) {
-    //         alert(err.message);
-    //     }
-    // };
+    useEffect(() => {
+        fetch(`{BACKEND_URL}/groupes/${groupeId}/membres`)
+            .then((res) => {
+                if(!res.ok) throw new Error("Erreur lors du chargement des membres");
+                return res.json();
+            })
+            .then((data) => {
+                setMembres(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, [groupeId]);
 
     const handleRoleChange = async (userId, newRole) => {
-        setMembres((prevMembres) =>
-            prevMembres.map((membre) =>
-                membre.id === userId ? { ...membre, role: newRole } : membre
-            )
-        );
+        try {
+            const response = await fetch(`/groupes/${groupeId}/membres/${userId}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: newRole}),
+            });
+
+            if (!response.ok) throw new Error("Échec de la mise à jour du rôle.");
+            
+            setMembres((prevMembres) =>
+                prevMembres.map((membre) =>
+                    membre.id === userId ? { ...membre, role: newRole} : membre
+                )
+            );
+        } catch(err) {
+            alert(err.message);
+        }
     };
 
-    // if (loading) return <div className="g-status">Chargement...</div>;
-    // if (error) return <div className="g-status g-error">{error}</div>;
+    if (loading) return <div className="g-status">Chargement...</div>;
+    if (error) return <div className="g-status g-error">{error}</div>;
 
     return (
         <div className="g-container">
