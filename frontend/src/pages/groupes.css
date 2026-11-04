@@ -1,0 +1,80 @@
+.g-container {
+    padding: 24.px;
+    max-width: 600px;
+    margin: 40px auto;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.g-container h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.g-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.g-table th {
+    background-color: aliceblue;
+    padding: 12px 16px;
+    text-align: left;
+    color:black;
+}
+
+.g-table td {
+    padding: 16px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+}
+
+.gm-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.gm-select:focus {
+  border-color: #2563eb;
+}
+
+/* Boutons d'action */
+.g-admin-actions {
+    display: flex;
+    margin-top: 24px;
+    gap: 12px;
+}
+
+.g-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.g-btn-primary {
+    background-color :rgb(32, 125, 20);
+    color: white;
+}
+
+.g-btn-add {
+    background-color: #2563eb;
+    color: white;
+}
+
+.g-btn-dlt {
+    background-color: brown;
+    color: white;
+}
+
+.gm-status {
+  padding: 20px;
+  text-align: center;
+}
+
+.gm-error {
+  color: #ef4444;
+}
