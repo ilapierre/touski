@@ -1,30 +1,6 @@
 import { useEffect, useState } from 'react'
+import FoodCard from '../components/FoodCard'
 import './Foods.css'
-
-const macros = [
-  { key: 'proteins', label: 'Protéines' },
-  { key: 'carbohydrates', label: 'Glucides' },
-  { key: 'fat', label: 'Lipides' },
-]
-
-function FoodImage({ food }) {
-  const [failed, setFailed] = useState(false)
-
-  return (
-    <div className="food-image">
-      {food.image_url && !failed ? (
-        <img
-          src={food.image_url}
-          alt={food.name}
-          loading="lazy"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <span aria-hidden="true">{food.name?.charAt(0).toUpperCase()}</span>
-      )}
-    </div>
-  )
-}
 
 const PAGE_SIZE = 24
 
@@ -130,23 +106,8 @@ function Foods() {
       )}
       <ul className="foods-grid">
         {foods.map((a) => (
-          <li key={a.id} className="food-card">
-            <FoodImage food={a} />
-            <div className="food-body">
-              <div className="food-header">
-                <h3 title={a.name}>{a.name}</h3>
-                {a.kcal != null && <span className="kcal-badge">{a.kcal} kcal</span>}
-              </div>
-              <p className="food-per">{a.per && `pour ${a.per}`}</p>
-              <dl className="macros">
-                {macros.map(({ key, label }) => (
-                  <div key={key}>
-                    <dt>{label}</dt>
-                    <dd>{a[key] != null ? `${a[key]} g` : '—'}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+          <li key={a.id}>
+            <FoodCard food={a} />
           </li>
         ))}
       </ul>
