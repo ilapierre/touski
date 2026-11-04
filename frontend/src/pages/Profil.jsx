@@ -1,4 +1,5 @@
 import "./Profil.css";
+import photoProfilDefault from "../assets/photo-profil-vide.jpg";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
@@ -38,7 +39,13 @@ function Profil() {
     <main className="profil">
       <header className="profil-entete">
         {/* Espace réservé pour la photo de profil si on fait */}
-        <div className="profil-photo" aria-hidden="true"></div>
+        <div className="profil-photo" aria-hidden="true">
+          <img
+            src={photoProfilDefault}
+            alt="Photo de profil"
+            className="profil-photo"
+          />
+        </div>
 
         <div className="profil-infos">
           <h2>{user.name}</h2>
