@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router'
 import TopBar from './components/TopBar'
 import Landing from './pages/Landing'
+import Groupes from './pages/groupes'
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <TopBar />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/groupes" element={<Groupes />} />
       </Routes>
     </>
   )
