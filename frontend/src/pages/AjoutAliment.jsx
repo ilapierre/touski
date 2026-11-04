@@ -46,7 +46,7 @@ const AjoutForm = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/aliments/' /* À corriger */, {
+            const res = await fetch('http://localhost:5000/aliments/' , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
