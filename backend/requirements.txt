@@ -3,3 +3,6 @@ uvicorn
 sqlalchemy
 pymysql
 pydantic
+PyJWT==2.8.0
+pwdlib[argon2]==0.2.0
+python-dotenv==1.0.1
