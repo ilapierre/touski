@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './groupes.css';
 
-const BACKEND_URL = "http://localhost:5000/";
+const BACKEND_URL = "http://localhost:5000";
 
 export default function Groupes({ groupeId = 1, isOwner = true}) {
     const [membres, setMembres] = useState([]);
@@ -28,7 +28,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
 
     const handleRoleChange = async (userId, newRole) => {
         try {
-            const response = await fetch(`${BACKEND_URL}/groupes/${groupeId}/membres`, {
+            const response = await fetch(`${BACKEND_URL}/groupes/${groupeId}/membres/${userId}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json' },
                 body: JSON.stringify({ role: newRole}),
