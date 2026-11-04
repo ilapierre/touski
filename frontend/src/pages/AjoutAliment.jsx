@@ -67,9 +67,9 @@ const AjoutForm = () => {
     };
     return (
         <div>
-            <h2>Ajouter un aliment</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <h2 className="title">Ajouter un aliment</h2>
+            <form className="form-container" onSubmit={handleSubmit}>
+                <div className="control">
                     <label>Nom</label>
                     <input
                         type="text"
@@ -78,10 +78,10 @@ const AjoutForm = () => {
                         onChange={handleChange}
                         required
                     />
-                    {error.nom && <span>{error.nom}</span>}
+                    {error.nom && <span className="error">{error.nom}</span>}
                 </div>
 
-                <div>
+                <div className="control">
                     <label>URL de l'image</label>
                     <input
                         type="text"
@@ -91,7 +91,7 @@ const AjoutForm = () => {
                     />
                 </div>
 
-                <div>
+                <div className="control">
                     <label>Per</label>
                     <input
                         type="text"
@@ -101,7 +101,7 @@ const AjoutForm = () => {
                     />
                 </div>
 
-                <div>
+                <div className="control">
                     <label>Calories</label>
                     <input
                         type="text"
@@ -109,10 +109,10 @@ const AjoutForm = () => {
                         value={formData.calories}
                         onChange={handleChange}
                     />
-                    {error.calories && <span>{error.calories}</span>}
+                    {error.calories && <span className="error">{error.calories}</span>}
                 </div>
 
-                <div>
+                <div className="control">
                     <label>Gras</label>
                     <input
                         type="text"
@@ -120,10 +120,10 @@ const AjoutForm = () => {
                         value={formData.gras}
                         onChange={handleChange}
                     />
-                    {error.gras && <span>{error.gras}</span>}
+                    {error.gras && <span className="error">{error.gras}</span>}
                 </div>
 
-                <div>
+                <div className="control">
                     <label>Protéines</label>
                     <input
                         type="text"
@@ -131,10 +131,10 @@ const AjoutForm = () => {
                         value={formData.proteines}
                         onChange={handleChange}
                     />
-                    {error.proteines && <span>{error.proteines}</span>}
+                    {error.proteines && <span className="error">{error.proteines}</span>}
                 </div>
 
-                <div>
+                <div className="control">
                     <label>Glucides</label>
                     <input
                         type="text"
@@ -142,10 +142,10 @@ const AjoutForm = () => {
                         value={formData.glucides}
                         onChange={handleChange}
                     />
-                    {error.glucides && <span>{error.glucides}</span>}
+                    {error.glucides && <span className="error">{error.glucides}</span>}
                 </div>
 
-                <div>
+                <div className="control">
                     <label>Quantité</label>
                     <input
                         type="text"
@@ -154,12 +154,12 @@ const AjoutForm = () => {
                         onChange={handleChange}
                         required
                     />
-                    {error.quantite && <span>{error.quantite}</span>}
+                    {error.quantite && <span className="error">{error.quantite}</span>}
                 </div>
 
-                <div>
-                    <button type="submit">Enregistrer</button>
-                    <button type="button" onClick={() => navigate("/")}>Annuler</button>
+                <div className="btn_actions">
+                    <button type="submit" className="btn_submit">Enregistrer</button>
+                    <button type="button" className="btn_cancel" onClick={() => navigate("/")}>Annuler</button>
                 </div>
             </form>
         </div>
