@@ -34,5 +34,13 @@
         "header" : "Everything left in the fridge—finally put to use.",
         "text" : "Touski makes organizing your meals a breeze. Derived from the French phrase \"tout ce qui\" (everything that...), this kitchen manager prioritizes simplicity. Log in to access your fridge contents and your recipes.",
         "connecter" : "Log in"
+    },
+    "profil": {
+        "charge" : "Loading...",
+        "modifer" : "To modify",
+        "gr" : "Group :",
+        "pasgr" : "No groups yet..",
+        "frigo" : "My fridge :",
+        "contenu" : "View content"
     }
 }

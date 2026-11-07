@@ -1,12 +1,14 @@
 import "./Profil.css";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const API_URL = "/api";
 
 function Profil() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function chargerProfil() {
@@ -29,7 +31,7 @@ function Profil() {
   if (!user) {
     return (
       <main className="profil">
-        <p>Chargement...</p>
+        <p>{t('profil.charge')}</p>
       </main>
     );
   }
@@ -47,19 +49,19 @@ function Profil() {
 
         {/* Bouton de modification du profil */}
         <button type="button" className="login-button">
-          Modifier
+          {t('profil.modifier')}
         </button>
       </header>
       {/* Section des groupes. Quand les groupes seront fait on le fera pour de vrai*/}
       <section className="profil-section">
-        <h3>Groupe :</h3>
-        <p className="profil-vide">Aucun groupe pour l'instant.</p>
+        <h3>{t('profil.gr')}</h3>
+        <p className="profil-vide">{t('profil.pasgr')}</p>
       </section>
 
       <section className="profil-section profil-frigo">
-        <h3>Mon frigo :</h3>
+        <h3>{t('profil.frigo')}</h3>
         <Link to="/frigo" className="profil-frigo-carte">
-          Voir le contenu
+          {t('profil.contenu')}
         </Link>
       </section>
     </main>
