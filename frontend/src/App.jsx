@@ -4,6 +4,7 @@ import Landing from "./pages/Landing";
 import Connexion from "./pages/Connexion";
 import Inscription from "./pages/Inscription";
 import Profil from "./pages/Profil";
+import Groupes from "./pages/groupes";
 
 // Si pas connecté, on redirige vers la connexion
 function RouteProtegee({ children }) {
@@ -29,6 +30,7 @@ function App() {
             </RouteProtegee>
           }
         />
+        <Route path="/groupes" element={<Groupes />} />
       </Routes>
     </>
   );

@@ -44,5 +44,8 @@
         "pasgr" : "No groups yet..",
         "frigo" : "My fridge :",
         "contenu" : "View content"
+    },
+    "groupes": {
+        "errCharge" : ""
     }
 }
