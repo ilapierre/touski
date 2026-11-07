@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useLocation, useNavigate } from "react-router";
 import "./TopBar.css";
+import ChangeLang from "./ChangeLang";
 
 function TopBar() {
   useLocation(); // pour que la barre se mette à jour quand on change de page
@@ -18,9 +19,9 @@ function TopBar() {
         <img src="/touski-logo.png" alt="" className="logo" />
         <h1>Touski</h1>
       </Link>
-
       {connecte ? (
         <nav className="topbar-actions">
+          <ChangeLang />
           <Link to="/profil" className="login-button">
             Profil
           </Link>
@@ -30,6 +31,7 @@ function TopBar() {
         </nav>
       ) : (
         <nav className="topbar-actions">
+          <ChangeLang />
           <Link to="/connexion" className="login-button">
             Connexion
           </Link>

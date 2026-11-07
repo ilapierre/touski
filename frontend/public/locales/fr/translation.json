@@ -1,0 +1,11 @@
+{
+    "connexion": {
+        "error" : "Courriel ou mot de passe invalide.",
+        "titre" : "Connexion",
+        "courriel" : "Courriel",
+        "motdepasse" : "Mot de passe",
+        "connecter" : "Se connecter",
+        "pascompte" : "Pas de compte ?",
+        "inscrire" : "Inscrivez-vous"
+    }
+}

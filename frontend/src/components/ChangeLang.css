@@ -1,0 +1,27 @@
+.lang-switcher {
+    display: flex;
+    gap: 10px;
+    margin-right: 5px;
+}
+
+.lang-switcher button {
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid #1f2328;
+    background: transparent;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    cursor: pointer;
+}
+
+.lang-switcher button:hover {
+    background-color: #cef5ff;
+    color: #000000;
+    transform: scale(1.1);
+}

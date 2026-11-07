@@ -1,6 +1,7 @@
 import "./Connexion.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const API_URL = "/api";
 
@@ -35,13 +36,15 @@ function Connexion() {
     navigate("/");
   }
 
+  const { t } = useTranslation();
+
   return (
     <main className="auth">
       <form className="auth-form" onSubmit={handleSubmit}>
         <img src="/touski-logo.png" alt="Logo Touski" className="auth-logo" />
-        <h2>Connexion</h2>
+        <h2>{t('connexion.titre')}</h2>
 
-        <label htmlFor="email">Courriel</label>
+        <label htmlFor="email">{t('connexion.courriel')}</label>
         <input
           id="email"
           type="email"
@@ -50,7 +53,7 @@ function Connexion() {
           required
         />
 
-        <label htmlFor="password">Mot de passe</label>
+        <label htmlFor="password">{t('connexion.motdepasse')}</label>
         <input
           id="password"
           type="password"
@@ -62,11 +65,11 @@ function Connexion() {
         {error && <p className="auth-erreur">{error}</p>}
 
         <button type="submit" className="login-button primary">
-          Se connecter
+          {t('connexion.connecter')}
         </button>
 
         <p className="auth-lien">
-          Pas de compte ? <Link to="/inscription">Inscrivez-vous</Link>
+          {t('connexion.pascompte')} <Link to="/inscription">{t('connexion.inscrire')}</Link>
         </p>
       </form>
     </main>
