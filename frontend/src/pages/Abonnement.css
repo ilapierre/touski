@@ -4,3 +4,20 @@
     padding: 3rem 1.5rem;
     color: #1f2937;
 }
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    font-size: 1.10rem;
+    color: rgb(125, 125, 125);
+    margin: 0;
+}
