@@ -12,6 +12,8 @@ function Inscription() {
   const [erreur, setErreur] = useState("");
   const navigate = useNavigate();
 
+  const { t } = useTranslation();
+
   async function handleSubmit(e) {
     e.preventDefault();
     setErreur("");
@@ -23,12 +25,12 @@ function Inscription() {
     });
 
     if (res.status === 409) {
-      setErreur("Ce courriel est déjà utilisé");
+      setErreur(t('inscription.errCourriel'));
       return;
     }
     if (!res.ok) {
       setErreur(
-        "Vérifiez vos informations (mot de passe : 8 caractères minimum)",
+        t('inscription.errPasse'),
       );
       return;
     }
@@ -38,8 +40,6 @@ function Inscription() {
     localStorage.setItem("token", data.access_token);
     navigate("/profil");
   }
-
-  const { t } = useTranslation();
 
   return (
     <main className="auth">

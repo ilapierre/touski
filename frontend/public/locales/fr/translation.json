@@ -21,7 +21,9 @@
         "motdepasse" : "Mot de passe",
         "créer" : "Créer mon compte",
         "compte" : "Déjà un compte ? ",
-        "connecter" : "Connectez-vous"
+        "connecter" : "Connectez-vous",
+        "errCourriel" : "Ce courriel est déjà utilisé",
+        "errPasse" : "Vérifiez vos informations (mot de passe : 8 caractères minimum)"
     },
     "landing": {
         "organise" : "Organisez votre frigo",

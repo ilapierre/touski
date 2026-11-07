@@ -21,7 +21,9 @@
         "motdepasse" : "Password",
         "creer" : "Create my account",
         "compte" : "Already have an account ?",
-        "connecter" : "Log in"
+        "connecter" : "Log in",
+        "errCourriel" : "This email is already in use",
+        "errPasse" : "Verify your information (password : minimum 8 characters)"
     },
     "landing": {
         "organise" : "Organize your fridge",
