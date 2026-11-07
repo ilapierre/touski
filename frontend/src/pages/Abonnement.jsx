@@ -6,6 +6,18 @@ export default function Abonnement() {
                 <h4> Abonnez-vous pour avoir accès à l'IA</h4>
                 <p> Utilisez l'IA pour vous créez des recettes idéales à votre goûts.</p>
             </div>
+
+            <div className="plans">
+                <div className="card-content">
+                    <h3>Gratuit</h3>
+                    <p>$0 par mois</p>
+                    <ul>
+                        <li>Gestion du réfrigérateur</li>
+                        <li>Recettes de base</li>
+                    </ul>
+                </div>
+            </div>
         </div>
+        
     )
 }
