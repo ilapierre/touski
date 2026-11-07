@@ -13,5 +13,14 @@
         "deconnexion" : "Log out",
         "connexion" : "Log in",
         "inscription" : "Sign in"
+    },
+    "inscription": {
+        "titre" : "Sign Up",
+        "nom" : "Name",
+        "courriel" : "Email",
+        "motdepasse" : "Password",
+        "creer" : "Create my account",
+        "compte" : "Already have an account ?",
+        "connecter" : "Log In"
     }
 }

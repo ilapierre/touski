@@ -13,5 +13,14 @@
         "deconnexion" : "Déconnexion",
         "connexion" : "Connexion",
         "inscription" : "Inscription"
+    },
+    "inscription": {
+        "titre" : "Inscription",
+        "nom" : "Nom",
+        "courriel" : "Courriel",
+        "motdepasse" : "Mot de passe",
+        "créer" : "Créer mon compte",
+        "compte" : "Déjà un compte ? ",
+        "connecter" : "Connectez-vous"
     }
 }

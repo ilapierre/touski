@@ -1,6 +1,7 @@
 import "./Connexion.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const API_URL = "/api";
 
@@ -38,13 +39,15 @@ function Inscription() {
     navigate("/profil");
   }
 
+  const { t } = useTranslation();
+
   return (
     <main className="auth">
       <form className="auth-form" onSubmit={handleSubmit}>
         <img src="/touski-logo.png" alt="Logo Touski" className="auth-logo" />
-        <h2>Inscription</h2>
+        <h2>{t('inscription.titre')}</h2>
 
-        <label htmlFor="name">Nom</label>
+        <label htmlFor="name">{t('inscription.nom')}</label>
         <input
           id="name"
           value={name}
@@ -53,7 +56,7 @@ function Inscription() {
           required
         />
 
-        <label htmlFor="email">Courriel</label>
+        <label htmlFor="email">{t('inscription.courriel')}</label>
         <input
           id="email"
           type="email"
@@ -62,7 +65,7 @@ function Inscription() {
           required
         />
 
-        <label htmlFor="password">Mot de passe</label>
+        <label htmlFor="password">{t('inscription.motdepasse')}</label>
         <input
           id="password"
           type="password"
@@ -75,11 +78,11 @@ function Inscription() {
         {erreur && <p className="auth-erreur">{erreur}</p>}
 
         <button type="submit" className="login-button primary">
-          Créer mon compte
+          {t('inscription.creer')}
         </button>
 
         <p className="auth-lien">
-          Déjà un compte ? <Link to="/connexion">Connectez-vous</Link>
+          {t('inscription.compte')} <Link to="/connexion">{t('inscription.connecter')}</Link>
         </p>
       </form>
     </main>
