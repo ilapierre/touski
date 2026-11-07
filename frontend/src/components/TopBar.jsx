@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { useLocation, useNavigate } from "react-router";
 import "./TopBar.css";
 import ChangeLang from "./ChangeLang";
+import { useTranslation } from "react-i18next";
 
 function TopBar() {
   useLocation(); // pour que la barre se mette à jour quand on change de page
@@ -13,6 +14,8 @@ function TopBar() {
     navigate("/");
   }
 
+  const { t } = useTranslation();
+
   return (
     <header className="topbar">
       <Link to="/" className="brand">
@@ -23,20 +26,20 @@ function TopBar() {
         <nav className="topbar-actions">
           <ChangeLang />
           <Link to="/profil" className="login-button">
-            Profil
+            {t('topbar.profil')}
           </Link>
           <button type="button" className="login-button" onClick={deconnexion}>
-            Déconnexion
+            {t('topbar.deconnexion')}
           </button>
         </nav>
       ) : (
         <nav className="topbar-actions">
           <ChangeLang />
           <Link to="/connexion" className="login-button">
-            Connexion
+            {t('topbar.connexion')}
           </Link>
           <Link to="/inscription" className="login-button">
-            Inscription
+            {t('topbar.inscription')}
           </Link>
         </nav>
       )}

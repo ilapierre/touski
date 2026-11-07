@@ -4,8 +4,14 @@
         "titre" : "Login",
         "courriel" : "Email",
         "motdepasse" : "Password",
-        "connecter" : "log in",
+        "connecter" : "Log in",
         "pascompte" : "No account?",
         "inscrire" : "Sign up"
+    },
+    "topbar": {
+        "profil" : "Profile",
+        "deconnexion" : "Log out",
+        "connexion" : "Log in",
+        "inscription" : "Sign in"
     }
 }

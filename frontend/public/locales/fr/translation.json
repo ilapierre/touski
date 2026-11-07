@@ -7,5 +7,11 @@
         "connecter" : "Se connecter",
         "pascompte" : "Pas de compte ?",
         "inscrire" : "Inscrivez-vous"
+    },
+    "topbar": {
+        "profil" : "Profil",
+        "deconnexion" : "Déconnexion",
+        "connexion" : "Connexion",
+        "inscription" : "Inscription"
     }
 }
