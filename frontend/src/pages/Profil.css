@@ -71,3 +71,49 @@
 .profil-frigo-carte:hover {
   background: #aae4aa;
 }
+
+.profil-photo-conteneur {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.profil-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profil-photo-plus {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1f5f3f;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.profil-infos label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.profil-erreur {
+  color: #c0392b;
+}
+
+.profil-boutons {
+  display: flex;
+  gap: 8px;
+}

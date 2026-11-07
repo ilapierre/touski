@@ -34,7 +34,7 @@ class InscriptionOut(BaseModel):
     token_type: str = "bearer"
     
     
-# ------ Route ------ #
+# ------ Routes ------ #
 router = APIRouter(prefix="/auth", tags=["auth"])
  
 #inscription (création de compte)
