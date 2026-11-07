@@ -49,13 +49,14 @@
         "errCharge" : "Erreur lors du chargement des membres",
         "errMAJ" : "Échec de la mise à jour du rôle.",
         "charge" : "Chargement...",
+        "titre" : "Gestion du groupe",
         "membres" : "Membres",
         "role" : "Rôle",
         "membre" : "Membre",
         "prop" : "Propriétaire",
         "priv" : "Privilégie",
         "stan" : "Standart",
-        "Inv" : "Inviter un membre",
-        "Re" : "Retirer un membre"
+        "inv" : "Inviter un membre",
+        "re" : "Retirer un membre"
     }
 }

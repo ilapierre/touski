@@ -46,6 +46,17 @@
         "contenu" : "View content"
     },
     "groupes": {
-        "errCharge" : ""
+        "errCharge" : "Error while loading members.",
+        "errMAJ" : "Role update failed.",
+        "charge" : "Loading...",
+        "titre" : "Group management",
+        "membres" : "Members",
+        "role" : "Role",
+        "membre" : "Member",
+        "prop" : "Owner",
+        "priv" : "Privileged",
+        "stan" : "Standard",
+        "inv" : "Invite a member",
+        "re" : "Remove a member"
     }
 }

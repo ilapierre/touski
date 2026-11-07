@@ -11,10 +11,12 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
 
     const peutGererLesRoles = isOwner;
 
+     const { t } = useTranslation();
+
     useEffect(() => {
         fetch(`${BACKEND_URL}/groupes/${groupeId}/membres`)
             .then((res) => {
-                if(!res.ok) throw new Error("Erreur lors du chargement des membres");
+                if(!res.ok) throw new Error(t('groupes.errCharge'));
                 return res.json();
             })
             .then((data) => {
@@ -35,7 +37,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
                 body: JSON.stringify({ role: newRole}),
             });
 
-            if (!response.ok) throw new Error("Échec de la mise à jour du rôle.");
+            if (!response.ok) throw new Error(t('groupes.errMAJ'));
             
             setMembres((prevMembres) =>
                 prevMembres.map((membre) =>
@@ -47,23 +49,23 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
         }
     };
 
-    if (loading) return <div className="g-status">Chargement...</div>;
+    if (loading) return <div className="g-status">{t('groupes.charge')}</div>;
     if (error) return <div className="g-status g-error">{error}</div>;
 
     return (
         <div className="g-container">
-            <h2>Gestion du groupe {groupeId} </h2>
+            <h2>{t('groupes.titre')} {groupeId} </h2>
             <table className="g-table">
                 <thead>
                     <tr>
-                        <th>Membres</th>
-                        <th>Rôle</th>
+                        <th>{t('groupes.membres')}</th>
+                        <th>{t('groupes.role')}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {membres.map((membre) => (
                         <tr key={membre.id}>
-                            <td className="g-user">Membre</td>
+                            <td className="g-user">{t('groupes.membre')}</td>
                             <td>
                                 {peutGererLesRoles ? (
                                     <select
@@ -71,9 +73,9 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
                                         value={membre.role || 'standart'}
                                         onChange={(e) => handleRoleChange(membre.id, e.target.value)}
                                     >
-                                        <option value="owner">Propriétaire</option>
-                                        <option value="privileged">Privilégie</option>
-                                        <option value="standart">Standart</option>
+                                        <option value="owner">{t('groupes.prop')}</option>
+                                        <option value="privileged">{t('groupes.priv')}</option>
+                                        <option value="standart">{t('groupes.stan')}</option>
                                     </select>
                                     ) : (
                                         <span>{membre.role || 'standart'}</span>
@@ -86,8 +88,8 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
 
             {peutGererLesRoles && (
                 <div className="g-admin-actions">
-                    <button className="g-btn g-btn-add">Inviter un membre</button>
-                    <button className="g-btn g-btn-dlt">Retirer un membre</button>
+                    <button className="g-btn g-btn-add">{t('groupes.inv')}</button>
+                    <button className="g-btn g-btn-dlt">{t('groupes.re')}</button>
                 </div>
             )}
         </div>
