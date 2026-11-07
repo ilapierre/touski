@@ -21,6 +21,18 @@
         "motdepasse" : "Password",
         "creer" : "Create my account",
         "compte" : "Already have an account ?",
-        "connecter" : "Log In"
+        "connecter" : "Log in"
+    },
+    "landing": {
+        "organise" : "Organize your fridge",
+        "orgTxt" : "Keep a list of what you have on hand, at a glance.",
+        "cuisine" : "Cook the leftovers",
+        "cuiTxt" : "Receive recipe suggestions based on your ingredients and dietary restrictions.",
+        "recette" : "Tailor-made recipes",
+        "reTxt" : "With a subscription, generate personalized recipes using AI.",
+
+        "header" : "Everything left in the fridge—finally put to use.",
+        "text" : "Touski makes organizing your meals a breeze. Derived from the French phrase \"tout ce qui\" (everything that...), this kitchen manager prioritizes simplicity. Log in to access your fridge contents and your recipes.",
+        "connecter" : "Log in"
     }
 }

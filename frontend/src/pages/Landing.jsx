@@ -1,34 +1,36 @@
 import "./Landing.css";
 import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
 
-const features = [
+const getFeatures = (t) => [
   {
-    title: "Organisez votre frigo",
-    text: "Gardez la liste de ce que vous avez sous la main, en un coup d’œil.",
+    title: t('landing.organise'),
+    text: t('landing.orgTxt'),
   },
   {
-    title: "Cuisinez les restes",
-    text: "Recevez des suggestions de recettes selon vos ingrédients et vos restrictions.",
+    title: t('landing.cuisine'),
+    text: t('landing.cuiTxt'),
   },
   {
-    title: "Recettes sur mesure",
-    text: "Avec l’abonnement, générez des recettes personnalisées grâce à l’IA.",
+    title: t('landing.recette'),
+    text: t('landing.reTxt'),
   },
 ];
 
 function Landing() {
+  const { t } = useTranslation();
+  const features = getFeatures(t);
+
   return (
     <main className="landing">
       <section className="intro">
         <img src="/touski-logo.png" alt="Logo Touski" className="intro-logo" />
-        <h2>Tout ce qui reste dans le frigo, enfin utilisé.</h2>
+        <h2>{t('landing.header')}</h2>
         <p>
-          Touski facilite l'organisation facile de vos repas. Provenant de
-          l'expression "tout ce qui", ce gestionnaire de cuisine priorise la
-          simplicité. Connectez-vous pour retrouver votre frigo et vos recettes.
+          {t('landing.text')}
         </p>
         <Link to="/connexion" className="login-button primary">
-          Se connecter
+          {t('landing.connecter')}
         </Link>
       </section>
       <section className="features">

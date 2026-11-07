@@ -22,5 +22,17 @@
         "créer" : "Créer mon compte",
         "compte" : "Déjà un compte ? ",
         "connecter" : "Connectez-vous"
+    },
+    "landing": {
+        "organise" : "Organisez votre frigo",
+        "orgTxt" : "Gardez la liste de ce que vous avez sous la main, en un coup d’œil.",
+        "cuisine" : "Cuisinez les restes",
+        "cuiTxt" : "Recevez des suggestions de recettes selon vos ingrédients et vos restrictions.",
+        "recette" : "Recettes sur mesure",
+        "reTxt" : "Avec l’abonnement, générez des recettes personnalisées grâce à l’IA.",
+
+        "header" : "Tout ce qui reste dans le frigo, enfin utilisé.",
+        "text" : "Touski facilite l'organisation facile de vos repas. Provenant de l'expression \"tout ce qui\", ce gestionnaire de cuisine priorise la simplicité. Connectez-vous pour retrouver votre frigo et vos recettes.",
+        "connecter" : "Se connecter"
     }
 }
