@@ -1,0 +1,11 @@
+# Git
+.env*
+.git
+README.md
+
+# Python
+__pycache__
+venv/
+
+# React
+node_modules/
