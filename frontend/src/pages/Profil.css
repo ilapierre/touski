@@ -1,0 +1,74 @@
+.profil {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.profil-entete {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #d8dee4;
+}
+
+.profil-photo {
+  flex-shrink: 0;
+  width: 6rem;
+  height: 6rem;
+  border: 1px solid #d8dee4;
+  border-radius: 8px;
+  background: #f0f2f4;
+}
+
+.profil-infos {
+  flex: 1;
+}
+
+.profil-infos h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.profil-email {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: #59636e;
+}
+
+.profil-section {
+  margin-top: 2rem;
+}
+
+.profil-section h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.profil-vide {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #59636e;
+}
+
+.profil-frigo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profil-frigo-carte {
+  display: flex;
+  align-items: flex-end;
+  width: 9rem;
+  height: 7rem;
+  padding: 0.75rem;
+  border: 1px solid #1f2328;
+  border-radius: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.profil-frigo-carte:hover {
+  background: #f0f2f4;
+}

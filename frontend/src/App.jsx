@@ -5,6 +5,7 @@ import Connexion from "./pages/Connexion";
 import Inscription from "./pages/Inscription";
 import Profil from "./pages/Profil";
 import Groupes from "./pages/groupes";
+import Abonnement from "./pages/Abonnement"
 
 // Si pas connecté, on redirige vers la connexion
 function RouteProtegee({ children }) {
@@ -31,6 +32,7 @@ function App() {
           }
         />
         <Route path="/groupes" element={<Groupes/>}/>
+        <Route path="/abonnement" element={<Abonnement />} />
       </Routes>
     </>
   );
