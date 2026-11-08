@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from touski.db.database import get_session_dependency
 from touski.models import Recipe
@@ -14,18 +14,30 @@ Offset = Annotated[int, Query(ge=0, description="Nombre d'aliments à sauter")]
 # get toutes les recettes
 @router.get("/")
 def list_recipes(
-    limit: Limit = 50, offset: Offset = 0, session=Depends(get_session_dependency)
+    request: Request, limit: Limit = 50, offset: Offset = 0, session=Depends(get_session_dependency)
 ):
     query = session.query(Recipe)
     total = query.count()
     recipes = query.order_by(Recipe.id).limit(limit).offset(offset).all()
 
-    return {"total": total, "resultats": recipes}
+    base_url = str(request.base_url)
+
+    # NOTE: Potentiellement utiliser une Pydantic
+    results = []
+    for recipe in recipes:
+        recipe_dict = recipe.__dict__.copy()
+        if recipe.image_url:
+            # Construct full image URL
+            recipe_dict["image_url"] = f"{base_url}static/images/{recipe.image_url}"
+        results.append(recipe_dict)
+
+    return {"total": total, "resultats": results}
 
 
 # recherche recette par nom
 @router.get("/recherche")
 def search_recipe(
+    request: Request,
     query: str,
     limit: Limit = 50,
     offset: Offset = 0,
@@ -38,7 +50,18 @@ def search_recipe(
     total = matches.count()
     recipes = matches.order_by(Recipe.id).limit(limit).offset(offset).all()
 
-    return {"recherche": query, "total": total, "resultats": recipes}
+    base_url = str(request.base_url)
+
+    # NOTE: Potentiellement utiliser une Pydantic
+    results = []
+    for recipe in recipes:
+        recipe_dict = recipe.__dict__.copy()
+        if recipe.image_url:
+            # Construct full image URL
+            recipe_dict["image_url"] = f"{base_url}static/images/{recipe.image_url}"
+        results.append(recipe_dict)
+
+    return {"recherche": query, "total": total, "resultats": results}
 
 
 #post pour créer une recette
