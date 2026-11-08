@@ -174,6 +174,11 @@ function Profil() {
       </form>
 
       <section className="profil-section">
+        <h3>Mes restrictions alimentaires :</h3>
+        <p className="profil-vide">Aucune restriction pour l'instant.</p>
+      </section>
+
+      <section className="profil-section">
         <h3>Groupe :</h3>
         <p className="profil-vide">Aucun groupe pour l'instant.</p>
       </section>
