@@ -1,5 +1,6 @@
 import requests
 import hashlib
+from typing import Any
 
 
 def image_type(content_type) -> str:
@@ -22,3 +23,12 @@ def store_image_from_url(image_url: str) -> str:
         f.write(res.content)
 
     return file_path
+
+
+def with_image_url(obj: Any, base_url: str) -> dict:
+    # Convertit un modèle SQLAlchemy en dict avec l'URL complète de son image
+    # FIX: Utiliser un modèle Pydantic?
+    data = obj.__dict__.copy()
+    if obj.image_url:
+        data["image_url"] = f"{base_url}static/images/{obj.image_url}"
+    return data

@@ -22,17 +22,16 @@ function Recipes() {
       limit: PAGE_SIZE,
       offset: page * PAGE_SIZE,
     })
-    if (query) params.set('query', query)
-    const url = query ? '/api/recipes/recherche' : '/api/recipes/'
+    if (query) params.set('q', query)
 
-    fetch(`${url}?${params}`, { signal: controller.signal })
+    fetch(`/api/recipes/?${params}`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`Erreur ${res.status}`)
         return res.json()
       })
       .then((data) => {
         setTotal(data.total)
-        setRecipes(data.resultats)
+        setRecipes(data.recipes)
         setLoading(false)
       })
       .catch((err) => {

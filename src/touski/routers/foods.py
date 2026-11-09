@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import HTTPException, Request, APIRouter, Depends, Query
 from touski.db.database import get_session_dependency
 from touski.models import Food
+from touski.services.static_service import with_image_url
 
 router = APIRouter(prefix="/foods", tags=["foods"])
 
@@ -28,33 +29,24 @@ def list_foods(
 
     base_url = str(request.base_url)
 
-    # FIX: Utiliser un modèle Pydantic?
-    results = []
-    for food in foods:
-        food_dict = food.__dict__.copy()
-        if food.image_url:
-            # Assembler l'URL de l'image
-            food_dict["image_url"] = f"{base_url}static/images/{food.image_url}"
-        results.append(food_dict)
-
     return {
         "limit": limit,
         "offset": offset,
         "total": total,
-        "foods": results,
+        "foods": [with_image_url(f, base_url) for f in foods],
     }
 
 
 # GET Aliment par ID
 @router.get("/{food_id}")
-def get_food(food_id: int, session=Depends(get_session_dependency)):
+def get_food(food_id: int, request: Request, session=Depends(get_session_dependency)):
     if food := session.get(Food, food_id):
-        return {"food": food}
+        return {"food": with_image_url(food, str(request.base_url))}
 
     raise HTTPException(404, detail="Food not found")
 
 
-# TODO: Les fonctions suivantes nécessitent l'authentification
+# TODO: ------ Les endpoints suivants nécessitent l'authentification ------
 
 
 # POST Créer un aliment (ajout manuel)
