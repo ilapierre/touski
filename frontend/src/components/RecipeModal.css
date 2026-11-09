@@ -1,0 +1,162 @@
+.recipe-modal {
+  width: min(56rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 3rem);
+  padding: 0;
+  overflow: auto;
+  border: none;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 20px 50px rgb(31 35 40 / 0.3);
+}
+
+.recipe-modal::backdrop {
+  background: rgb(31 35 40 / 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.9);
+  color: #1f2328;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgb(31 35 40 / 0.2);
+}
+
+.modal-close:hover {
+  background: #fff;
+}
+
+.modal-image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22rem;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f6f8fa, #e6e9ec);
+}
+
+.modal-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-image span {
+  font-size: 4rem;
+  font-weight: 600;
+  color: #afb8c1;
+}
+
+.modal-body {
+  padding: 1.5rem 2rem 2rem;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+
+.modal-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin: 1.25rem 0 0;
+}
+
+.modal-details div {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  background: #f6f8fa;
+}
+
+.modal-details dt {
+  font-size: 0.7rem;
+  color: #57606a;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.modal-details dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}
+
+.modal-details a {
+  color: #0969da;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.modal-details a:hover {
+  text-decoration: underline;
+}
+
+.modal-section {
+  margin-top: 1.5rem;
+}
+
+.modal-section h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+}
+
+.modal-ingredients {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modal-ingredients li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  background: #f6f8fa;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.modal-ingredients .measure {
+  flex-shrink: 0;
+  color: #57606a;
+  text-transform: none;
+}
+
+.modal-instructions {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #1f2328;
+}
+
+.modal-instructions li + li {
+  margin-top: 0.6rem;
+}
+
+.modal-instructions li::marker {
+  color: #0969da;
+}

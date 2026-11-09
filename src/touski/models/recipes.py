@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, String, Integer
+from sqlalchemy import JSON, Boolean, String, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from touski.db.database import Base
 
@@ -13,3 +13,5 @@ class Recipe(Base):
     source: Mapped[str] = mapped_column(String(50))
     mealdb_id: Mapped[int | None] = mapped_column(Integer, unique=True, nullable=True)
     image_url: Mapped[str] = mapped_column(String(100), nullable=True)
+    instructions: Mapped[str] = mapped_column(Text, nullable=True)
+    ingredients: Mapped[dict] = mapped_column(JSON, nullable=True)

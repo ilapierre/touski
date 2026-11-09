@@ -20,15 +20,21 @@ function RecipeImage({ recipe }) {
   )
 }
 
-function RecipeCard({ recipe }) {
+function RecipeCard({ recipe, onSelect }) {
   return (
     <article className="recipe-card">
       <RecipeImage recipe={recipe} />
-      <div className="recipe-header">
-        <h3 title={recipe.name}>{recipe.name}</h3>
-        {recipe.is_ai && <span className="ai-badge">IA</span>}
+      <div className="recipe-body">
+        <div className="recipe-header">
+          <h3 title={recipe.name}>
+            <button type="button" className="recipe-open" onClick={() => onSelect(recipe)}>
+              {recipe.name}
+            </button>
+          </h3>
+          {recipe.is_ai && <span className="ai-badge">IA</span>}
+        </div>
+        <p className="recipe-source">{recipe.source}</p>
       </div>
-      {recipe.source && <p className="recipe-source">{recipe.source}</p>}
     </article>
   )
 }

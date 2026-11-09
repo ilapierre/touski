@@ -7,6 +7,23 @@ from touski.models import Recipe
 from touski.services.static_service import store_image_from_url
 
 
+def normalize_meal_db_ingredients(recipe: dict) -> list[dict] | None:
+    # Formatte le format des ingrédients MealDB pour Touski
+    # MealDB expose jusqu'à 20 paires strIngredientN / strMeasureN, vides ou None si inutilisées
+    # Format: [{"name": "olive oil", "measure": "1/4 cup"}, ...]
+    ingredients = []
+    for i in range(1, 21):
+        name = (recipe.get(f"strIngredient{i}") or "").strip()
+        if not name:
+            continue
+
+        measure = (recipe.get(f"strMeasure{i}") or "").strip()
+        ingredients.append({"name": name, "measure": measure})
+
+    # Retourne None si aucun ingrédient
+    return ingredients or None
+
+
 def fetch_mealdb_recipes(query: str) -> list[dict]:
     res = requests.get(
         f"https://www.themealdb.com/api/json/v1/1/search.php?s={query}",
@@ -55,6 +72,8 @@ def save_mealdb_recipes(recipes: list[dict]):
                 "source": "https://www.themealdb.com",
                 "mealdb_id": r.get("idMeal"),
                 "image_url": image_url,
+                "instructions": r.get("strInstructions"),
+                "ingredients": normalize_meal_db_ingredients(r),
             }
         )
 
