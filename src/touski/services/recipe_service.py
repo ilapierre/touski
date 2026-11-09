@@ -63,7 +63,7 @@ def save_mealdb_recipes(recipes: list[dict]):
     to_save = []
     for r in recipes:
         if image_url := r.get("strMealThumb"):
-            image_url = store_image_from_url(image_url)
+            image_url = store_image_from_url(image_url, "recipes")
 
         to_save.append(
             {

@@ -1,4 +1,5 @@
 import requests
+from pathlib import Path
 import hashlib
 from typing import Any
 
@@ -13,16 +14,17 @@ def image_type(content_type) -> str:
             return ".jpg"
 
 
-def store_image_from_url(image_url: str) -> str:
+def store_image_from_url(image_url: str, folder: str) -> str:
     res = requests.get(image_url)
     content_type = res.headers.get("Content-Type")
 
-    file_path = hashlib.sha256(res.content).hexdigest() + image_type(content_type)
+    filename = hashlib.sha256(res.content).hexdigest() + image_type(content_type)
 
-    with open(f"static/images/{file_path}", "wb") as f:
-        f.write(res.content)
+    directory = Path("static/images") / folder
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / filename).write_bytes(res.content)
 
-    return file_path
+    return f"{folder}/{filename}"
 
 
 def with_image_url(obj: Any, base_url: str) -> dict:

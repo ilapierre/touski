@@ -28,7 +28,7 @@ def scrape_data(file_path: str, extract_size: int | None = None):
                 continue
 
             if image_url := extract_image_url(data):
-                image_url = store_image_from_url(image_url)
+                image_url = store_image_from_url(image_url, "foods")
 
             foods.append(
                 Food(
