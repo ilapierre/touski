@@ -1,3 +1,4 @@
+from touski.services.static_service import store_image_from_url
 from touski.db.database import get_session
 from touski.models import Food
 import argparse
@@ -26,7 +27,8 @@ def scrape_data(file_path: str, extract_size: int | None = None):
             else:
                 continue
 
-            image_url = extract_image_url(data)
+            if image_url := extract_image_url(data):
+                image_url = store_image_from_url(image_url)
 
             foods.append(
                 Food(

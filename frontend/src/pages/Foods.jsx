@@ -20,17 +20,16 @@ function Foods() {
       limit: PAGE_SIZE,
       offset: page * PAGE_SIZE,
     })
-    if (query) params.set('nom', query)
-    const url = query ? '/api/foods/recherche' : '/api/foods/'
+    if (query) params.set('q', query)
 
-    fetch(`${url}?${params}`, { signal: controller.signal })
+    fetch(`/api/foods/?${params}`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`Erreur ${res.status}`)
         return res.json()
       })
       .then((data) => {
         setTotal(data.total)
-        setFoods(data.resultats)
+        setFoods(data.foods)
         setLoading(false)
       })
       .catch((err) => {
