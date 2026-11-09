@@ -1,3 +1,8 @@
+---
+title: Scraper
+nav_order: 6
+---
+
 # Scraper (Open Food Facts)
 
 Le scraper importe des aliments dans la table `Food` à partir d'un export JSONL d'[Open Food Facts](https://world.openfoodfacts.org/data) (un produit JSON par ligne).
