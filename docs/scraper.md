@@ -14,7 +14,7 @@ scrape = "touski.scripts:scraper.main"
 Prérequis : `.env` configuré (`DATABASE_URL`) et migrations appliquées (`make migrate`). Voir [installation.md](../installation.md).
 
 ```bash
-uv run scrape -f docs/scraper/sample.jsonl  # 100 premières lignes (défaut)
+uv run scrape -f docs/assets/openfoodsfacts_sample.jsonl  # 100 premières lignes (défaut)
 uv run scrape -f foods.jsonl -m 5000        # 5000 premières lignes
 uv run scrape -f foods.jsonl -m 0           # tout le fichier
 ```
@@ -24,7 +24,7 @@ uv run scrape -f foods.jsonl -m 0           # tout le fichier
 | `-f`, `--file` | Fichier JSONL à traiter (obligatoire). |
 | `-m`, `--max` | Nombre max de lignes à lire (défaut : `100`, `0` = aucune limite). |
 
-> Le dump complet d'Open Food Facts pèse plusieurs dizaines de Go. Utiliser `docs/scraper/sample.jsonl` (extrait du dump) pour le développement. Comme tous les produits sont gardés en mémoire avant l'insertion, éviter `-m 0` sur le dump complet.
+> Le dump complet d'Open Food Facts pèse plusieurs dizaines de Go. Utiliser `docs/assets/openfoodsfacts_sample.jsonl` (extrait du dump) pour le développement. Comme tous les produits sont gardés en mémoire avant l'insertion, éviter `-m 0` sur le dump complet.
 
 ## Fonctionnement
 
