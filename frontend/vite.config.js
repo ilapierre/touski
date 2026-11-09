@@ -10,6 +10,9 @@ export default defineConfig({
         target: "http://127.0.0.1:8080",
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
+      "/static": {
+        target: "http://127.0.0.1:8080",
+      },
     },
   },
 });
