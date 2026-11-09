@@ -47,6 +47,7 @@ function Recipes() {
     setLoading(true)
     setError(null)
     setPage(next)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleSearch = (e) => {
