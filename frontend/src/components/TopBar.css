@@ -13,16 +13,21 @@
 }
 
 .login-button {
+  display: inline-block;
   padding: 0.4rem 1rem;
   border: 1px solid #1f2328;
   border-radius: 6px;
   background: transparent;
+  color: inherit;
   font: inherit;
+  text-decoration: none;
   cursor: pointer;
+  margin-left: 1rem;
+  background-color: #8bc98b;
 }
 
 .login-button:hover {
-  background: #f0f2f4;
+  background: #aae4aa;
 }
 
 .brand {
@@ -37,17 +42,4 @@
   height: 2.5rem;
   width: 2.5rem;
   border-radius: 8px;
-}
-
-/* Pour que les link soit comme un bouton */
-.login-button {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  border: 1px solid #1f2328;
-  border-radius: 6px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-decoration: none;
-  cursor: pointer;
 }
