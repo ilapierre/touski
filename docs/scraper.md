@@ -45,6 +45,7 @@ uv run scrape -f foods.jsonl -m 0           # tout le fichier
 | `kcal` | `energy-kcal` |
 | `fat`, `carbohydrates`, `proteins` | `fat`, `carbohydrates`, `proteins` |
 | `values` | Objet nutritionnel brut (`nutriments` ou `nutrition`) |
+| `off_id` | `code` (code-barres, texte). Les produits déjà en BD sont ignorés |
 | `brand` | `brands` (séparées par des virgules) |
 | `description` | `generic_name_fr`, sinon `generic_name`, sinon `generic_name_en` |
 | `quantity` | `quantity` (ex. `350 g`), sinon `product_quantity` + `product_quantity_unit` |
@@ -52,6 +53,7 @@ uv run scrape -f foods.jsonl -m 0           # tout le fichier
 | `nutriscore` | `nutriscore_grade` (`A` à `E`, `None` si inconnu) |
 | `origin` | `origins_tags` (ex. `France, Spain`) |
 | `allergens` | `allergens_tags` sans préfixe de langue (ex. `["milk", "nuts"]`) |
+| `source` | URL de la page du produit (`https://world.openfoodfacts.org/product/{code}`) |
 
 Ces champs sont normalisés par `normalize_off_details()` : les valeurs vides ou inconnues (`""`, `unknown`, `not-applicable`, `en:null`) deviennent `None`, les textes sont nettoyés (espaces) et tronqués à la taille de la colonne.
 | `image_url` | Image de face du produit (voir ci-dessous) |

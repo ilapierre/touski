@@ -148,6 +148,16 @@
   font-weight: 600;
 }
 
+.food-modal-details a {
+  color: #0969da;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.food-modal-details a:hover {
+  text-decoration: underline;
+}
+
 .food-modal-section {
   margin-top: 1.5rem;
 }

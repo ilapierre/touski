@@ -25,7 +25,17 @@ const details = [
   { key: 'quantity', label: 'Quantité' },
   { key: 'serving_size', label: 'Portion' },
   { key: 'origin', label: 'Origine' },
+  { key: 'source', label: 'Source', link: true },
 ]
+
+// "https://world.openfoodfacts.org/product/123" -> "world.openfoodfacts.org"
+const hostname = (url) => {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url
+  }
+}
 
 const macros = [
   { key: 'proteins', label: 'Protéines' },
@@ -92,10 +102,18 @@ function FoodModal({ food, onClose }) {
 
         {shownDetails.length > 0 && (
           <dl className="food-modal-details">
-            {shownDetails.map(({ key, label }) => (
+            {shownDetails.map(({ key, label, link }) => (
               <div key={key}>
                 <dt>{label}</dt>
-                <dd>{food[key]}</dd>
+                <dd>
+                  {link && /^https?:\/\//.test(food[key]) ? (
+                    <a href={food[key]} target="_blank" rel="noreferrer">
+                      {hostname(food[key])}
+                    </a>
+                  ) : (
+                    food[key]
+                  )}
+                </dd>
               </div>
             ))}
           </dl>

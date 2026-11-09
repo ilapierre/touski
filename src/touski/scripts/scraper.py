@@ -1,5 +1,6 @@
 from touski.services.static_service import store_image_from_url
 from touski.db.database import get_session
+from sqlalchemy import select
 from touski.models import Food
 import argparse
 import json
@@ -7,11 +8,10 @@ import json
 
 def scrape_data(file_path: str, extract_size: int | None = None):
     foods = []
+    seen_ids = set()
 
     # Extraction des données
-    with open(file_path, "r") as f:
-        session = get_session()
-
+    with open(file_path, "r") as f, get_session() as session:
         for i, line in enumerate(f):
             data = json.loads(line)
 
@@ -19,6 +19,15 @@ def scrape_data(file_path: str, extract_size: int | None = None):
 
             if not name:
                 continue
+
+            # Produit déjà importé (BD ou fichier): évite aussi de retélécharger l'image
+            off_id = clean_text(data.get("code"))
+            if off_id and (
+                off_id in seen_ids
+                or session.scalar(select(Food.id).where(Food.off_id == off_id))
+            ):
+                continue
+            seen_ids.add(off_id)
 
             if nutriments := data.get("nutriments"):
                 macros = extract_macros_old(nutriments)
@@ -33,6 +42,7 @@ def scrape_data(file_path: str, extract_size: int | None = None):
             foods.append(
                 Food(
                     name=name,
+                    off_id=off_id,
                     image_url=image_url,
                     **(macros or {}),
                     **normalize_off_details(data),
@@ -46,7 +56,6 @@ def scrape_data(file_path: str, extract_size: int | None = None):
                     break
                 i += 1
 
-        f.close()
 
     # Ajout à la BD
     with get_session() as session:
@@ -201,6 +210,8 @@ def normalize_off_details(data: dict) -> dict:
         name.replace("-", " ").title() for name in clean_tags(data.get("origins_tags"))
     )
 
+    code = clean_text(data.get("code"))
+
     return {
         "brand": ", ".join(brands)[:255] or None,
         "description": description,
@@ -209,6 +220,7 @@ def normalize_off_details(data: dict) -> dict:
         "nutriscore": nutriscore if nutriscore in ("A", "B", "C", "D", "E") else None,
         "origin": origin[:255] or None,
         "allergens": clean_tags(data.get("allergens_tags")) or None,
+        "source": f"https://world.openfoodfacts.org/product/{code}" if code else None,
     }
 
 
