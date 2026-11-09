@@ -1,9 +1,11 @@
 import { Navigate, Route, Routes } from "react-router";
-import TopBar from "./components/TopBar";
-import Landing from "./pages/Landing";
+import TopBar from './components/TopBar'
+import Landing from './pages/Landing'
+import Profil from "./pages/Profil";
+import Foods from './pages/Foods'
+import Recipes from './pages/Recipes'
 import Connexion from "./pages/Connexion";
 import Inscription from "./pages/Inscription";
-import Profil from "./pages/Profil";
 import Groupes from "./pages/groupes";
 import Abonnement from "./pages/Abonnement"
 
@@ -21,6 +23,8 @@ function App() {
       <TopBar />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/foods" element={<Foods />} />
+        <Route path="/recipes" element={<Recipes />} />
         <Route path="/connexion" element={<Connexion />} />
         <Route path="/inscription" element={<Inscription />} />
         <Route

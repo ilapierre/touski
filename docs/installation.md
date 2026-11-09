@@ -6,7 +6,7 @@
 - [Node.js](https://nodejs.org/en/download) et npm (frontend)
 
 ## Backend
-
+### Local
 1. À la racine du projet, créer le fichier `.env` à partir du modèle :
 ```bash
 cp .env.template .env
@@ -16,10 +16,18 @@ cp .env.template .env
 
 | Variable | Description |
 |---|---|
-| `ENVIRONMENT` | Nom de l'environnement |
-| `DATABASE_URL` | URL de connexion à la base de données (ex. `sqlite:///touski.db`) |
+| `ENVIRONMENT` | Nom de l'environnement (`prod`, `dev` ou `test`) |
+| `DATABASE_URL` | URL de connexion à la base de données |
 | `SECRET_KEY` | Clé secrète |
 
+Touski utilise MySQL pour la production ou SQLite pour le développement. La variable d'environnement `ENVIRONMENT` dicte le dialecte de BD utilisé.
+```bash
+# MySQL
+DATABASE_URL="mysql+pymysql://<user>:<password>@<host>:<port>/<db>"
+
+# SQLite
+DATABASE_URL="sqlite:///touski.db"
+```
 
 3. Installer les dépendances et créer les tables:
 ```bash
@@ -39,6 +47,9 @@ make run-app
 > [!NOTE]  
 > Pour lancer l'application en mode développement:
 > `make run-dev`
+
+### Docker
+TODO
 
 ## Frontend
 Installer et démarrer l'application web:
