@@ -1,6 +1,6 @@
 [project]
 name = "touski"
-version = "0.1.0"
+version = "0.2.0"
 description = "Application de gestion de l'inventaire de la cuisine."
 authors = [
   { name = "Gaëlle Juteau", email = "2515105@cmontmorency.qc.ca" },
