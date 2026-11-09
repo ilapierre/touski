@@ -41,8 +41,12 @@ make migrate
 
 5. Lancer le backend:
 ```bash
-make run
+make run-app
 ```
+
+> [!NOTE]  
+> Pour lancer l'application en mode développement:
+> `make run-dev`
 
 ### Docker
 TODO
@@ -50,9 +54,7 @@ TODO
 ## Frontend
 Installer et démarrer l'application web:
 ```bash
-cd frontend/touski
-npm install
-npm run dev
+make run-frontend
 ```
 
 ## Commandes

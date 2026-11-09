@@ -1,17 +1,15 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Redirige /api/* vers l'API FastAPI (make run-dev)
-      '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+      "/api": {
+        target: "http://127.0.0.1:8080",
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
-})
+});
