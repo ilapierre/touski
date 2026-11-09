@@ -32,7 +32,7 @@ uv run scrape -f foods.jsonl -m 0           # tout le fichier
 2. Les produits sans `product_name` sont ignorés.
 3. Extraction des macros selon le format du produit (sinon le produit est ignoré) :
    - `nutriments` (ancien format) → `extract_macros_old()`, valeurs pour `100g`.
-   - `nutrition.aggregated_set` (nouveau format) → `extract_macros()`, unité incluse dans la valeur (ex. `12.5g`).
+   - `nutrition.aggregated_set.nutrients` (nouveau format) → `extract_macros()`, valeurs converties en grammes.
 4. Construction de l'URL de l'image avec `extract_image_url()`.
 5. Insertion de tous les objets `Food` dans une seule transaction.
 
@@ -45,6 +45,15 @@ uv run scrape -f foods.jsonl -m 0           # tout le fichier
 | `kcal` | `energy-kcal` |
 | `fat`, `carbohydrates`, `proteins` | `fat`, `carbohydrates`, `proteins` |
 | `values` | Objet nutritionnel brut (`nutriments` ou `nutrition`) |
+| `brand` | `brands` (séparées par des virgules) |
+| `description` | `generic_name_fr`, sinon `generic_name`, sinon `generic_name_en` |
+| `quantity` | `quantity` (ex. `350 g`), sinon `product_quantity` + `product_quantity_unit` |
+| `serving_size` | `serving_size` |
+| `nutriscore` | `nutriscore_grade` (`A` à `E`, `None` si inconnu) |
+| `origin` | `origins_tags` (ex. `France, Spain`) |
+| `allergens` | `allergens_tags` sans préfixe de langue (ex. `["milk", "nuts"]`) |
+
+Ces champs sont normalisés par `normalize_off_details()` : les valeurs vides ou inconnues (`""`, `unknown`, `not-applicable`, `en:null`) deviennent `None`, les textes sont nettoyés (espaces) et tronqués à la taille de la colonne.
 | `image_url` | Image de face du produit (voir ci-dessous) |
 
 ## URL d'image

@@ -34,10 +34,9 @@ def scrape_data(file_path: str, extract_size: int | None = None):
                 Food(
                     name=name,
                     image_url=image_url,
-                    **macros,
+                    **(macros or {}),
+                    **normalize_off_details(data),
                 )
-                if macros
-                else Food(name=name, image_url=image_url)
             )
 
             if extract_size:
@@ -101,33 +100,115 @@ def extract_macros_old(nutriments: dict) -> dict:
     }
 
 
+def nutrient_in_grams(nutrient: dict) -> float | None:
+    # Convertit un nutriment du nouveau format OFF ({"value": 36, "unit": "g"}) en grammes
+    value = nutrient.get("value")
+    if value is None:
+        return None
+
+    factor = {"g": 1, "mg": 1e-3, "µg": 1e-6, "mcg": 1e-6}.get(nutrient.get("unit"), 1)
+    return round(value * factor, 3)
+
+
 def extract_macros(nutrition: dict) -> dict | None:
-    nutrients = nutrition.get("aggregated_set")
+    aggregated = nutrition.get("aggregated_set")
+    if not aggregated:
+        return None
+
+    # Les nutriments sont sous aggregated_set["nutrients"]
+    nutrients = aggregated.get("nutrients")
     if not nutrients:
         return None
 
-    per = nutrition["aggregated_set"]["per"]
-
     try:
-        kcal_val = nutrients["energy-kcal"]
-        fat_val = nutrients["fat"]
-        carbohydrates_val = nutrients["carbohydrates"]
-        proteins_val = nutrients["proteins"]
+        kcal = nutrients["energy-kcal"]["value"]
+        fat = nutrient_in_grams(nutrients["fat"])
+        carbohydrates = nutrient_in_grams(nutrients["carbohydrates"])
+        proteins = nutrient_in_grams(nutrients["proteins"])
     except KeyError:
         return None
 
-    kcal = kcal_val["value"]
-    fat = str(fat_val["value"]) + fat_val["unit"]
-    carbohydrates = str(carbohydrates_val["value"]) + carbohydrates_val["unit"]
-    proteins = str(proteins_val["value"]) + proteins_val["unit"]
+    if None in (kcal, fat, carbohydrates, proteins):
+        return None
 
     return {
-        "per": per,
+        "per": aggregated.get("per"),
         "kcal": kcal,
         "fat": fat,
         "carbohydrates": carbohydrates,
         "proteins": proteins,
         "values": nutrition,
+    }
+
+
+# Valeurs OFF qui signifient "inconnu"
+UNKNOWN_VALUES = {"", "unknown", "not-applicable", "null"}
+
+
+def clean_text(value, max_length: int | None = None) -> str | None:
+    if not isinstance(value, str):
+        return None
+
+    value = " ".join(value.split())
+    if value.lower() in UNKNOWN_VALUES:
+        return None
+
+    return value[:max_length] if max_length else value
+
+
+def clean_tags(tags) -> list[str]:
+    # ["en:nuts", "en:milk"] -> ["nuts", "milk"] (sans doublons ni valeurs inconnues)
+    if not isinstance(tags, list):
+        return []
+
+    names = []
+    for tag in tags:
+        name = str(tag).split(":", 1)[-1].strip()
+        if name.lower() not in UNKNOWN_VALUES and name not in names:
+            names.append(name)
+
+    return names
+
+
+def normalize_off_details(data: dict) -> dict:
+    # Formatte les informations d'un produit OFF pour Touski (None si absent ou inconnu)
+
+    # Marques séparées par des virgules
+    brands = [b.strip() for b in str(data.get("brands") or "").split(",") if b.strip()]
+
+    # "350 g" sinon construit à partir de la quantité et de l'unité
+    quantity = clean_text(data.get("quantity"), 50)
+    if not quantity and data.get("product_quantity") and data.get("product_quantity_unit"):
+        try:
+            quantity = f"{float(data['product_quantity']):g} {data['product_quantity_unit']}"
+        except (TypeError, ValueError):
+            quantity = None
+
+    nutriscore = (clean_text(data.get("nutriscore_grade")) or "").upper()
+
+    # Description dans la langue de l'interface en priorité
+    description = next(
+        (
+            text
+            for key in ("generic_name_fr", "generic_name", "generic_name_en")
+            if (text := clean_text(data.get(key)))
+        ),
+        None,
+    )
+
+    # "en:united-states" -> "United States"
+    origin = ", ".join(
+        name.replace("-", " ").title() for name in clean_tags(data.get("origins_tags"))
+    )
+
+    return {
+        "brand": ", ".join(brands)[:255] or None,
+        "description": description,
+        "quantity": quantity,
+        "serving_size": clean_text(data.get("serving_size"), 50),
+        "nutriscore": nutriscore if nutriscore in ("A", "B", "C", "D", "E") else None,
+        "origin": origin[:255] or None,
+        "allergens": clean_tags(data.get("allergens_tags")) or None,
     }
 
 

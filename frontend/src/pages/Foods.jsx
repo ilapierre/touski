@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import FoodCard from '../components/FoodCard'
+import FoodModal from '../components/FoodModal'
 import './Foods.css'
 
 const PAGE_SIZE = 24
@@ -12,6 +13,7 @@ function Foods() {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selected, setSelected] = useState(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -106,11 +108,12 @@ function Foods() {
       <ul className="foods-grid">
         {foods.map((a) => (
           <li key={a.id}>
-            <FoodCard food={a} />
+            <FoodCard food={a} onSelect={setSelected} />
           </li>
         ))}
       </ul>
       {pagination}
+      {selected && <FoodModal food={selected} onClose={() => setSelected(null)} />}
     </main>
   )
 }

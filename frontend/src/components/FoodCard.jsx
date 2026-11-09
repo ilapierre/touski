@@ -26,13 +26,17 @@ function FoodImage({ food }) {
   )
 }
 
-function FoodCard({ food }) {
+function FoodCard({ food, onSelect }) {
   return (
     <article className="food-card">
       <FoodImage food={food} />
       <div className="food-body">
         <div className="food-header">
-          <h3 title={food.name}>{food.name}</h3>
+          <h3 title={food.name}>
+            <button type="button" className="food-open" onClick={() => onSelect(food)}>
+              {food.name}
+            </button>
+          </h3>
           {food.kcal != null && <span className="kcal-badge">{food.kcal} kcal</span>}
         </div>
         <p className="food-per">{food.per && `pour ${food.per}`}</p>
