@@ -8,6 +8,7 @@ import Connexion from "./pages/Connexion";
 import Inscription from "./pages/Inscription";
 import Groupes from "./pages/groupes";
 import Abonnement from "./pages/Abonnement"
+import FoodForm from "./pages/FoodForm";
 
 // Si pas connecté, on redirige vers la connexion
 function RouteProtegee({ children }) {
@@ -35,8 +36,9 @@ function App() {
             </RouteProtegee>
           }
         />
-        <Route path="/groupes" element={<Groupes/>}/>
+        <Route path="/groupes" element={<Groupes />} />
         <Route path="/abonnement" element={<Abonnement />} />
+        <Route path="/addFood" element={<FoodForm />} />
       </Routes>
     </>
   );
