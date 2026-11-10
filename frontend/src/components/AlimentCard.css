@@ -1,0 +1,37 @@
+
+.AlimentCard_content {
+    padding: 0;
+    text-align: center;
+    border: 2px solid #fce4ec;
+    transition: transform 0.3s ease;
+}
+
+
+.title {
+    color: #000000;
+    text-align: center;
+    padding-bottom: 1rem;
+}
+
+
+.btn_actions {
+    padding: 1rem;
+    border-top: 1px solid #b9b6b7;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn_submit {
+    background: #1f2328;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn_submit:hover {
+    background: #0d0e10;
+}
