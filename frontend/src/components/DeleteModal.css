@@ -1,0 +1,47 @@
+.modal {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #ffff;
+  opacity: 0.8;
+  border-radius: 5px;
+  border: solid 2px #272626;
+}
+
+.container {
+  width: 90%;
+}
+
+header {
+  background-color: #000000;
+  color: #ffff;
+}
+
+.body {
+  padding: 2.5rem;
+}
+
+footer {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn_confirm {
+  background: #f32222;
+  color: #ffff;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.btn_cancel {
+  background: #646262;
+  color: #ffff;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
