@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 // import RecipeCard from '../components/RecipeCard'
 // import RecipeModal from '../components/RecipeModal'
 import './Recipes.css'
+import { useTranslation } from "react-i18next";
 
 const PAGE_SIZE = 24
 
@@ -14,6 +15,8 @@ function Recipes() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selected, setSelected] = useState(null)
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const controller = new AbortController()

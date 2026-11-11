@@ -74,5 +74,13 @@
         "charge" : "Chargement...",
         "error" : "Impossible de charger les aliments : ",
         "placeholder" : "Recherhcer un aliment..."
+    },
+    "recipes" : {
+        "pg" : "Page",
+        "sur" : "sur",
+        "titre" : "Recettes",
+        "rePH" : "Rechercher une recette...",
+        "btnRe" : "Rechercher",
+        "charge" : "Chargement..."
     }
 }

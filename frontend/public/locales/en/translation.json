@@ -73,5 +73,13 @@
         "charge" : "Loading...",
         "error" : "Unable to load food items : ",
         "placeholder" : "Search for a food..."
+    },
+    "recipes" : {
+        "pg" : "Page",
+        "sur" : "on",
+        "titre" : "Recipes",
+        "rePH" : "Search for a recipe...",
+        "btnRe" : "Search",
+        "charge" : "Loading..."
     }
 }
