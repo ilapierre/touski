@@ -24,12 +24,31 @@ function TopBar() {
           <Link to="/profil" className="login-button">
             Profil
           </Link>
+          <Link to="/foods" className="login-button">
+            Aliments
+          </Link>
+          <Link to="/recipes" className="login-button">
+            Recettes
+          </Link>
+          <Link to="/frigo" className="login-button">
+            Frigo
+          </Link>
+
+          <Link to="/groupes" className="login-button">
+            Groupes
+          </Link>
           <button type="button" className="login-button" onClick={deconnexion}>
             Déconnexion
           </button>
         </nav>
       ) : (
         <nav className="topbar-actions">
+          <Link to="/foods" className="login-button">
+            Aliments
+          </Link>
+          <Link to="/recipes" className="login-button">
+            Recettes
+          </Link>
           <Link to="/connexion" className="login-button">
             Connexion
           </Link>
