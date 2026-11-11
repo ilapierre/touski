@@ -1,21 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import "./Abonnement.css"
 
 export default function Abonnement() {
     const [selectedPlan, setSelectedPlan] = useState('')
     const [showCheckout, setShowCheckout] = useState(false)
+    const [subscription, setSubscription] = useState({premium : false})
+    const [loading, setLoading] = useState(true)
     const [cardNumber, setCardNumber] = useState('')
     const [expired, setExpired] = useState('')
-    const [csv, setCSV] = useState('')
+    const [cvv, setCVV] = useState('')
 
     const navigate = useNavigate()
-    const isLoggedIn = !!localStorage.getItem("token")
+    const token = localStorage.getItem("token")
+    const isLoggedIn = !!token
+    
+    useEffect(() => {
+        if(!isLoggedIn) {
+            setLoading(false)
+            return
+        }
+
+        fetch('http://127.0.0.1:8080/abonnements/moi', {
+            headers: {
+                'Authorization' : `Bearer ${token}`
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            setSubscription(data)
+            if (data.premium) {
+                setSelectedPlan('ia')
+            } else {
+                setSelectedPlan('gratuit')
+            }
+            setLoading(false)
+        })
+        .catch(err => {
+            setLoading(false)
+        })
+    }, [isLoggedIn, token])
 
     const handleIaAction = () => {
         if(!isLoggedIn) {
             navigate('/connexion')
-        } else {
+        } else if(subscription.premium){
             setShowCheckout(true)
         }
     }
@@ -104,13 +133,13 @@ export default function Abonnement() {
                                 />
                             </div> 
                             <div>
-                                <label htmlFor="csv"> CSV </label>
+                                <label htmlFor="cvv"> CVV </label>
                                 <input
-                                    id = "csv"
+                                    id = "cvv"
                                     type = "text"
                                     placeholder = "123"
-                                    value = {setCSV}
-                                    onChange = {(e) => setCSV(e.target.value)}
+                                    value = {cvv}
+                                    onChange = {(e) => setCVV(e.target.value)}
                                     required
                                 />
                             </div>
