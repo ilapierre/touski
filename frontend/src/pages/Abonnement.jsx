@@ -2,7 +2,7 @@ import { useState } from 'react'
 import "./Abonnement.css"
 
 export default function Abonnement() {
-    const [selectedPlan, setSelectedPlan] = useState('null')
+    const [selectedPlan, setSelectedPlan] = useState('')
 
     return (
         <div className="abonnement-container">
@@ -17,10 +17,10 @@ export default function Abonnement() {
                     onClick={() => setSelectedPlan('gratuit')}>
                     <div>
                         <h3>Gratuit</h3>
-                        <p>$0 par mois</p>
+                        <p className="plan-prix">$0 par mois</p>
                         <ul className="plan-liste">
                             <li>Gestion du réfrigérateur</li>
-                            <li>Recettes de base</li><div/>
+                            <li>Recettes de base</li>
                         </ul>
                     </div>
                 </div>
@@ -31,8 +31,9 @@ export default function Abonnement() {
                     onClick={() => setSelectedPlan('ia')}>
                     <div>
                         <h3>IA</h3>
+                        <p className="plan-txt"> L'IA pourra t'assister dans la création d'une nouvelle recette. </p>
                         {/* À CHANGER LE PRIX */}
-                        <p>$50 par mois</p>
+                        <p className="plan-prix">$50 par mois</p>
                         <ul className="plan-liste">
                             <li>Gestion du réfrigérateur</li>
                             <li>Recettes de base</li>

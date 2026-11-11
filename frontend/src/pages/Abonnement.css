@@ -81,9 +81,15 @@
   margin: 0 0 0.5rem 0;
 }
 
-.type-plan p {
+.plan-prix {
   font-size: 1.75rem;
   font-weight: 700;
   color: rgb(0, 95, 25);
   margin: 0 0 1.5rem 0;
+}
+
+.plan-txt {
+    font-size : 0.95rem;
+    font-style: italic;
+    color: rgb(155, 156, 155);
 }
