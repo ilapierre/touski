@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-// import FoodCard from '../components/FoodCard'
-// import FoodModal from '../components/FoodModal'
+import FoodCard from '../components/FoodCard'
+import FoodModal from '../components/FoodModal'
 import './Foods.css'
 import { useTranslation } from "react-i18next";
 
