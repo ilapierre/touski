@@ -1,7 +1,7 @@
 .profil {
-  max-width: 50rem;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 2rem 4rem;
 }
 
 .profil-entete {
@@ -21,11 +21,6 @@
 
 .profil-infos {
   flex: 1;
-}
-
-.profil-infos h2 {
-  margin: 0;
-  font-size: 2rem;
 }
 
 .profil-email {
@@ -116,4 +111,31 @@
 .profil-boutons {
   display: flex;
   gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .profil {
+    padding: 1.5rem 1rem;
+  }
+
+  .profil-entete {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profil-entete button {
+    width: 100%;
+  }
+
+  .profil-infos h2 {
+    font-size: 1.5rem;
+  }
+
+  .profil-section {
+    margin-top: 1.5rem;
+  }
+
+  .profil-frigo-carte {
+    width: 100%;
+  }
 }
