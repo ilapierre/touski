@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import RecipeCard from '../components/RecipeCard'
-import RecipeModal from '../components/RecipeModal'
+// import RecipeCard from '../components/RecipeCard'
+// import RecipeModal from '../components/RecipeModal'
 import './Recipes.css'
 
 const PAGE_SIZE = 24

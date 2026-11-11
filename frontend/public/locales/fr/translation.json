@@ -58,5 +58,14 @@
         "stan" : "Standart",
         "inv" : "Inviter un membre",
         "re" : "Retirer un membre"
+    },
+    "foods": {
+        "pg" : "Page",
+        "sur" : "sur",
+        "titre" : "Aliments",
+        "btnRe" : "Rechercher",
+        "charge" : "Chargement...",
+        "error" : "Impossible de charger les aliments : ",
+        "placeholder" : "Recherhcer un aliment..."
     }
 }

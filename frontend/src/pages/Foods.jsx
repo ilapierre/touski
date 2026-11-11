@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import FoodCard from '../components/FoodCard'
-import FoodModal from '../components/FoodModal'
+// import FoodCard from '../components/FoodCard'
+// import FoodModal from '../components/FoodModal'
 import './Foods.css'
+import { useTranslation } from "react-i18next";
 
 const PAGE_SIZE = 24
 
@@ -14,6 +15,8 @@ function Foods() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selected, setSelected] = useState(null)
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const controller = new AbortController()
@@ -73,7 +76,7 @@ function Foods() {
         ←
       </button>
       <span>
-        Page {page + 1} sur {totalPages}
+        {t('foods.pg')} {page + 1} {t('foods.sur')} {totalPages}
       </span>
       <button
         type="button"
@@ -88,19 +91,19 @@ function Foods() {
 
   return (
     <main className="foods">
-      <h2>Aliments</h2>
+      <h2>{t('foods.titre')}</h2>
       <form className="search" role="search" onSubmit={handleSearch}>
         <input
           type="search"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Rechercher un aliment…"
+          placeholder={t('foods.placeholder')}
           aria-label="Rechercher un aliment"
         />
-        <button type="submit">Rechercher</button>
+        <button type="submit">{t('foods.btnRe')}</button>
       </form>
-      {loading && <p className="status">Chargement…</p>}
-      {error && <p className="status error">Impossible de charger les aliments : {error}</p>}
+      {loading && <p className="status">{t('foods.charge')}</p>}
+      {error && <p className="status error">{t('foods.error')} {error}</p>}
       {!loading && !error && foods.length === 0 && (
         <p className="status">
           {query ? `Aucun résultat pour « ${query} ».` : 'Aucun aliment pour le moment.'}

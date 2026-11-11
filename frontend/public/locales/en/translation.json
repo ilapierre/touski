@@ -58,5 +58,14 @@
         "stan" : "Standard",
         "inv" : "Invite a member",
         "re" : "Remove a member"
+    },
+    "foods": {
+        "pg" : "Page",
+        "sur" : "on",
+        "titre" : "Foods",
+        "btnRe" : "Search",
+        "charge" : "Loading...",
+        "error" : "Unable to load food items : ",
+        "placeholder" : "Search for a food..."
     }
 }
