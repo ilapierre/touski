@@ -51,7 +51,7 @@ function Profil() {
     setErreur("");
 
     // On n'envoie le mot de passe que s'il a été rempli
-    const donnees = { name: form.name, email: form.email };
+    const donnees = { name: form.name, email: form.email, photo: form.photo };
     if (form.password) {
       donnees.password = form.password;
     }

@@ -34,6 +34,8 @@ def update_current_user(
 
     if data.password:
         current_user.password = hash_password(data.password)
+    
+    store_image_from_url()
 # TODO: Changement de photo de profil. La charger dans /static
     db.commit()
     db.refresh(current_user)
