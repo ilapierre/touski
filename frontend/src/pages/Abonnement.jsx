@@ -1,8 +1,19 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import "./Abonnement.css"
 
 export default function Abonnement() {
     const [selectedPlan, setSelectedPlan] = useState('')
+    const navigate = useNavigate()
+    const isLoggedIn = !!localStorage.getItem("token")
+
+    const handleIaAction = () => {
+        if(!isLoggedIn) {
+            navigate('/connexion')
+        } else {
+            console.log("User is logged in, proceed to checkout...")
+        }
+    }
 
     return (
         <div className="abonnement-container">
@@ -28,7 +39,10 @@ export default function Abonnement() {
 
             <div className="plans">
                 <div className={`type-plan ${selectedPlan === 'ia' ? 'active' : ''}`}
-                    onClick={() => setSelectedPlan('ia')}>
+                    onClick={() => {
+                        setSelectedPlan('ia') 
+                        handleIaAction()}}
+                >
                     <div>
                         <h3>IA</h3>
                         <p className="plan-txt"> L'IA pourra t'assister dans la création d'une nouvelle recette. </p>
@@ -39,6 +53,9 @@ export default function Abonnement() {
                             <li>Recettes de base</li>
                             <li>IA</li>
                         </ul>
+                        <p className="plan-passage">
+                            {isLoggedIn ? "Acheter maintenant" : "Connectez-vous ou inscrivez-vous pour avoir ce plan."}
+                        </p>
                     </div>
                 </div>
             </div>
