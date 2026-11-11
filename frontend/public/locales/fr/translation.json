@@ -82,5 +82,15 @@
         "rePH" : "Rechercher une recette...",
         "btnRe" : "Rechercher",
         "charge" : "Chargement..."
+    },
+    "abonnement" : {
+        "titre" : "Abonnement",
+        "soust" : "Abonnez-vous pour avoir accès à l'IA",
+        "txt" : "Utilisez l'IA pour vous créez des recettes idéales à votre goûts.",
+        "freet" : "Gratuit",
+        "prix" : " par mois",
+        "li1" : "Gestion du réfrigérateur",
+        "li2" : "Recettes de base",
+        "ia" : "AI"
     }
 }

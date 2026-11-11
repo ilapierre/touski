@@ -81,5 +81,15 @@
         "rePH" : "Search for a recipe...",
         "btnRe" : "Search",
         "charge" : "Loading..."
+    },
+    "abonnement" : {
+        "titre" : "Subscription",
+        "soust" : "Subscribe to get access to the AI",
+        "txt" : "Use AI to create recipes perfectly tailored to your tastes.",
+        "freet" : "Free",
+        "prix" : " per month",
+        "li1" : "Refrigerator management",
+        "li2" : "Basic recipes",
+        "ia" : "AI"
     }
 }
