@@ -19,25 +19,31 @@ function TopBar() {
         <h1>Touski</h1>
       </Link>
 
+      <nav className="topbar-action">
+        <Link to="/abonnement" className="subs">
+          Abonnement
+        </Link> 
+
       {connecte ? (
-        <nav className="topbar-actions">
+        <>
           <Link to="/profil" className="login-button">
             Profil
           </Link>
           <button type="button" className="login-button" onClick={deconnexion}>
             Déconnexion
           </button>
-        </nav>
+        </>
       ) : (
-        <nav className="topbar-actions">
+        <>
           <Link to="/connexion" className="login-button">
             Connexion
           </Link>
           <Link to="/inscription" className="login-button">
             Inscription
           </Link>
-        </nav>
+        </>
       )}
+      </nav>
     </header>
   );
 }
