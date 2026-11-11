@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from dotenv import find_dotenv, load_dotenv, get_key
 
 # Valider l'existence du fichier .env
@@ -20,4 +21,15 @@ SECRET_KEY = get_key(env_file, "SECRET_KEY")
 if [var for var in [ENVIRONMENT, DATABASE_URL, SECRET_KEY] if var is None]:
     # TODO: Remplacer par un Logger
     print("[ERREUR] Variable(s) d'environnement manquantes")
+    sys.exit(1)
+
+# Création du répertoire static
+static_dir = Path("static/")
+if not static_dir.exists():
+    Path(static_dir / "images").mkdir(parents=True)
+    Path(static_dir / "uploads").mkdir(parents=True)
+    Path(static_dir / "media").mkdir(parents=True)
+
+    print("Répertoire 'static/' créé (stockage de média)")
+
     sys.exit(1)

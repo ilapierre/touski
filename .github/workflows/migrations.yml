@@ -1,0 +1,72 @@
+name: Migrations
+
+on:
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - "alembic/**"
+      - "src/touski/models/**"
+      - "src/touski/db/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/migrations.yml"
+
+jobs:
+  migrations:
+    name: Migrations (${{ matrix.dialect }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dialect: sqlite
+            database_url: sqlite:///./ci.db
+          - dialect: mysql
+            database_url: mysql+pymysql://root:root@127.0.0.1:3306/touski_ci
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Démarrer MySQL
+        if: matrix.dialect == 'mysql'
+        run: |
+          docker run -d --name mysql -p 3306:3306 \
+            -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=touski_ci \
+            mysql:8
+          for i in $(seq 1 40); do
+            docker exec mysql mysqladmin ping -h 127.0.0.1 -proot --silent && exit 0
+            sleep 3
+          done
+          docker logs mysql
+          exit 1
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - name: Installer les dépendances
+        run: uv sync --frozen
+
+      # config.py lit uniquement le fichier .env et quitte si static/ n'existe pas.
+      - name: Préparer l'environnement
+        run: |
+          cat > .env <<EOF
+          ENVIRONMENT=test
+          DATABASE_URL=${{ matrix.database_url }}
+          SECRET_KEY=ci-secret-key
+          EOF
+          mkdir -p static/images static/uploads static/media
+
+      - name: Appliquer les migrations (upgrade head)
+        run: uv run alembic upgrade head
+
+      - name: Les modèles correspondent aux migrations (check)
+        run: uv run alembic check
+
+      - name: Retour arrière complet (downgrade base)
+        run: uv run alembic downgrade base
+
+      - name: Réappliquer les migrations (upgrade head)
+        run: uv run alembic upgrade head

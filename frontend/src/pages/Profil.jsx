@@ -1,5 +1,5 @@
 import "./Profil.css";
-// import photoProfilDefault from "../assets/photo-profil-vide.jpg";
+import photoProfilDefault from "../assets/photo-profil-vide.jpg";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 

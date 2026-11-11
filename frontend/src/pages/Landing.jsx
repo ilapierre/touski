@@ -17,6 +17,7 @@ const features = [
 ];
 
 function Landing() {
+  const connecte = localStorage.getItem("token") != null;
   return (
     <main className="landing">
       <section className="intro">
@@ -27,9 +28,11 @@ function Landing() {
           l'expression "tout ce qui", ce gestionnaire de cuisine priorise la
           simplicité. Connectez-vous pour retrouver votre frigo et vos recettes.
         </p>
-        <Link to="/connexion" className="login-button primary">
-          Se connecter
-        </Link>
+        {!connecte && (
+          <Link to="/connexion" className="login-button primary">
+            Se connecter
+          </Link>
+        )}
       </section>
       <section className="features">
         {features.map((f) => (

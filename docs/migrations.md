@@ -1,3 +1,8 @@
+---
+title: Migrations
+nav_order: 5
+---
+
 # Migrations (Alembic)
 
 Les changements de schéma de la base de données (migrations) sont gérés avec Alembic.
