@@ -20,6 +20,11 @@ export default function Abonnement() {
         }
     }
 
+    const handleSubscribeSubmit = (e) => {
+        e.preventDefault()
+        setShowCheckout(false)
+    }
+
     return (
         <div className="abonnement-container">
             <div className="header">
@@ -64,6 +69,63 @@ export default function Abonnement() {
                     </div>
                 </div>
             </div>
+
+            { showCheckout && (
+                <div>
+                    <form onSubmit={handleSubscribeSubmit}>
+                        <h2> Achat </h2>
+                        <h4> Plan IA - Rappel</h4>
+                        <ul>
+                            <li>Gestion du réfrigérateur</li>
+                            <li>Recettes de base</li>
+                            <li>IA</li>
+                        </ul>
+
+                        <label htmlFor="card"> Numéro de carte</label>
+                        <input
+                            id = "card"
+                            type = "text"
+                            placeholder = "1111 2222 3333 4444"
+                            value = {cardNumber}
+                            onChange = {(e) => setCardNumber(e.target.value)}
+                            required
+                        />
+
+                        <div>
+                            <div>
+                                <label htmlFor="expiry"> Expiration </label>
+                                <input
+                                    id = "expiry"
+                                    type = "text"
+                                    placeholder = "MM/AA"
+                                    value = {expired}
+                                    onChange = {(e) => setExpired(e.target.value)}
+                                    required
+                                />
+                            </div> 
+                            <div>
+                                <label htmlFor="csv"> CSV </label>
+                                <input
+                                    id = "csv"
+                                    type = "text"
+                                    placeholder = "123"
+                                    value = {setCSV}
+                                    onChange = {(e) => setCSV(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <button type="button"
+                                    className="login-button"
+                                    onClick={() => setShowCheckout(false)}
+                                >
+                                    Annuler
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     )
 }
