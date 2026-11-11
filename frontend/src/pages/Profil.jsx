@@ -2,6 +2,7 @@ import "./Profil.css";
 import photoProfilDefault from "../assets/photo-profil-vide.jpg";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const API_URL = "/api";
 
@@ -12,6 +13,8 @@ function Profil() {
   const [apercuPhoto, setApercuPhoto] = useState(null);
   const [erreur, setErreur] = useState("");
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function chargerProfil() {
@@ -75,7 +78,7 @@ function Profil() {
       setErreur(
         typeof data.detail === "string"
           ? data.detail
-          : "Erreur lors de la modification",
+          : t('profil.errMod'),
       );
       return;
     }
@@ -87,7 +90,7 @@ function Profil() {
   if (!user) {
     return (
       <main className="profil">
-        <p>Chargement...</p>
+        <p>{t('profil.charge')}</p>
       </main>
     );
   }
@@ -137,7 +140,7 @@ function Profil() {
                 <input
                   type="password"
                   value={form.password}
-                  placeholder="Laisser vide pour ne pas changer"
+                  placeholder={t('profil.passPH')}
                   onChange={(e) =>
                     setForm({ ...form, password: e.target.value })
                   }
@@ -156,10 +159,10 @@ function Profil() {
         {edition ? (
           <div className="profil-boutons">
             <button type="submit" className="login-button">
-              Enregistrer
+              {t('profil.btnEnre')}
             </button>
             <button type="button" onClick={annuler}>
-              Annuler
+              {t('profil.btnAn')}
             </button>
           </div>
         ) : (
@@ -168,25 +171,25 @@ function Profil() {
             className="login-button"
             onClick={ouvrirEdition}
           >
-            Modifier
+            {t('profil.modifier')}
           </button>
         )}
       </form>
 
       <section className="profil-section">
-        <h3>Mes restrictions alimentaires :</h3>
-        <p className="profil-vide">Aucune restriction pour l'instant.</p>
+        <h3>{t('profil.sousRes')}</h3>
+        <p className="profil-vide">{t('profil.resVide')}</p>
       </section>
 
       <section className="profil-section">
-        <h3>Groupe :</h3>
-        <p className="profil-vide">Aucun groupe pour l'instant.</p>
+        <h3>{t('profil.gr')}</h3>
+        <p className="profil-vide">{t('profil.pasgr')}</p>
       </section>
 
       <section className="profil-section profil-frigo">
-        <h3>Mon frigo :</h3>
+        <h3>{t('profil.frigo')}</h3>
         <Link to="/frigo" className="profil-frigo-carte">
-          Voir le contenu
+          {t('profil.contenu')}
         </Link>
       </section>
     </main>

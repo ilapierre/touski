@@ -39,11 +39,17 @@
     },
     "profil": {
         "charge" : "Chargement...",
-        "modifer" : "Modifier",
+        "modifier" : "Modifier",
         "gr" : "Groupe :",
         "pasgr" : "Aucun groupe pour l'instant.",
         "frigo" : "Mon frigo :",
-        "contenu" : "Voir le contenu"
+        "contenu" : "Voir le contenu",
+        "btnEnre" : "Enregistrer",
+        "btnAn" : "Annuler",
+        "sousRes" : "Mes restrictions alimentaires :",
+        "resVide" : "Aucune restriction pour l'instant.",
+        "passPH" : "Laisser vide pour ne pas changer",
+        "errMod" : "Erreur lors de la modification"
     },
     "groupes": {
         "errCharge" : "Erreur lors du chargement des membres",
@@ -57,7 +63,8 @@
         "priv" : "Privilégie",
         "stan" : "Standart",
         "inv" : "Inviter un membre",
-        "re" : "Retirer un membre"
+        "re" : "Retirer un membre",
+        "errMod" : "Erreur lors de la modification"
     },
     "foods": {
         "pg" : "Page",

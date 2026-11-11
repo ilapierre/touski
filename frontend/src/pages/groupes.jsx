@@ -11,7 +11,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
 
     const peutGererLesRoles = isOwner;
 
-     const { t } = useTranslation();
+    const { t } = useTranslation();
 
     useEffect(() => {
         fetch(`${BACKEND_URL}/groupes/${groupeId}/membres`)

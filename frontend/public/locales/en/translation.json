@@ -39,11 +39,17 @@
     },
     "profil": {
         "charge" : "Loading...",
-        "modifer" : "To modify",
+        "modifier" : "To modify",
         "gr" : "Group :",
         "pasgr" : "No groups yet..",
         "frigo" : "My fridge :",
-        "contenu" : "View content"
+        "contenu" : "View the content",
+        "btnEnre" : "Save",
+        "btnAn" : "Cancrl",
+        "sousRes" : "My dietary restrictions :",
+        "resVide" : "No restrictions for now.",
+        "passPH" : "Leave blank to keep unchanged",
+        "errMod" : "Error while modifying"
     },
     "groupes": {
         "errCharge" : "Error while loading members.",
