@@ -1,6 +1,7 @@
 ---
 title: Scraper
-nav_order: 6
+parent: Base de données
+nav_order: 2
 ---
 
 # Scraper (Open Food Facts)
@@ -16,7 +17,7 @@ scrape = "touski.scripts:scraper.main"
 
 ## Utilisation
 
-Prérequis : `.env` configuré (`DATABASE_URL`) et migrations appliquées (`make migrate`). Voir [installation.md](../installation.md).
+Prérequis : `.env` configuré (`DATABASE_URL`) et migrations appliquées (`make migrate`). Voir [Installation]({{ site.baseurl }}{% link installation.md %}).
 
 ```bash
 uv run scrape -f docs/assets/openfoodsfacts_sample.jsonl  # 100 premières lignes (défaut)
