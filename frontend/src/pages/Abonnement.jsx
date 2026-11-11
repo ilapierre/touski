@@ -49,9 +49,28 @@ export default function Abonnement() {
         }
     }
 
-    const handleSubscribeSubmit = (e) => {
+    const handleSubscribeSubmit = async (e) => {
         e.preventDefault()
-        setShowCheckout(false)
+
+        const response = await fetch('http://127.0.0.1:8080/abonnements/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : `Bearer ${token}`
+            }
+        })
+
+        const data = await response.json()
+        setSubscription({ premium: false, ends_at: data.ends_at, status: 'active'})
+        setSelectedPlan('gratuit')
+    }
+
+    if (loading) {
+        return (
+            <main className="abon">
+                <p>Chargement...</p>
+            </main>
+        );
     }
 
     return (
