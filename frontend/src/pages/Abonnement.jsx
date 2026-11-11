@@ -4,6 +4,11 @@ import "./Abonnement.css"
 
 export default function Abonnement() {
     const [selectedPlan, setSelectedPlan] = useState('')
+    const [showCheckout, setShowCheckout] = useState(false)
+    const [cardNumber, setCardNumber] = useState('')
+    const [expired, setExpired] = useState('')
+    const [csv, setCSV] = useState('')
+
     const navigate = useNavigate()
     const isLoggedIn = !!localStorage.getItem("token")
 
@@ -11,7 +16,7 @@ export default function Abonnement() {
         if(!isLoggedIn) {
             navigate('/connexion')
         } else {
-            console.log("User is logged in, proceed to checkout...")
+            setShowCheckout(true)
         }
     }
 
