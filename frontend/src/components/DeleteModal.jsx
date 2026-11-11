@@ -1,17 +1,18 @@
 import createPortal from "react-dom";
+import "./DeleteModal.css";
 
 const DeleteModal = () => {
   const content = (
-    <div>
+    <div className="Modal">
       <header>
         <h2>Suppression</h2>
       </header>
-      <div>
+      <div className="body">
         <p>Êtes-vous sûr.e de vouloir supprimer cet aliment ?</p>
       </div>
       <footer>
-        <button>Confirmer</button>
-        <button>Annuler</button>
+        <button className="btn_confirm">Confirmer</button>
+        <button className="btn_cancel">Annuler</button>
       </footer>
     </div>
   );
