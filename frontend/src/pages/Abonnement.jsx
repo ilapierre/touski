@@ -21,7 +21,7 @@ export default function Abonnement() {
             return
         }
 
-        fetch('http://127.0.0.1:8080/abonnements/moi', {
+        fetch('/api/abonnements/moi', {
             headers: {
                 'Authorization' : `Bearer ${token}`
             }
@@ -45,7 +45,7 @@ export default function Abonnement() {
     const handleIaAction = () => {
         if(!isLoggedIn) {
             navigate('/connexion')
-        } else if(subscription.premium){
+        } else if(!subscription.premium){
             setShowCheckout(true)
         }
     }
@@ -53,7 +53,7 @@ export default function Abonnement() {
     const handleSubscribeSubmit = async (e) => {
         e.preventDefault()
 
-        const response = await fetch('http://127.0.0.1:8080/abonnements/', {
+        const response = await fetch('/api/abonnements/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,12 +62,13 @@ export default function Abonnement() {
         })
 
         const data = await response.json()
-        setSubscription({ premium: false, ends_at: data.ends_at, status: 'active'})
-        setSelectedPlan('gratuit')
+        setSubscription({ premium: true, ends_at: data.ends_at, status: 'active'})
+        setSelectedPlan('ia')
+        setShowCheckout(false)
     }
 
     const handleCancelSubscription = async () => {
-         await fetch('http://127.0.0.1:8080/abonnements/moi', {
+         await fetch('/api/abonnements/moi', {
             method : 'DELETE',
             headers: {
                 'Authorization' : `Bearer ${token}`
@@ -91,7 +92,7 @@ export default function Abonnement() {
             <div className="header">
                 <h1> Abonnement </h1>
                 <h4> Abonnez-vous pour avoir accès à l'IA</h4>
-                <p> Utilisez l'IA pour vous créez des recettes idéales à votre goûts.</p>
+                <p> Utilisez l'IA pour vous créez des recettes idéales à votre goûts, où <strong>tous les membres de votre groupe</strong> auront accès.</p>
             </div>
 
             <div className="plans">
@@ -115,45 +116,57 @@ export default function Abonnement() {
                         handleIaAction()}}
                 >
                     <div>
-                        <h3>IA</h3>
-                        <p className="plan-txt"> L'IA pourra t'assister dans la création d'une nouvelle recette. </p>
-                        {/* À CHANGER LE PRIX */}
-                        <p className="plan-prix">$50 par mois</p>
+                        <h3>IA par Groupe</h3>
+                        <p className="plan-txt"> Accès à l'assistance IA pour tout votre groupe. </p>
+                        <p className="plan-prix">$22 par mois</p>
                         <ul className="plan-liste">
                             <li>Gestion du réfrigérateur</li>
                             <li>Recettes de base</li>
                             <li>IA</li>
                         </ul>
                         <p className="plan-passage">
-                            {isLoggedIn ? "Acheter maintenant" : "Connectez-vous ou inscrivez-vous pour avoir ce plan."}
+                            {isLoggedIn ? (subscription.premium ? (
+                                <span> Plan Actif </span>
+                            ) : "Acheter maintenant" ) : "Connectez-vous ou inscrivez-vous pour abonner votre groupe. "}
                         </p>
                     </div>
                 </div>
             </div>
 
-            { showCheckout && (
+            {subscription.premium && isLoggedIn && (
                 <div>
-                    <form onSubmit={handleSubscribeSubmit}>
+                    <button
+                    onClick={handleCancelSubscription}>
+                        Annuler l'abonnement
+                    </button>
+                </div>
+            )}
+
+            { showCheckout && (
+                <div className="checkout-container">
+                    <form onSubmit={handleSubscribeSubmit} className="checkout-form">
                         <h2> Achat </h2>
-                        <h4> Plan IA - Rappel</h4>
-                        <ul>
+                        <h4> Plan IA </h4>
+                        <ul className="checkout-feature">
                             <li>Gestion du réfrigérateur</li>
                             <li>Recettes de base</li>
                             <li>IA</li>
                         </ul>
 
-                        <label htmlFor="card"> Numéro de carte</label>
-                        <input
-                            id = "card"
-                            type = "text"
-                            placeholder = "1111 2222 3333 4444"
-                            value = {cardNumber}
-                            onChange = {(e) => setCardNumber(e.target.value)}
-                            required
-                        />
-
-                        <div>
-                            <div>
+                        <div className='form-group'>
+                            <label htmlFor="card"> Numéro de carte</label>
+                            <input
+                                id = "card"
+                                type = "text"
+                                placeholder = "1111 2222 3333 4444"
+                                value = {cardNumber}
+                                onChange = {(e) => setCardNumber(e.target.value)}
+                                required
+                            />
+                        </div>
+                        
+                        <div className='form-row'>
+                            <div className='form-group'>
                                 <label htmlFor="expiry"> Expiration </label>
                                 <input
                                     id = "expiry"
@@ -164,7 +177,7 @@ export default function Abonnement() {
                                     required
                                 />
                             </div> 
-                            <div>
+                            <div className='form-group'>
                                 <label htmlFor="cvv"> CVV </label>
                                 <input
                                     id = "cvv"
@@ -175,34 +188,18 @@ export default function Abonnement() {
                                     required
                                 />
                             </div>
-                            <div>
-                                <button type="button"
-                                    className="login-button"
-                                    onClick={() => setShowCheckout(false)}
-                                >
-                                    Annuler
-                                </button>
-                            </div>
                         </div>
-                    </form>
-                    <form onSubmit={handleCancelSubscription}>
-                        <div>
-                            <h2> Annuler votre plan? </h2>
-                            <h4> êtes-vous sûre de vouloir annuler votre plan? </h4>
-                            <p>
-                                Merci d'avoir utiliser le plan d'IA. On est toujours là si vous changez d'avis.
-                            </p>
-                        </div>
-                        
-                        <div className="plan-bouton">
-                           <button className="btnAnn">
-                                Annuler le plan
-                            </button> 
 
-                            <Link to="/profile"
-                                className="btnAvis">
-                                Changer d'avis?
-                            </Link>
+                        <div className='btn-action'>
+                            <button type="submit" className='btn-submit'>
+                                Acheter
+                            </button>
+                            <button type="button"
+                                className="btn-cancel"
+                                onClick={() => setShowCheckout(false)}
+                                >
+                                Annuler
+                            </button>
                         </div>
                     </form>
                 </div>
