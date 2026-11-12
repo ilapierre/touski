@@ -7,6 +7,7 @@ export default function Abonnement() {
     const [showCheckout, setShowCheckout] = useState(false)
     const [subscription, setSubscription] = useState({premium : false})
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
     const [cardNumber, setCardNumber] = useState('')
     const [expired, setExpired] = useState('')
     const [cvv, setCVV] = useState('')
@@ -17,7 +18,6 @@ export default function Abonnement() {
     
     useEffect(() => {
         if(!isLoggedIn) {
-            setLoading(false)
             return
         }
 
@@ -36,7 +36,8 @@ export default function Abonnement() {
             }
             setLoading(false)
         })
-        .catch(err => {
+        .catch((err) => {
+            setError(err.message)
             setLoading(false)
         })
     }, [isLoggedIn, token])
@@ -62,6 +63,18 @@ export default function Abonnement() {
 
         const data = await response.json()
         setSubscription({ premium: false, ends_at: data.ends_at, status: 'active'})
+        setSelectedPlan('gratuit')
+    }
+
+    const handleCancelSubscription = async () => {
+         await fetch('http://127.0.0.1:8080/abonnements/moi', {
+            method : 'DELETE',
+            headers: {
+                'Authorization' : `Bearer ${token}`
+            }
+        })
+
+        setSubscription({premium: false})
         setSelectedPlan('gratuit')
     }
 
@@ -170,6 +183,26 @@ export default function Abonnement() {
                                     Annuler
                                 </button>
                             </div>
+                        </div>
+                    </form>
+                    <form onSubmit={handleCancelSubscription}>
+                        <div>
+                            <h2> Annuler votre plan? </h2>
+                            <h4> êtes-vous sûre de vouloir annuler votre plan? </h4>
+                            <p>
+                                Merci d'avoir utiliser le plan d'IA. On est toujours là si vous changez d'avis.
+                            </p>
+                        </div>
+                        
+                        <div className="plan-bouton">
+                           <button className="btnAnn">
+                                Annuler le plan
+                            </button> 
+
+                            <Link to="/profile"
+                                className="btnAvis">
+                                Changer d'avis?
+                            </Link>
                         </div>
                     </form>
                 </div>

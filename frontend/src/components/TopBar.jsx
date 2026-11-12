@@ -20,7 +20,7 @@ function TopBar() {
       </Link>
 
       <nav className="topbar-action">
-        <Link to="/abonnement" className="subs">
+        <Link to="/abonnements" className="subs">
           Abonnement
         </Link> 
 
