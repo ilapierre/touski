@@ -8,6 +8,8 @@ from touski.core.dependencies import get_current_user
 from touski.core.security import create_access_token, hash_password, verify_password
 from touski.db.database import get_session_dependency
 from touski.models.users import User
+from fastapi import Request
+from touski.services.user_service import user_out
  
 # ------ Schemas ------ #
 class InscriptionIn(BaseModel):
@@ -70,7 +72,7 @@ def deconnexion(current_user: User = Depends(get_current_user)):
     return {"message": "Déconnecté avec succès"}
  
 #infos de l'utilisateur connecté
-@router.get("/moi", response_model=UserOut)
-def get_moi(current_user: User = Depends(get_current_user)):
-    return current_user
+@router.get("/moi")
+def moi(request: Request, current_user: User = Depends(get_current_user)):
+    return user_out(current_user, request)
  

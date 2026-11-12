@@ -10,6 +10,7 @@ function Profil() {
   const [edition, setEdition] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [apercuPhoto, setApercuPhoto] = useState(null);
+  const [fichierPhoto, setFichierPhoto] = useState(null);
   const [erreur, setErreur] = useState("");
   const navigate = useNavigate();
 
@@ -36,12 +37,14 @@ function Profil() {
 
   function annuler() {
     setApercuPhoto(null);
+    setFichierPhoto(null);
     setEdition(false);
   }
 
   function changerPhoto(e) {
     const fichier = e.target.files[0];
     if (fichier) {
+      setFichierPhoto(fichier);
       setApercuPhoto(URL.createObjectURL(fichier));
     }
   }
@@ -50,8 +53,7 @@ function Profil() {
     e.preventDefault();
     setErreur("");
 
-    // On n'envoie le mot de passe que s'il a été rempli
-    const donnees = { name: form.name, email: form.email, photo: form.photo };
+    const donnees = { name: form.name, email: form.email };
     if (form.password) {
       donnees.password = form.password;
     }
@@ -80,7 +82,29 @@ function Profil() {
       return;
     }
 
-    setUser(await res.json());
+    let userMaj = await res.json();
+
+    if (fichierPhoto) {
+      const formData = new FormData();
+      formData.append("photo", fichierPhoto);
+
+      const resPhoto = await fetch(`${API_URL}/users/moi/photo`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        body: formData,
+      });
+
+      if (!resPhoto.ok) {
+        const data = await resPhoto.json().catch(() => ({}));
+        setErreur(data.detail || "Erreur lors de l'envoi de la photo");
+        return;
+      }
+      userMaj = await resPhoto.json();
+    }
+
+    setUser(userMaj);
+    setApercuPhoto(null);
+    setFichierPhoto(null);
     setEdition(false);
   }
 
