@@ -7,7 +7,6 @@ export default function Abonnement() {
     const [showCheckout, setShowCheckout] = useState(false)
     const [subscription, setSubscription] = useState({premium : false})
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
     const [cardNumber, setCardNumber] = useState('')
     const [expired, setExpired] = useState('')
     const [cvv, setCVV] = useState('')
@@ -36,8 +35,7 @@ export default function Abonnement() {
             }
             setLoading(false)
         })
-        .catch((err) => {
-            setError(err.message)
+        .catch(() => {
             setLoading(false)
         })
     }, [isLoggedIn, token])
