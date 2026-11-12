@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
-import TopBar from "./components/TopBar";
+import TopBar from "./components/navigation/TopBar";
 import Landing from "./pages/Landing";
 import Profil from "./pages/Profil";
 import Foods from "./pages/Foods";
