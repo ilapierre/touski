@@ -11,6 +11,7 @@ router = APIRouter(prefix="/groupes", tags=["groupes"])
 class AddMemberSchema(BaseModel):
     email: str
     role: str = "standard"
+    nickname: str
 
 class UpdateRoleSchema(BaseModel):
     role: str
@@ -76,6 +77,7 @@ def list_membres(groupe_id: int, current_user: User = Depends(get_current_user),
         {
             "id": u.id,
             "email": u.email,
+            "nickname": g.nickname,
             "role": g.role.value if hasattr(g.role, "value") else g.role
         }
         for g, u in membres
@@ -102,13 +104,13 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, curren
     except ValueError:
         role_to_save = "standard"
         
-    new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=role_to_save)
+    new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=role_to_save, nickname=body.nickname)
     db.add(new_membre)
     db.commit()
     
     return {
         "message" : f"Membre ajouté au groupe {groupe_id}",
-        "membre" : {"id": user.id, "email": user.email, "role": body.role}
+        "membre" : {"id": user.id, "email": user.email, "role": body.role, "nickname" : new_membre.nickname}
     }
 
 #modif d'un membre d un groupe

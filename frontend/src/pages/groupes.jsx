@@ -8,14 +8,18 @@ export default function Groupes({ groupeId = 1 }) {
 
   const [showAdd, setShowAdd] = useState(false);
   const [emailInput, setEmailInput] = useState("");
+  const [nnameInput, setNNameInput] = useState("");
   const [addError, setAddError] = useState("");
 
   const [currentUserEmail, setCurrentUserEmail] = useState("");
 
-  const getRoleString = (role) => (typeof role === "string" ? role : role?.value || "").toLowerCase();
-  const currentUserRole = getRoleString(membres.find((m) => m.email === currentUserEmail)?.role);
+  const getRoleString = (role) =>
+    (typeof role === "string" ? role : role?.value || "").toLowerCase();
+  const currentUserRole = getRoleString(
+    membres.find((m) => m.email === currentUserEmail)?.role,
+  );
   const peutGererLesRoles = ["owner", "propriétaire"].includes(currentUserRole);
-  
+
   useEffect(() => {
     const loadMembres = async () => {
       try {
@@ -25,7 +29,7 @@ export default function Groupes({ groupeId = 1 }) {
 
         const userRes = await fetch(`/api/auth/moi`, {
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -55,11 +59,11 @@ export default function Groupes({ groupeId = 1 }) {
 
   const refreshMembres = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const res = await fetch(`/api/groupes/${groupeId}/membres`, {
         headers: {
-          "Authorization": `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.ok) {
         const data = await res.json();
@@ -79,7 +83,7 @@ export default function Groupes({ groupeId = 1 }) {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ role: newRole }),
         },
@@ -109,9 +113,13 @@ export default function Groupes({ groupeId = 1 }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json ",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ email: emailInput.trim(), role: "standard" }),
+        body: JSON.stringify({
+          email: emailInput.trim(),
+          role: "standard",
+          nickname: nnameInput.trim() || null,
+        }),
       });
 
       if (!response.ok) {
@@ -136,6 +144,7 @@ export default function Groupes({ groupeId = 1 }) {
 
       await refreshMembres();
       setEmailInput("");
+      setNNameInput("");
       setShowAdd(false);
     } catch (err) {
       setAddError(err.message);
@@ -150,8 +159,8 @@ export default function Groupes({ groupeId = 1 }) {
         {
           method: "DELETE",
           headers: {
-            "Authorization": `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
 
@@ -173,6 +182,7 @@ export default function Groupes({ groupeId = 1 }) {
         <thead>
           <tr>
             <th>Membres</th>
+            <th>Surnom</th>
             <th>Rôle</th>
             {peutGererLesRoles && <th>Actions</th>}
           </tr>
@@ -185,8 +195,17 @@ export default function Groupes({ groupeId = 1 }) {
               return (
                 <tr key={membre.id}>
                   <td className="g-user">
-                    {membre.email || `Utilisateur #${membre.id}`}
+                    {membre.nickname ? (
+                      <div>
+                        <span>{membre.email}</span>
+                      </div>
+                    ) : (
+                      membre.email || `Utilisateur #${membre.id}`
+                    )}
                     {isCurrentUserOwner && " (Vous)"}
+                  </td>
+                  <td>
+                    <span>{membre.nickname || "-"}</span>
                   </td>
                   <td>
                     {peutGererLesRoles && !isCurrentUserOwner ? (
@@ -247,6 +266,14 @@ export default function Groupes({ groupeId = 1 }) {
                 placeholder="Entrez le courriel de l'invité"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
+                className="g-input"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Surnom"
+                value={nnameInput}
+                onChange={(e) => setNNameInput(e.target.value)}
                 className="g-input"
                 required
               />
