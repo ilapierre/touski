@@ -10,12 +10,51 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
   const [emailInput, setEmailInput] = useState("");
   const [addError, setAddError] = useState("");
 
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
+
   const peutGererLesRoles = isOwner;
+
+  //   useEffect(() => {
+  //     const loadMembres = async () => {
+  //       try {
+  //         const res = await fetch(`/api/groupes/${groupeId}/membres`);
+  //         if (!res.ok) throw new Error("Erreur lors du chargement des membres.");
+  //         const data = await res.json();
+  //         setMembres(data);
+  //       } catch (err) {
+  //         setError(err.message);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+
+  //     loadMembres();
+  //   }, [groupeId]);
 
   useEffect(() => {
     const loadMembres = async () => {
       try {
-        const res = await fetch(`/api/groupes/${groupeId}/membres`);
+        setLoading(true);
+
+        const token = localStorage.getItem("token");
+
+        const userRes = await fetch(`/api/auth/moi`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setCurrentUserEmail(userData.email);
+        }
+
+        const res = await fetch(`/api/groupes/${groupeId}/membres`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         if (!res.ok) throw new Error("Erreur lors du chargement des membres.");
         const data = await res.json();
         setMembres(data);
@@ -43,11 +82,15 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `/api/groupes/${groupeId}/membres/${userId}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({ role: newRole }),
         },
       );
@@ -71,9 +114,13 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
     if (!emailInput.trim()) return;
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(`/api/groupes/${groupeId}/membres`, {
         method: "POST",
-        headers: { "Content-Type": "application/json " },
+        headers: {
+          "Content-Type": "application/json ",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ email: emailInput.trim(), role: "standard" }),
       });
 
@@ -86,7 +133,7 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
         } else if (Array.isArray(errData.detail)) {
           errorMessage = errData.detail.map((err) => err.msg).join(", ");
         } else if (errData.erreur) {
-            errorMessage = errData.erreur;
+          errorMessage = errData.erreur;
         }
 
         throw new Error(errorMessage);
@@ -102,10 +149,14 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
 
   const handleRemoveMember = async (userId) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `/api/groupes/${groupeId}/membres/${userId}`,
         {
           method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
         },
       );
 
@@ -133,46 +184,55 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
         </thead>
         <tbody>
           {membres &&
-            membres.filter(Boolean).map((membre) => (
-              <tr key={membre.id}>
-                <td className="g-user">
-                  {membre.email || `Utilisateur #${membre.id}`}
-                </td>
-                <td>
-                  {peutGererLesRoles ? (
-                    <select
-                      className="g-select"
-                      value={
-                        membre.role
-                          ? typeof membre.role === "string"
-                            ? membre.role
-                            : membre.role.value || "standard"
-                          : "standard"
-                      }
-                      onChange={(e) =>
-                        handleRoleChange(membre.id, e.target.value)
-                      }
-                    >
-                      <option value="owner">Propriétaire</option>
-                      <option value="privileged">Privilégie</option>
-                      <option value="standard">Standard</option>
-                    </select>
-                  ) : (
-                    <span>{membre.role || "standard"}</span>
-                  )}
-                </td>
-                {peutGererLesRoles && (
-                  <td>
-                    <button
-                      className="g-btn g-btn-dlt"
-                      onClick={() => handleRemoveMember(membre.id)}
-                    >
-                      Retirer
-                    </button>
+            membres.filter(Boolean).map((membre) => {
+              const isCurrentUserOwner =
+                currentUserEmail && membre.email === currentUserEmail;
+              return (
+                <tr key={membre.id}>
+                  <td className="g-user">
+                    {membre.email || `Utilisateur #${membre.id}`}
+                    {isCurrentUserOwner && " (Vous)"}
                   </td>
-                )}
-              </tr>
-            ))}
+                  <td>
+                    {peutGererLesRoles && !isCurrentUserOwner ? (
+                      <select
+                        className="g-select"
+                        value={
+                          membre.role
+                            ? typeof membre.role === "string"
+                              ? membre.role
+                              : membre.role.value || "standard"
+                            : "standard"
+                        }
+                        onChange={(e) =>
+                          handleRoleChange(membre.id, e.target.value)
+                        }
+                      >
+                        <option value="owner">Propriétaire</option>
+                        <option value="privileged">Privilégie</option>
+                        <option value="standard">Standard</option>
+                      </select>
+                    ) : (
+                      <span>{membre.role || "standard"}</span>
+                    )}
+                  </td>
+                  {peutGererLesRoles && (
+                    <td>
+                      {!isCurrentUserOwner ? (
+                        <button
+                          className="g-btn g-btn-dlt"
+                          onClick={() => handleRemoveMember(membre.id)}
+                        >
+                          Retirer
+                        </button>
+                      ) : (
+                        <span className="g-owner">-</span>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
         </tbody>
       </table>
 

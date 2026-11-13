@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from touski.db.database import get_session_dependency as get_db
 from touski.models.groups_users import GroupUser, User, UserRole, Group
 from pydantic import BaseModel
+from touski.core.dependencies import get_current_user
 
 #ROUTE RECETTES 
 router = APIRouter(prefix="/groupes", tags=["groupes"])
@@ -45,13 +46,32 @@ def delete_groupe(groupe_id: int):
 
 #get les membre d un groupe
 @router.get("/{groupe_id}/membres")
-def list_membres(groupe_id: int, db: Session = Depends(get_db)):
+def list_membres(groupe_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     membres = (
         db.query(GroupUser, User)
         .join(User, GroupUser.user_id == User.id)
         .filter(GroupUser.group_id == groupe_id)
         .all()
     )
+    
+    user_ids_dans_groupe = [u.id for g, u in membres]
+    
+    if current_user.id not in user_ids_dans_groupe:
+        nouveau_proprietaire = GroupUser(
+            group_id=groupe_id,
+            user_id=current_user.id,
+            role=UserRole.OWNER.value
+        )
+        db.add(nouveau_proprietaire)
+        db.commit()
+        
+        membres = (
+            db.query(GroupUser, User)
+            .join(User, GroupUser.user_id == User.id)
+            .filter(GroupUser.group_id == groupe_id)
+            .all()
+        )
+        
     return [
         {
             "id": u.id,
@@ -74,6 +94,7 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, db: Se
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"erreur" : "L'utilisateur est déjà membre de ce groupe."}
     
+    role_str = body.role.lower() if body.role else "standard"
     new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=UserRole(body.role))
     db.add(new_membre)
     db.commit()
@@ -91,7 +112,7 @@ def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"erreur": "Membre introuvable."}
     
-    membre.role = UserRole(body.role)
+    membre.role = body.role.lower() if body.role else "standard"
     db.commit()
     return {"message": f"Membre {user_id} du groupe {groupe_id} mis à jour"}
 
@@ -106,4 +127,3 @@ def remove_membre(groupe_id: int, user_id: int, response: Response, db: Session 
     db.delete(member)
     db.commit()
     return {"message": f"Membre {user_id} retiré"}
-
