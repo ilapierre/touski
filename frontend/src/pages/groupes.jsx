@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import './groupes.css';
 
-const BACKEND_URL = "/api";
-
 export default function Groupes({ groupeId = 1, isOwner = true}) {
     const [membres, setMembres] = useState([]);
     const [loading, setLoading] = useState(true);

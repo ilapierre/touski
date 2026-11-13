@@ -1,4 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, status, Response
+from sqlalchemy.orm import Session
+from touski.db.database import get_session_dependency as get_db
+from touski.models.groups_users import GroupUser, User, UserRole, Group
 
 #ROUTE RECETTES 
 router = APIRouter(prefix="/groupes", tags=["groupes"])
@@ -77,7 +80,16 @@ def add_membre(groupe_id: int, body: AddMemberSchema, db: Session = Depends(get_
 
 #modif d'un membre d un groupe
 @router.put("/{groupe_id}/membres/{user_id}")
+# def update_membre(groupe_id: int, user_id: int):
+#     return {"message": f"Membre {user_id} du groupe {groupe_id} mis à jour"}
 def update_membre(groupe_id: int, user_id: int):
+    membre = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user_id).first()
+    if not member:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"erreur": "Membre introuvable."}
+    
+    membre.role = UserRole(body.role)
+    db.commit()
     return {"message": f"Membre {user_id} du groupe {groupe_id} mis à jour"}
 
 #Retirer un membre
