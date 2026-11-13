@@ -1,5 +1,5 @@
 .g-container {
-    padding: 24.px;
+    padding: 24px;
     max-width: 600px;
     margin: 40px auto;
     border-radius: 12px;
@@ -32,7 +32,7 @@
     text-align: center;
 }
 
-.gm-select {
+.g-select {
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
@@ -40,7 +40,7 @@
   cursor: pointer;
 }
 
-.gm-select:focus {
+.g-select:focus {
   border-color: #2563eb;
 }
 
@@ -74,11 +74,11 @@
     color: white;
 }
 
-.gm-status {
+.g-status {
   padding: 20px;
   text-align: center;
 }
 
-.gm-error {
+.g-error {
   color: #ef4444;
 }
