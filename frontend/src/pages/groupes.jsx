@@ -8,6 +8,10 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
     const [loading, setLoading] = useState(true);
     const[error, setError] = useState('');
 
+    const [showAdd, setShowAdd] = useState(false);
+    const [emailInput, setEmailInput] = useState("");
+    const [addError, setAddError] = useState("");
+
     const peutGererLesRoles = isOwner;
 
     useEffect(() => {
@@ -43,6 +47,26 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
             );
         } catch(err) {
             alert(err.message);
+        }
+    };
+
+    const handleAddMember = async (e) => {
+        e.preventedDefault();
+        setAddError("");
+
+        if(!emailInput.trim()) return;
+
+        try{
+            await fetch(`/api/groupes/${groupeId}/membres`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json "},
+                body: JSON.stringify({email: emailInput.trim(), role: "standart" }),
+            });
+
+            setEmailInput("");
+            setShowAdd(false);
+        } catch (err) {
+            setAddError(err.message);
         }
     };
 
@@ -85,8 +109,43 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
 
             {peutGererLesRoles && (
                 <div className="g-admin-actions">
-                    <button className="g-btn g-btn-add">Inviter un membre</button>
-                    <button className="g-btn g-btn-dlt">Retirer un membre</button>
+                    { !showAdd ? (
+                        <>
+                            <button className="g-btn g-btn-add"
+                                onClick={() => setShowAdd(true)}>
+                                Inviter un membre
+                            </button>
+                        </>
+                    ) : (
+                        <form onSubmit={handleAddMember} className="g-add-form">
+                            <input
+                                type="email"
+                                placeholder="Entrez le courriel de l'invité"
+                                value={emailInput}
+                                onChange={(e) => setEmailInput(e.target.value)}
+                                className="g-input"
+                                required
+                            />
+                            <button type="submit" className="g-btn b-btn-confirm">
+                                Ajouter
+                            </button>
+                            <button
+                                type="button"
+                                className="g-btn g-btn-cancel"
+                                onClick={() => {
+                                    setShowAdd(false);
+                                    setAddError("");
+                                }}
+                            >
+                                Annuler
+                            </button>
+                        </form>
+                    )}
+                    {addError && 
+                        <div className='g-status g-error'>
+                            {addError}
+                        </div>
+                    }
                 </div>
             )}
         </div>
