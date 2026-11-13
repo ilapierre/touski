@@ -14,23 +14,6 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
 
   const peutGererLesRoles = isOwner;
 
-  //   useEffect(() => {
-  //     const loadMembres = async () => {
-  //       try {
-  //         const res = await fetch(`/api/groupes/${groupeId}/membres`);
-  //         if (!res.ok) throw new Error("Erreur lors du chargement des membres.");
-  //         const data = await res.json();
-  //         setMembres(data);
-  //       } catch (err) {
-  //         setError(err.message);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     loadMembres();
-  //   }, [groupeId]);
-
   useEffect(() => {
     const loadMembres = async () => {
       try {
