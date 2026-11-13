@@ -15,24 +15,37 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
     const peutGererLesRoles = isOwner;
 
     useEffect(() => {
-        fetch(`${BACKEND_URL}/groupes/${groupeId}/membres`)
-            .then((res) => {
-                if(!res.ok) throw new Error("Erreur lors du chargement des membres");
-                return res.json();
-            })
-            .then((data) => {
+        const loadMembres = async () => {
+            try {
+                const res = await fetch(`/api/groupes/${groupeId}/membres`);
+                if(!res.ok) throw new Error("Erreur lors du chargement des membres.");
+                const data = await res.json();
                 setMembres(data);
-                setLoading(false);
-            })
-            .catch((err) => {
+            } catch (err) {
                 setError(err.message);
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        loadMembres();
     }, [groupeId]);
+
+    const refreshMembres = async () => {
+        try {
+            const res = await fetch(`/api/groupes/${groupeId}/membres`);
+            if(res.ok) {
+                const data = await res.json();
+                setMembres(data);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     const handleRoleChange = async (userId, newRole) => {
         try {
-            const response = await fetch(`${BACKEND_URL}/groupes/${groupeId}/membres/${userId}`, {
+            const response = await fetch(`/api/groupes/${groupeId}/membres/${userId}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json' },
                 body: JSON.stringify({ role: newRole}),
@@ -51,7 +64,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
     };
 
     const handleAddMember = async (e) => {
-        e.preventedDefault();
+        e.preventDefault();
         setAddError("");
 
         if(!emailInput.trim()) return;
@@ -64,7 +77,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
             });
 
            if(!response.ok) {
-                const errDate = await response.json()
+                const errData = await response.json()
 
                 let errorMessage = "Erreur de l'ajout du membre.";
                 if(typeof errData.detail === "string" ) {
@@ -76,6 +89,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
                 throw new Error(errorMessage);
             }
 
+            await refreshMembres();
             setEmailInput("");
             setShowAdd(false);
         } catch (err) {
