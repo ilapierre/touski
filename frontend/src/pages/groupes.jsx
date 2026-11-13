@@ -85,6 +85,8 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
           errorMessage = errData.detail;
         } else if (Array.isArray(errData.detail)) {
           errorMessage = errData.detail.map((err) => err.msg).join(", ");
+        } else if (errData.erreur) {
+            errorMessage = errData.erreur;
         }
 
         throw new Error(errorMessage);
@@ -144,8 +146,8 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
                         membre.role
                           ? typeof membre.role === "string"
                             ? membre.role
-                            : membre.role.value || "standart"
-                          : "standart"
+                            : membre.role.value || "standard"
+                          : "standard"
                       }
                       onChange={(e) =>
                         handleRoleChange(membre.id, e.target.value)
@@ -153,10 +155,10 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
                     >
                       <option value="owner">Propriétaire</option>
                       <option value="privileged">Privilégie</option>
-                      <option value="standart">Standard</option>
+                      <option value="standard">Standard</option>
                     </select>
                   ) : (
-                    <span>{membre.role || "standart"}</span>
+                    <span>{membre.role || "standard"}</span>
                   )}
                 </td>
                 {peutGererLesRoles && (
