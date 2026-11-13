@@ -135,14 +135,20 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {membres.map((membre) => (
+                    {membres &&
+                        membres.filter(Boolean).map((membre) => (
                         <tr key={membre.id}>
-                            <td className="g-user">Membre</td>
+                            <td className="g-user">{membre.email || `Utilisateur #${membre.id}`}</td>
                             <td>
                                 {peutGererLesRoles ? (
                                     <select
                                         className="g-select"
-                                        value={membre.role || 'standart'}
+                                        value={
+                                            membre.role 
+                                            ? typeof membre.role === "string"
+                                            ? membre.role
+                                            : membre.role.value || 'standart'
+                                        : "standart"}
                                         onChange={(e) => handleRoleChange(membre.id, e.target.value)}
                                     >
                                         <option value="owner">Propriétaire</option>
@@ -153,6 +159,14 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
                                         <span>{membre.role || 'standart'}</span>
                                     )}
                             </td>
+                            {peutGererLesRoles && (
+                                <td>
+                                    <button className="g-btn g-btn-dlt"
+                                    onClick={() => handleRemoveMember(membre.id)}>
+                                        Retirer
+                                    </button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
@@ -165,10 +179,6 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
                             <button className="g-btn g-btn-add"
                                 onClick={() => setShowAdd(true)}>
                                 Inviter un membre
-                            </button>
-                            <button className="g-btn g-btn-dlt"
-                                onClick={handleRemoveMember}>
-                                Retirer
                             </button>
                         </>
                     ) : (
