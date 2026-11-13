@@ -83,7 +83,7 @@ def list_membres(groupe_id: int, current_user: User = Depends(get_current_user),
  
 #Ajouter un membre à un groupe
 @router.post("/{groupe_id}/membres", status_code=201)
-def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, db: Session = Depends(get_db)):
+def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == body.email).first()
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -95,7 +95,14 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, db: Se
         return {"erreur" : "L'utilisateur est déjà membre de ce groupe."}
     
     role_str = body.role.lower() if body.role else "standard"
-    new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=UserRole(body.role))
+    
+    try:
+        role_enum = UserRole(role_str)
+        role_to_save = role_enum.value
+    except ValueError:
+        role_to_save = "standard"
+        
+    new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=role_to_save)
     db.add(new_membre)
     db.commit()
     
@@ -106,19 +113,38 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, db: Se
 
 #modif d'un membre d un groupe
 @router.put("/{groupe_id}/membres/{user_id}")
-def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response: Response, db: Session = Depends(get_db)):
+def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
+    is_owner = current_membership and str(current_membership.role).lower() in ["owner", "propriétaire"]
+    if not is_owner:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"erreur": "Action non autorisée. Seul le propriétaire peut modifier les rôles."}
+    
     membre = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user_id).first()
     if not membre:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"erreur": "Membre introuvable."}
     
-    membre.role = body.role.lower() if body.role else "standard"
+    role_str = body.role.lower() if body.role else "standard"
+    
+    if role_str in ["propriétaire", "owner"]:
+        membre.role = UserRole.OWNER.value
+    else:
+        membre.role = role_str
+
     db.commit()
     return {"message": f"Membre {user_id} du groupe {groupe_id} mis à jour"}
 
 #Retirer un membre
 @router.delete("/{groupe_id}/membres/{user_id}")
-def remove_membre(groupe_id: int, user_id: int, response: Response, db: Session = Depends(get_db)):
+def remove_membre(groupe_id: int, user_id: int, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
+    is_owner = current_membership and str(current_membership.role).lower() in ["owner", "propriétaire"]
+    
+    if not is_owner:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"erreur": "Action non autorisée. Seul le propriétaire peut retirer des membres."}
+    
     member = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user_id).first()
     if not member:
         response.status_code = status.HTTP_404_NOT_FOUND

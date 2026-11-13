@@ -23,5 +23,4 @@ class GroupUser(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey(User.id))
 
     nickname: Mapped[str | None] = mapped_column(String(30), nullable=True)
-    # role: Mapped[PyEnum] = mapped_column(Enum(UserRole))
     role: Mapped[str] = mapped_column(String(20), default="standard")

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./groupes.css";
 
-export default function Groupes({ groupeId = 1, isOwner = true }) {
+export default function Groupes({ groupeId = 1 }) {
   const [membres, setMembres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -12,8 +12,10 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
 
   const [currentUserEmail, setCurrentUserEmail] = useState("");
 
-  const peutGererLesRoles = isOwner;
-
+  const getRoleString = (role) => (typeof role === "string" ? role : role?.value || "").toLowerCase();
+  const currentUserRole = getRoleString(membres.find((m) => m.email === currentUserEmail)?.role);
+  const peutGererLesRoles = ["owner", "propriétaire"].includes(currentUserRole);
+  
   useEffect(() => {
     const loadMembres = async () => {
       try {
@@ -23,7 +25,7 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
 
         const userRes = await fetch(`/api/auth/moi`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
           },
         });
 
@@ -53,7 +55,12 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
 
   const refreshMembres = async () => {
     try {
-      const res = await fetch(`/api/groupes/${groupeId}/membres`);
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/groupes/${groupeId}/membres`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       if (res.ok) {
         const data = await res.json();
         setMembres(data);
@@ -72,7 +79,7 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify({ role: newRole }),
         },
@@ -102,7 +109,7 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json ",
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ email: emailInput.trim(), role: "standard" }),
       });
@@ -120,6 +127,11 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
         }
 
         throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      if (data.membre) {
+        setMembres((prevMembres) => [...prevMembres, data.membre]);
       }
 
       await refreshMembres();
