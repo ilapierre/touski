@@ -2,9 +2,17 @@ from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from touski.db.database import get_session_dependency as get_db
 from touski.models.groups_users import GroupUser, User, UserRole, Group
+from pydantic import BaseModel
 
 #ROUTE RECETTES 
 router = APIRouter(prefix="/groupes", tags=["groupes"])
+
+class AddMemberSchema(BaseModel):
+    email: str
+    role: str = "standard"
+
+class UpdateRoleSchema(BaseModel):
+    role: str
 
 #get toutes les groupes
 @router.get("/")
@@ -37,13 +45,11 @@ def delete_groupe(groupe_id: int):
 
 #get les membre d un groupe
 @router.get("/{groupe_id}/membres")
-# def list_membres(groupe_id: int):
-#     return []
 def list_membres(groupe_id: int, db: Session = Depends(get_db)):
     membres = (
         db.query(GroupUser, User)
         .join(User, GroupUser.user_id == User.id)
-        .filter(GroupUser.group.id == groupe_id)
+        .filter(GroupUser.group_id == groupe_id)
         .all()
     )
     return [
@@ -57,9 +63,7 @@ def list_membres(groupe_id: int, db: Session = Depends(get_db)):
  
 #Ajouter un membre à un groupe
 @router.post("/{groupe_id}/membres", status_code=201)
-# def add_membre(groupe_id: int):
-#     return {"message": f"Membre ajouté au groupe {groupe_id}"}
-def add_membre(groupe_id: int, body: AddMemberSchema, db: Session = Depends(get_db)):
+def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == body.email).first()
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -75,16 +79,14 @@ def add_membre(groupe_id: int, body: AddMemberSchema, db: Session = Depends(get_
     db.commit()
     
     return {
-        "message" : "Membre ajouté au groupe {groupe_id}"
+        "message" : f"Membre ajouté au groupe {groupe_id}"
     }
 
 #modif d'un membre d un groupe
 @router.put("/{groupe_id}/membres/{user_id}")
-# def update_membre(groupe_id: int, user_id: int):
-#     return {"message": f"Membre {user_id} du groupe {groupe_id} mis à jour"}
-def update_membre(groupe_id: int, user_id: int):
+def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response: Response):
     membre = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user_id).first()
-    if not member:
+    if not membre:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"erreur": "Membre introuvable."}
     
@@ -94,6 +96,13 @@ def update_membre(groupe_id: int, user_id: int):
 
 #Retirer un membre
 @router.delete("/{groupe_id}/membres/{user_id}")
-def remove_membre(groupe_id: int, user_id: int):
-    return {"message": f"Membre {user_id} retiré du groupe {groupe_id}"}
+def remove_membre(groupe_id: int, user_id: int, response: Response, db: Session = Depends(get_db)):
+    member = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user_id).first()
+    if not member:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"error": "Membre introuvable."}
+    
+    db.delete(member)
+    db.commit()
+    return {"message": f"Membre {user_id} retiré"}
 

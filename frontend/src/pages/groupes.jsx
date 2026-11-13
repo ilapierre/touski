@@ -71,7 +71,7 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
             const response = await fetch(`/api/groupes/${groupeId}/membres`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json "},
-                body: JSON.stringify({email: emailInput.trim(), role: "standart" }),
+                body: JSON.stringify({email: emailInput.trim(), role: "standard" }),
             });
 
            if(!response.ok) {
@@ -94,6 +94,32 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
             setAddError(err.message);
         }
     };
+
+    const handleRemoveMember = async () => {
+    const userIdInput = prompt("Entrez l'ID de l'utilisateur à retirer :");
+    if (!userIdInput) return;
+    const userId = parseInt(userIdInput, 10);
+
+    if (isNaN(userId)) {
+      alert("ID invalide.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/groupes/${groupeId}/membres/${userId}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!response.ok) throw new Error("Échec de la suppression du membre.");
+
+      await refreshMembres();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
     if (loading) return <div className="g-status">Chargement...</div>;
     if (error) return <div className="g-status g-error">{error}</div>;
@@ -139,6 +165,10 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
                             <button className="g-btn g-btn-add"
                                 onClick={() => setShowAdd(true)}>
                                 Inviter un membre
+                            </button>
+                            <button className="g-btn g-btn-dlt"
+                                onClick={handleRemoveMember}>
+                                Retirer
                             </button>
                         </>
                     ) : (
