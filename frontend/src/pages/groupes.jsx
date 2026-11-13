@@ -194,7 +194,7 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
                 required
               />
               <div className="g-form-buttons">
-                <button type="submit" className="g-btn b-btn-confirm">
+                <button type="submit" className="g-btn g-btn-confirm">
                   Ajouter
                 </button>
                 <button
