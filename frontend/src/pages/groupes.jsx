@@ -95,31 +95,21 @@ export default function Groupes({ groupeId = 1, isOwner = true}) {
         }
     };
 
-    const handleRemoveMember = async () => {
-    const userIdInput = prompt("Entrez l'ID de l'utilisateur à retirer :");
-    if (!userIdInput) return;
-    const userId = parseInt(userIdInput, 10);
+    const handleRemoveMember = async (userId) => {
+        try {
+        const response = await fetch(`/api/groupes/${groupeId}/membres/${userId}`,
+            {
+                method: "DELETE",
+            }
+        );
 
-    if (isNaN(userId)) {
-      alert("ID invalide.");
-      return;
-    }
+        if (!response.ok) throw new Error("Échec de la suppression du membre.");
 
-    try {
-      const response = await fetch(
-        `/api/groupes/${groupeId}/membres/${userId}`,
-        {
-          method: "DELETE",
-        },
-      );
-
-      if (!response.ok) throw new Error("Échec de la suppression du membre.");
-
-      await refreshMembres();
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+            await refreshMembres();
+        } catch (err) {
+            alert(err.message);
+        }
+    };
 
     if (loading) return <div className="g-status">Chargement...</div>;
     if (error) return <div className="g-status g-error">{error}</div>;

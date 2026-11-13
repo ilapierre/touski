@@ -79,12 +79,13 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, db: Se
     db.commit()
     
     return {
-        "message" : f"Membre ajouté au groupe {groupe_id}"
+        "message" : f"Membre ajouté au groupe {groupe_id}",
+        "membre" : {"id": user.id, "email": user.email, "role": body.role}
     }
 
 #modif d'un membre d un groupe
 @router.put("/{groupe_id}/membres/{user_id}")
-def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response: Response):
+def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response: Response, db: Session = Depends(get_db)):
     membre = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user_id).first()
     if not membre:
         response.status_code = status.HTTP_404_NOT_FOUND
