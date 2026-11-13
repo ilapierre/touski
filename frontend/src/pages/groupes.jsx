@@ -8,15 +8,7 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-<<<<<<< HEAD
-    const [showAdd, setShowAdd] = useState(false);
-    const [emailInput, setEmailInput] = useState("");
-    const [addError, setAddError] = useState("");
-
-    const peutGererLesRoles = isOwner;
-=======
   const peutGererLesRoles = isOwner;
->>>>>>> adb199c16b0234512ab43deb3dab3be0684f09e9
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/groupes/${groupeId}/membres`)
@@ -47,30 +39,6 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
 
       if (!response.ok) throw new Error("Échec de la mise à jour du rôle.");
 
-<<<<<<< HEAD
-    const handleAddMember = async (e) => {
-        e.preventedDefault();
-        setAddError("");
-
-        if(!emailInput.trim()) return;
-
-        try{
-            await fetch(`/api/groupes/${groupeId}/membres`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json "},
-                body: JSON.stringify({email: emailInput.trim(), role: "standart" }),
-            });
-
-            setEmailInput("");
-            setShowAdd(false);
-        } catch (err) {
-            setAddError(err.message);
-        }
-    };
-
-    if (loading) return <div className="g-status">Chargement...</div>;
-    if (error) return <div className="g-status g-error">{error}</div>;
-=======
       setMembres((prevMembres) =>
         prevMembres.map((membre) =>
           membre.id === userId ? { ...membre, role: newRole } : membre,
@@ -80,54 +48,10 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
       alert(err.message);
     }
   };
->>>>>>> adb199c16b0234512ab43deb3dab3be0684f09e9
 
   if (loading) return <div className="g-status">Chargement...</div>;
   if (error) return <div className="g-status g-error">{error}</div>;
 
-<<<<<<< HEAD
-            {peutGererLesRoles && (
-                <div className="g-admin-actions">
-                    { !showAdd ? (
-                        <>
-                            <button className="g-btn g-btn-add"
-                                onClick={() => setShowAdd(true)}>
-                                Inviter un membre
-                            </button>
-                        </>
-                    ) : (
-                        <form onSubmit={handleAddMember} className="g-add-form">
-                            <input
-                                type="email"
-                                placeholder="Entrez le courriel de l'invité"
-                                value={emailInput}
-                                onChange={(e) => setEmailInput(e.target.value)}
-                                className="g-input"
-                                required
-                            />
-                            <button type="submit" className="g-btn b-btn-confirm">
-                                Ajouter
-                            </button>
-                            <button
-                                type="button"
-                                className="g-btn g-btn-cancel"
-                                onClick={() => {
-                                    setShowAdd(false);
-                                    setAddError("");
-                                }}
-                            >
-                                Annuler
-                            </button>
-                        </form>
-                    )}
-                    {addError && 
-                        <div className='g-status g-error'>
-                            {addError}
-                        </div>
-                    }
-                </div>
-            )}
-=======
   return (
     <div className="g-container">
       <h2>Gestion du groupe {groupeId} </h2>
@@ -168,7 +92,6 @@ export default function Groupes({ groupeId = 1, isOwner = true }) {
         <div className="g-admin-actions">
           <button className="g-btn g-btn-add">Inviter un membre</button>
           <button className="g-btn g-btn-dlt">Retirer un membre</button>
->>>>>>> adb199c16b0234512ab43deb3dab3be0684f09e9
         </div>
       )}
     </div>
