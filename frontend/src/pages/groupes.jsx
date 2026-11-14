@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./groupes.css";
+import { Link } from "react-router";
 
 export default function Groupes({ groupeId = 1 }) {
   const [membres, setMembres] = useState([]);
@@ -14,10 +15,6 @@ export default function Groupes({ groupeId = 1 }) {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [groupNameInput, setGroupNameInput] = useState("");
   const [createGroupError, setCreateGroupError] = useState("");
-
-  const [hasActiveGroup, setHasActiveGroup] = useState(() => {
-    return !!localStorage.getItem("activeGroupId");
-  });
 
   const [currentUserEmail, setCurrentUserEmail] = useState("");
 
@@ -250,10 +247,12 @@ export default function Groupes({ groupeId = 1 }) {
       }
 
       if (data.id) {
+        localStorage.setItem("activeGroupId", data.id);
+
         setGroupeIdAct(data.id);
         setGroupeNomAct(data.name || groupNameInput.trim());
-        localStorage.setItem("activeGroupId", data.id);
-        setHasActiveGroup(true);
+        setMembres([]);
+        setError("");
       }
 
       setGroupNameInput("");
@@ -283,7 +282,7 @@ export default function Groupes({ groupeId = 1 }) {
             <button type="submit" className="g-btn g-btn-confirm">
               Créer
             </button>
-            {hasActiveGroup && (
+            {groupeIdAct && (
               <button
                 type="button"
                 className="g-btn g-btn-cancel"
@@ -303,128 +302,132 @@ export default function Groupes({ groupeId = 1 }) {
       </div>
     );
   }
-  
+
   return (
     <div className="g-container">
-          <h2>Gestion de {groupeNomAct} </h2>
-          <table className="g-table">
-            <thead>
-              <tr>
-                <th>Membres</th>
-                <th>Surnom</th>
-                <th>Rôle</th>
-                {peutGererLesRoles && <th>Actions</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {membres &&
-                membres.filter(Boolean).map((membre) => {
-                  const isCurrentUserOwner =
-                    currentUserEmail && membre.email === currentUserEmail;
-                  return (
-                    <tr key={membre.id}>
-                      <td className="g-user">
-                        {membre.nickname ? (
-                          <div>
-                            <span>{membre.email}</span>
-                          </div>
-                        ) : (
-                          membre.email || `Utilisateur #${membre.id}`
-                        )}
-                        {isCurrentUserOwner && " (Vous)"}
-                      </td>
-                      <td>
-                        <span>{membre.nickname || "-"}</span>
-                      </td>
-                      <td>
-                        {peutGererLesRoles && !isCurrentUserOwner ? (
-                          <select
-                            className="g-select"
-                            value={
-                              membre.role
-                                ? typeof membre.role === "string"
-                                  ? membre.role
-                                  : membre.role.value || "standard"
-                                : "standard"
-                            }
-                            onChange={(e) =>
-                              handleRoleChange(membre.id, e.target.value)
-                            }
-                          >
-                            <option value="owner">Propriétaire</option>
-                            <option value="privileged">Privilégie</option>
-                            <option value="standard">Standard</option>
-                          </select>
-                        ) : (
-                          <span>{membre.role || "standard"}</span>
-                        )}
-                      </td>
-                      {peutGererLesRoles && (
-                        <td>
-                          {!isCurrentUserOwner ? (
-                            <button
-                              className="g-btn g-btn-dlt"
-                              onClick={() => handleRemoveMember(membre.id)}
-                            >
-                              Retirer
-                            </button>
-                          ) : (
-                            <span className="g-owner">-</span>
-                          )}
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
+      <Link to="/profil" className="g-profil-link">
+        Profile
+      </Link>
 
-          {peutGererLesRoles && (
-            <div className="g-admin-actions">
-              {!showAdd ? (
-                <button
-                  className="g-btn g-btn-add"
-                  onClick={() => setShowAdd(true)}
-                >
-                  Inviter un membre
+      <h2>Gestion de {groupeNomAct} </h2>
+      <table className="g-table">
+        <thead>
+          <tr>
+            <th>Membres</th>
+            <th>Surnom</th>
+            <th>Rôle</th>
+            {peutGererLesRoles && <th>Actions</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {membres &&
+            membres.filter(Boolean).map((membre) => {
+              const isCurrentUserOwner =
+                currentUserEmail && membre.email === currentUserEmail;
+              return (
+                <tr key={membre.id}>
+                  <td className="g-user">
+                    {membre.nickname ? (
+                      <div>
+                        <span>{membre.email}</span>
+                      </div>
+                    ) : (
+                      membre.email || `Utilisateur #${membre.id}`
+                    )}
+                    {isCurrentUserOwner && " (Vous)"}
+                  </td>
+                  <td>
+                    <span>{membre.nickname || "-"}</span>
+                  </td>
+                  <td>
+                    {peutGererLesRoles && !isCurrentUserOwner ? (
+                      <select
+                        className="g-select"
+                        value={
+                          membre.role
+                            ? typeof membre.role === "string"
+                              ? membre.role
+                              : membre.role.value || "standard"
+                            : "standard"
+                        }
+                        onChange={(e) =>
+                          handleRoleChange(membre.id, e.target.value)
+                        }
+                      >
+                        <option value="owner">Propriétaire</option>
+                        <option value="privileged">Privilégie</option>
+                        <option value="standard">Standard</option>
+                      </select>
+                    ) : (
+                      <span>{membre.role || "standard"}</span>
+                    )}
+                  </td>
+                  {peutGererLesRoles && (
+                    <td>
+                      {!isCurrentUserOwner ? (
+                        <button
+                          className="g-btn g-btn-dlt"
+                          onClick={() => handleRemoveMember(membre.id)}
+                        >
+                          Retirer
+                        </button>
+                      ) : (
+                        <span className="g-owner">-</span>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+
+      {peutGererLesRoles && (
+        <div className="g-admin-actions">
+          {!showAdd ? (
+            <button
+              className="g-btn g-btn-add"
+              onClick={() => setShowAdd(true)}
+            >
+              Inviter un membre
+            </button>
+          ) : (
+            <form onSubmit={handleAddMember} className="g-add-form">
+              <input
+                type="email"
+                placeholder="Entrez le courriel de l'invité"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                className="g-input"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Surnom"
+                value={nnameInput}
+                onChange={(e) => setNNameInput(e.target.value)}
+                className="g-input"
+                required
+              />
+              <div className="g-form-buttons">
+                <button type="submit" className="g-btn g-btn-confirm">
+                  Ajouter
                 </button>
-              ) : (
-                <form onSubmit={handleAddMember} className="g-add-form">
-                  <input
-                    type="email"
-                    placeholder="Entrez le courriel de l'invité"
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    className="g-input"
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="Surnom"
-                    value={nnameInput}
-                    onChange={(e) => setNNameInput(e.target.value)}
-                    className="g-input"
-                    required
-                  />
-                  <div className="g-form-buttons">
-                    <button type="submit" className="g-btn g-btn-confirm">
-                      Ajouter
-                    </button>
-                    <button
-                      type="button"
-                      className="g-btn g-btn-cancel"
-                      onClick={() => {
-                        setShowAdd(false);
-                      }}
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </form>
-              )}
-              {addError && <div className="g-status g-error">{addError}</div>}
-            </div>
+                <button
+                  type="button"
+                  className="g-btn g-btn-cancel"
+                  onClick={() => {
+                    setShowAdd(false);
+                  }}
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
           )}
+          {addError && <div className="g-status g-error">{addError}</div>}
+        </div>
+      )}
     </div>
   );
 }

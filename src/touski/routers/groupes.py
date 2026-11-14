@@ -163,11 +163,7 @@ def remove_membre(groupe_id: int, user_id: int, response: Response, current_user
     return {"message": f"Membre {user_id} retiré"}
 
 @router.post("", status_code=201)
-def create_groupe(
-    body: CreateGroupSchema, 
-    current_user: User = Depends(get_current_user), 
-    db: Session = Depends(get_db)
-):
+def create_groupe(body: CreateGroupSchema, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     try:
         nouveau_groupe = Group(name=body.name)
         db.add(nouveau_groupe)
@@ -185,7 +181,6 @@ def create_groupe(
         return {
             "id": nouveau_groupe.id,
             "name": nouveau_groupe.name,
-            "message": "Groupe créé avec succès."
         }
     except Exception as e:
         db.rollback()
