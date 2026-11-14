@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, Response
+from fastapi import APIRouter, Depends, status, Response, HTTPException
 from sqlalchemy.orm import Session
 from touski.db.database import get_session_dependency as get_db
 from touski.models.groups_users import GroupUser, User, UserRole, Group
@@ -15,16 +15,28 @@ class AddMemberSchema(BaseModel):
 
 class UpdateRoleSchema(BaseModel):
     role: str
+    
+class CreateGroupSchema(BaseModel):
+    name: str
 
 #get toutes les groupes
 @router.get("/")
-def list_groupe():
-    return []
+def list_groupe(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    user_groups = (
+        db.query(Group)
+        .join(GroupUser, Group.id == GroupUser.group_id)
+        .filter(GroupUser.user_id == current_user.id)
+        .all()
+    )
+    return [{"id": g.id, "name": g.name} for g in user_groups]
 
 #get groupe par id
 @router.get("/{groupe_id}")
-def get_groupe(groupe_id: int):
-    return {"id": groupe_id}    
+def get_groupe(groupe_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    group = db.query(Group).filter(Group.id == groupe_id).first()
+    if not group:
+        return {"id": groupe_id, "name": ""}
+    return {"id": group.id, "name": group.name} 
 
 #post pour créer un groupe
 @router.post("/", status_code=201)
@@ -55,24 +67,18 @@ def list_membres(groupe_id: int, current_user: User = Depends(get_current_user),
         .all()
     )
     
+    group = db.query(Group).filter(Group.id == groupe_id).first()
+    if not group:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Groupe introuvable.")
+    
     user_ids_dans_groupe = [u.id for g, u in membres]
     
     if current_user.id not in user_ids_dans_groupe:
-        nouveau_proprietaire = GroupUser(
-            group_id=groupe_id,
-            user_id=current_user.id,
-            role=UserRole.OWNER.value
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Vous n'êtes pas membre de ce groupe."
         )
-        db.add(nouveau_proprietaire)
-        db.commit()
-        
-        membres = (
-            db.query(GroupUser, User)
-            .join(User, GroupUser.user_id == User.id)
-            .filter(GroupUser.group_id == groupe_id)
-            .all()
-        )
-        
+    
     return [
         {
             "id": u.id,
@@ -155,3 +161,32 @@ def remove_membre(groupe_id: int, user_id: int, response: Response, current_user
     db.delete(member)
     db.commit()
     return {"message": f"Membre {user_id} retiré"}
+
+@router.post("", status_code=201)
+def create_groupe(
+    body: CreateGroupSchema, 
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
+    try:
+        nouveau_groupe = Group(name=body.name)
+        db.add(nouveau_groupe)
+        db.commit()
+        db.refresh(nouveau_groupe)
+        
+        nouveau_proprietaire = GroupUser(
+            group_id=nouveau_groupe.id,
+            user_id=current_user.id,
+            role=UserRole.OWNER.value
+        )
+        db.add(nouveau_proprietaire)
+        db.commit()
+        
+        return {
+            "id": nouveau_groupe.id,
+            "name": nouveau_groupe.name,
+            "message": "Groupe créé avec succès."
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
