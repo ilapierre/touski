@@ -91,7 +91,6 @@ export default function Abonnement() {
         <h1> Abonnement </h1>
         <h4> Abonnez-vous pour avoir accès à l'IA</h4>
         <p>
-          {" "}
           Utilisez l'IA pour vous créez des recettes idéales à votre goûts, où{" "}
           <strong>tous les membres de votre groupe</strong> auront accès.
         </p>
@@ -168,7 +167,7 @@ export default function Abonnement() {
             </ul>
 
             <div className="form-group">
-              <label htmlFor="card"> Numéro de carte</label>
+              <label htmlFor="card"> Numéro de carte *</label>
               <input
                 id="card"
                 type="text"
@@ -181,7 +180,7 @@ export default function Abonnement() {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="expiry"> Expiration </label>
+                <label htmlFor="expiry"> Expiration *</label>
                 <input
                   id="expiry"
                   type="text"
@@ -192,7 +191,7 @@ export default function Abonnement() {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="cvv"> CVV </label>
+                <label htmlFor="cvv"> CVV *</label>
                 <input
                   id="cvv"
                   type="text"
