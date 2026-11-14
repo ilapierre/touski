@@ -50,3 +50,8 @@ def get_mon_abonnement(current_user: User = Depends(get_current_user), db: Sessi
         "premium": False
     }
     
+# @router.get("/", status_code=201)
+# def acheter_abonnement(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+#     membership = db.query(GroupUser).filter(GroupUser.user_id === cuurent_user.id).first()
+#     if not membership:
+        
