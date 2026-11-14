@@ -1,6 +1,6 @@
 .g-container {
-    padding: 24.px;
-    max-width: 600px;
+    padding: 24px;
+    max-width: 800px;
     margin: 40px auto;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
@@ -32,7 +32,7 @@
     text-align: center;
 }
 
-.gm-select {
+.g-select {
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
@@ -40,7 +40,7 @@
   cursor: pointer;
 }
 
-.gm-select:focus {
+.g-select:focus {
   border-color: #2563eb;
 }
 
@@ -65,20 +65,88 @@
 }
 
 .g-btn-add {
-    background-color: #2563eb;
+    background-color: #16a633;
+    border: #16a633;
     color: white;
 }
 
+.g-btn-add:hover {
+    background-color: #107c26;
+    color: white;
+}
+
+/* Bouton de supprimr */
 .g-btn-dlt {
     background-color: rgb(212, 22, 22);
+    border: rgb(212, 22, 22);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.g-btn-dlt:hover {
+    background-color: rgb(182, 18, 18);
+}
+
+/* Bouton du formulaire d'ajout membre */
+.g-btn-cancel {
+    background-color: rgb(212, 22, 22);
+    border: rgb(212, 22, 22);
     color: white;
 }
 
-.gm-status {
+.g-btn-cancel:hover {
+    background-color: rgb(182, 18, 18);
+}
+
+.g-btn-confirm {
+    background-color: rgb(20, 172, 76);
+    border: rgb(20, 172, 76);
+    color: white;
+}
+
+.g-btn-confirm:hover {
+    background-color: rgb(16, 128, 57);
+}
+
+/* Messages */
+.g-status {
   padding: 20px;
   text-align: center;
 }
 
-.gm-error {
+.g-error {
   color: #ef4444;
+  background-color: #fef2f2;
+  border: 1px solid #fef2f2;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+/* Inputs */
+.g-input {
+    padding: 10px 14px;
+    border: 1px solid #cecece;
+    border-radius: 7px;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+}
+
+.g-add-form {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+/* Boutons des inputs */
+.g-form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+    margin-left: 85px;
+}
+
+.g-form-buttons .g-btn {
+    margin: 0;
 }
