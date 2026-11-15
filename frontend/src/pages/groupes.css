@@ -150,3 +150,20 @@
 .g-form-buttons .g-btn {
     margin: 0;
 }
+
+.g-btn-ann {
+    background-color: rgb(240, 15, 15);
+    border: rgb(240, 15, 15);
+    color: white;
+    margin-left: 20px;
+}
+
+.g-btn-ann:hover {
+    background-color: rgb(193, 13, 13);
+}
+
+.supprime-container {
+    background-color: rgb(246, 246, 246);
+    padding: 15px;
+    border-radius: 20px;
+}

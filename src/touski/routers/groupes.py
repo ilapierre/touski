@@ -39,9 +39,29 @@ def get_groupe(groupe_id: int, current_user: User = Depends(get_current_user), d
     return {"id": group.id, "name": group.name} 
 
 #post pour créer un groupe
-@router.post("/", status_code=201)
-def create_groupe():
-    return {"message": "Groupe créée avec succès"}
+@router.post("", status_code=201)
+def create_groupe(body: CreateGroupSchema, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    try:
+        nouveau_groupe = Group(name=body.name)
+        db.add(nouveau_groupe)
+        db.commit()
+        db.refresh(nouveau_groupe)
+        
+        nouveau_proprietaire = GroupUser(
+            group_id=nouveau_groupe.id,
+            user_id=current_user.id,
+            role=UserRole.OWNER.value
+        )
+        db.add(nouveau_proprietaire)
+        db.commit()
+        
+        return {
+            "id": nouveau_groupe.id,
+            "name": nouveau_groupe.name,
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
 
 #modif d un groupe
 @router.put("/{groupe_id}")
@@ -50,7 +70,28 @@ def update_groupe(groupe_id: int):
 
 #pour supprimer un groupe
 @router.delete("/{groupe_id}")
-def delete_groupe(groupe_id: int):
+def delete_groupe(groupe_id: int, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    membership = db.query(GroupUser).filter_by(group_id = groupe_id, user_id = current_user.id).first()
+    if not membership:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"erreur" : "Le proprétaire peut supprimer ce groupe."}
+    
+    role_str = str(membership.role).lower()
+    if role_str not in ["owner", "propriétaire"]:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"erreur": "C'est le proprétaire qui peut supprimer ce groupe."}
+    
+    groupe = db.query(Group).filter(Group.id == groupe_id).first()
+    if not groupe:
+        response.status_code = status.HTTP_404_BAD_REQUEST
+        return {"erreur" : "Groupe Introuvable"}
+    
+    print("DATABASE URL:", db.bind.url)
+    
+    db.query(GroupUser).filter(GroupUser.group_id == groupe_id).delete()
+    db.delete(groupe)
+    db.commit()
+    
     return {"message": f"Groupe {groupe_id} supprimé avec succès"}
 
 
@@ -161,27 +202,3 @@ def remove_membre(groupe_id: int, user_id: int, response: Response, current_user
     db.delete(member)
     db.commit()
     return {"message": f"Membre {user_id} retiré"}
-
-@router.post("", status_code=201)
-def create_groupe(body: CreateGroupSchema, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    try:
-        nouveau_groupe = Group(name=body.name)
-        db.add(nouveau_groupe)
-        db.commit()
-        db.refresh(nouveau_groupe)
-        
-        nouveau_proprietaire = GroupUser(
-            group_id=nouveau_groupe.id,
-            user_id=current_user.id,
-            role=UserRole.OWNER.value
-        )
-        db.add(nouveau_proprietaire)
-        db.commit()
-        
-        return {
-            "id": nouveau_groupe.id,
-            "name": nouveau_groupe.name,
-        }
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=str(e))

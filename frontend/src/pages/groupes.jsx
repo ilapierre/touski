@@ -16,6 +16,8 @@ export default function Groupes({ groupeId = 1 }) {
   const [groupNameInput, setGroupNameInput] = useState("");
   const [createGroupError, setCreateGroupError] = useState("");
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   const [currentUserEmail, setCurrentUserEmail] = useState("");
 
   const getRoleString = (role) =>
@@ -234,8 +236,8 @@ export default function Groupes({ groupeId = 1 }) {
       let data = {};
       try {
         data = responseText ? JSON.parse(responseText) : {};
-      } catch {
-        // Ignored
+      } catch (err) {
+        alert(err.message);
       }
 
       if (!response.ok) {
@@ -259,6 +261,30 @@ export default function Groupes({ groupeId = 1 }) {
       setShowCreateGroup(false);
     } catch (err) {
       setCreateGroupError(err.message);
+    }
+  };
+
+  const handleDeleteGroupe = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`/api/groupes/${groupeIdAct}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.erreur || "Échec de la suppression du groupe.");
+      }
+
+      localStorage.removeItem(groupeId);
+      setGroupeIdAct(null);
+      setMembres([]);
+      setShowCreateGroup(true);
+    } catch (err) {
+      alert(err.message);
     }
   };
 
@@ -426,6 +452,27 @@ export default function Groupes({ groupeId = 1 }) {
             </form>
           )}
           {addError && <div className="g-status g-error">{addError}</div>}
+        </div>
+      )}
+      <div>
+        {peutGererLesRoles && !showDeleteConfirm && (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="g-btn g-btn-dlt"
+          >
+            Supprimer Groupe
+          </button>
+        )}
+      </div>
+      {showDeleteConfirm && (
+        <div className="supprime-container">
+          <p>Êtes-vous sûre de vouloir supprimer le groupe {groupeNomAct} ?</p>
+          <div>
+            <button onClick={handleDeleteGroupe} className="g-btn g-btn-confirm">
+              Supprimer
+            </button>
+            <button onClick={() => setShowDeleteConfirm(false)} className="g-btn g-btn-ann">Annuler</button>
+          </div>
         </div>
       )}
     </div>
