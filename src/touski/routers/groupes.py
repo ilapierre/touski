@@ -10,7 +10,7 @@ router = APIRouter(prefix="/groupes", tags=["groupes"])
 
 class AddMemberSchema(BaseModel):
     email: str
-    role: str = "standard"
+    role: str = "STANDARD"
     nickname: str
 
 class UpdateRoleSchema(BaseModel):
@@ -77,7 +77,7 @@ def delete_groupe(groupe_id: int, response: Response, current_user: User = Depen
         return {"erreur" : "Le proprétaire peut supprimer ce groupe."}
     
     role_str = str(membership.role).lower()
-    if role_str not in ["owner", "propriétaire"]:
+    if role_str not in ["OWNER", "PROPRIÉTAIRE"]:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"erreur": "C'est le proprétaire qui peut supprimer ce groupe."}
     
@@ -143,14 +143,16 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, curren
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"erreur" : "L'utilisateur est déjà membre de ce groupe."}
     
-    role_str = body.role.lower() if body.role else "standard"
+    role_str = body.role.lower() if body.role else "STANDARD"
     
-    try:
-        role_enum = UserRole(role_str)
-        role_to_save = role_enum.value
-    except ValueError:
-        role_to_save = "standard"
-        
+    if role_str in ["PROPRIÉTAIRE", "OWNER"]:
+        role_to_save = UserRole.OWNER.value
+    else:
+        try:
+            role_to_save = UserRole(role_str).value
+        except ValueError:
+            role_to_save = UserRole.STANDARD.value
+
     new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=role_to_save, nickname=body.nickname)
     db.add(new_membre)
     db.commit()
@@ -164,7 +166,7 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, curren
 @router.put("/{groupe_id}/membres/{user_id}")
 def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
-    is_owner = current_membership and str(current_membership.role).lower() in ["owner", "propriétaire"]
+    is_owner = current_membership and str(current_membership.role).upper() in ["OWNER", "PROPRIÉTAIRE"]
     if not is_owner:
         response.status_code = status.HTTP_403_FORBIDDEN
         return {"erreur": "Action non autorisée. Seul le propriétaire peut modifier les rôles."}
@@ -174,12 +176,16 @@ def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"erreur": "Membre introuvable."}
     
-    role_str = body.role.lower() if body.role else "standard"
+    role_str = body.role.lower() if body.role else "STANDARD"
     
-    if role_str in ["propriétaire", "owner"]:
+    if role_str in ["PROPRIÉTAIRE", "OWNER"]:
         membre.role = UserRole.OWNER.value
+    elif role_str in ["PRIVILÉGIÉ", "PRIVILEGED"]:
+        membre.role = UserRole.PRIVILEGED.value
+    elif role_str == "ADMIN":
+        membre.role = UserRole.ADMIN.value
     else:
-        membre.role = role_str
+        membre.role = UserRole.STANDARD.value
 
     db.commit()
     return {"message": f"Membre {user_id} du groupe {groupe_id} mis à jour"}
@@ -188,7 +194,7 @@ def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response
 @router.delete("/{groupe_id}/membres/{user_id}")
 def remove_membre(groupe_id: int, user_id: int, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
-    is_owner = current_membership and str(current_membership.role).lower() in ["owner", "propriétaire"]
+    is_owner = current_membership and str(current_membership.role).upper() in ["OWNER", "PROPRIÉTAIRE"]
     
     if not is_owner:
         response.status_code = status.HTTP_403_FORBIDDEN

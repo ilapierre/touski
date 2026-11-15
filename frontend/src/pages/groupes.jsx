@@ -25,7 +25,7 @@ export default function Groupes({ groupeId = 1 }) {
   const currentUserRole = getRoleString(
     membres.find((m) => m.email === currentUserEmail)?.role,
   );
-  const peutGererLesRoles = ["owner", "propriétaire"].includes(currentUserRole);
+  const peutGererLesRoles = ["OWNER", "propriétaire"].includes(currentUserRole);
 
   const [groupeIdAct, setGroupeIdAct] = useState(() => {
     const savedId = localStorage.getItem("activeGroupId");
@@ -160,7 +160,7 @@ export default function Groupes({ groupeId = 1 }) {
         },
         body: JSON.stringify({
           email: emailInput.trim(),
-          role: "standard",
+          role: "STANDARD",
           nickname: nnameInput.trim() || null,
         }),
       });
@@ -373,19 +373,19 @@ export default function Groupes({ groupeId = 1 }) {
                           membre.role
                             ? typeof membre.role === "string"
                               ? membre.role
-                              : membre.role.value || "standard"
-                            : "standard"
+                              : membre.role.value || "STANDARD"
+                            : "STANDARD"
                         }
                         onChange={(e) =>
                           handleRoleChange(membre.id, e.target.value)
                         }
                       >
-                        <option value="owner">Propriétaire</option>
-                        <option value="privileged">Privilégie</option>
-                        <option value="standard">Standard</option>
+                        <option value="OWNER">Propriétaire</option>
+                        <option value="PRIVILIGED">Privilégie</option>
+                        <option value="STANDARD">Standard</option>
                       </select>
                     ) : (
-                      <span>{membre.role || "standard"}</span>
+                      <span>{membre.role || "STANDARD"}</span>
                     )}
                   </td>
                   {peutGererLesRoles && (
