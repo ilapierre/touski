@@ -50,7 +50,7 @@ def create_groupe(body: CreateGroupSchema, current_user: User = Depends(get_curr
         nouveau_proprietaire = GroupUser(
             group_id=nouveau_groupe.id,
             user_id=current_user.id,
-            role=UserRole.OWNER.value
+            role=UserRole.OWNER
         )
         db.add(nouveau_proprietaire)
         db.commit()
