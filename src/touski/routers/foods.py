@@ -48,17 +48,20 @@ def get_food(food_id: int, request: Request, session=Depends(get_session_depende
 
 # TODO: ------ Les endpoints suivants nécessitent l'authentification ------
 
-
 # POST Créer un aliment (ajout manuel)
-@router.post("/", status_code=201)
-def create_food():
-    return {}
+@router.post("/addFood", status_code=201)
+def create_food(Food: Food):
+    return {
+         "message": "Aliment créé avec succès !"
+    }
 
 
 # PUT Modification d'un aliment
 @router.put("/{food_id}")
-def update_food(food_id: int):
-    return {}
+def update_food(food_id: int, Food: Food):
+    return {
+        "message": f"Aliment {food_id} mis à jour avec succès !"
+    }
 
 
 # DELETE Suppression d'un aliment

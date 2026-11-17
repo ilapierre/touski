@@ -1,11 +1,12 @@
-import './AjoutAliment.css';
+import './FoodForm.css';
+//import "../components/FoodCard.jsx"
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
+const API_URL = "/api";
 
 const FoodForm = () => {
     const { alimentId } = useParams();
-    const navigate = useNavigate();
     const [formData, setFormData] = useState(() => {
         if (alimentId) {
             const storedFoods = JSON.parse(localStorage.getItem("aliments")) || [];
@@ -65,7 +66,7 @@ const FoodForm = () => {
             storedFoods = storedFoods.map(aliment => (aliment.id === alimentId ? { ...formData } : aliment));
         } else {
             try {
-                const res = await fetch('http://localhost:5173/api/aliments/', {
+                const res = await fetch(`${API_URL}/foods/addFood`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -180,7 +181,7 @@ const FoodForm = () => {
 
                 <div className="btn_actions">
                     <button type="submit" className="btn_submit">Enregistrer</button>
-                    <button type="button" className="btn_cancel" onClick={() => navigate("/")}>Annuler</button>
+                    <button type="button" className="btn_cancel" onClick={() => ("/")}>Annuler</button>
                 </div>
             </form>
         </div>
