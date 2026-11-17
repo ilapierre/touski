@@ -64,4 +64,6 @@ def update_food(food_id: int):
 # DELETE Suppression d'un aliment
 @router.delete("/{food_id}")
 def delete_food(food_id: int):
-    return {}
+    return {
+        "message": f"Aliment supprimé avec succès !"
+    }
