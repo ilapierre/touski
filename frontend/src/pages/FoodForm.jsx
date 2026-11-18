@@ -1,5 +1,5 @@
 import "./FoodForm.css";
-import "../components/FoodCard.jsx";
+import FoodCard from "../components/FoodCard.jsx";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -121,6 +121,7 @@ const FoodForm = () => {
   };
   return (
     <div className="form-container">
+      <FoodCard>
         <h2 className="title">
           {alimentId ? "Modifier l'aliment" : "Ajouter un aliment"}
         </h2>
@@ -224,6 +225,7 @@ const FoodForm = () => {
             </button>
           </div>
         </form>
+      </FoodCard>
     </div>
   );
 };
