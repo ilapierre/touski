@@ -63,7 +63,7 @@ export default function Abonnement() {
       });
 
       const data = await response.json();
-      
+
       setSubscription({
         premium: true,
         ends_at: data.ends_at,
@@ -175,11 +175,11 @@ export default function Abonnement() {
 
       {subscription.premium && isLoggedIn && (
         <div className="btn-cancel-abon-container">
-          <button 
+          <button
             type="button"
             className="btn-cancel-abon"
             onClick={() => setShowCancelModal(true)}
-            >
+          >
             Annuler l'abonnement
           </button>
         </div>
@@ -190,7 +190,7 @@ export default function Abonnement() {
           <div className="checkout-form">
             <h2>Confirmation d'annulation</h2>
             <p>Êtes-vous sûr de vouloir annuler votre abonnement?</p>
-          </div>
+          
           <div className="btn-action">
             <button
               type="button"
@@ -206,6 +206,7 @@ export default function Abonnement() {
             >
               Retour
             </button>
+            </div>
           </div>
         </div>
       )}
