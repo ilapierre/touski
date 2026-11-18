@@ -9,6 +9,11 @@ export default function Abonnement() {
   const [expired, setExpired] = useState("");
   const [cvv, setCVV] = useState("");
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
+  const [membres, setMembres] = useState([]);
+  const groupeIdAct = localStorage.getItem("activeGroupId");
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -17,34 +22,63 @@ export default function Abonnement() {
   const [loading, setLoading] = useState(isLoggedIn);
   const [subscription, setSubscription] = useState({ premium: false });
 
+  const getRoleString = (role) =>
+    (typeof role === "string" ? role : role?.value || "").toLowerCase();
+
+  const currentUserRole = getRoleString(
+    membres.find((m) => m.email === currentUserEmail)?.role
+  );
+  const isOwner = ["owner", "propriétaire"].includes(currentUserRole);
   useEffect(() => {
+
     if (!isLoggedIn) {
       return;
     }
 
-    fetch("/api/abonnements/moi", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setSubscription({ ...data, premium: data.premium === true });
-        if (data.premium) {
-          setSelectedPlan("ia");
-        } else {
-          setSelectedPlan("gratuit");
+    const fetchData = async () => {
+      try {
+        const subRes = await fetch("/api/abonnements/moi", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (subRes.ok) {
+          const data = await subRes.json();
+          setSubscription({ ...data, premium: data.premium === true });
+          setSelectedPlan(data.premium ? "ia" : "gratuit");
         }
+
+        const userRes = await fetch("/api/auth/moi", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setCurrentUserEmail(userData.email);
+        }
+
+        if (groupeIdAct) {
+          const membresRes = await fetch(`/api/groupes/${groupeIdAct}/membres`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (membresRes.ok) {
+            const membresData = await membresRes.json();
+            setMembres(membresData);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
         setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  }, [isLoggedIn, token]);
+      }
+    };
+
+    fetchData();
+  }, [isLoggedIn, token, groupeIdAct]);
 
   const handleIaAction = () => {
+    setErrorMsg("");
     if (!isLoggedIn) {
       navigate("/connexion");
+    } else if (!isOwner) {
+      setErrorMsg("Seul le propriétaire du groupe peut gérer l'abonnement.")
     } else if (!subscription.premium) {
       setShowCheckout(true);
     }
@@ -112,6 +146,12 @@ export default function Abonnement() {
         </p>
       </div>
 
+      {errorMsg && (
+        <div className="abon-error">
+            {errorMsg}
+        </div>
+      )}
+
       <div className="plans">
         <div
           className={`type-plan ${selectedPlan === "gratuit" ? "active" : ""}`}
@@ -149,31 +189,29 @@ export default function Abonnement() {
               <li>IA</li>
             </ul>
             <div className="plan-passage">
-              {isLoggedIn ? (
-                subscription.premium ? (
-                  <div className="active-plan-info">
-                    <span className="plan-actif">Plan Actif</span>
-                    {console.log("Current subscription state:", subscription)}
-
-                    {subscription.ends_at && (
-                      <p className="plan-expirer">
-                        Expire le :{" "}
-                        {new Date(subscription.ends_at).toLocaleDateString()}
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  "Acheter maintenant"
-                )
+              {!isLoggedIn ? (
+                "Connectez-vous ou inscrivez-vous pour abonner votre groupe."
+              ) : !isOwner ? (
+                <span className="plan-restreint"> Réservé au propriétaire du groupe</span>
+              ) : subscription.premium ? (
+                <div className="active-plan-info">
+                  <span className="plan-actif">Plan Actif</span>
+                  {subscription.ends_at && (
+                    <p className="plan-expirer">
+                      Expire le :{" "}
+                      {new Date(subscription.ends_at).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
               ) : (
-                "Connectez-vous ou inscrivez-vous pour abonner votre groupe. "
+                "Acheter maintenant"
               )}
             </div>
           </div>
         </div>
       </div>
 
-      {subscription.premium && isLoggedIn && (
+      {subscription.premium && isLoggedIn && isOwner &&(
         <div className="btn-cancel-abon-container">
           <button
             type="button"
