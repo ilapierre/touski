@@ -1,5 +1,5 @@
 import "./FoodForm.css";
-//import "../components/FoodCard.jsx"
+import "../components/FoodCard.jsx";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -120,108 +120,110 @@ const FoodForm = () => {
     }
   };
   return (
-    <div>
-      <h2 className="title">
-        {alimentId ? "Modifier l'aliment" : "Ajouter un aliment"}
-      </h2>
-      <form className="form-container" onSubmit={handleSubmit}>
-        <div className="control">
-          <label>Nom</label>
-          <input
-            type="text"
-            name="nom"
-            value={formData.nom}
-            onChange={handleChange}
-            required
-          />
-          {error.nom && <span className="error">{error.nom}</span>}
-        </div>
+    <div className="form-container">
+        <h2 className="title">
+          {alimentId ? "Modifier l'aliment" : "Ajouter un aliment"}
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div className="control">
+            <label>Nom</label>
+            <input
+              type="text"
+              name="nom"
+              value={formData.nom}
+              onChange={handleChange}
+              required
+            />
+            {error.nom && <span className="error">{error.nom}</span>}
+          </div>
 
-        <div className="control">
-          <label>URL de l'image</label>
-          <input
-            type="text"
-            name="image_url"
-            value={formData.image_url}
-            onChange={handleChange}
-          />
-        </div>
+          <div className="control">
+            <label>URL de l'image</label>
+            <input
+              type="text"
+              name="image_url"
+              value={formData.image_url}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div className="control">
-          <label>Per</label>
-          <input
-            type="text"
-            name="per"
-            value={formData.per}
-            onChange={handleChange}
-          />
-        </div>
+          <div className="control">
+            <label>Per</label>
+            <input
+              type="text"
+              name="per"
+              value={formData.per}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div className="control">
-          <label>Calories</label>
-          <input
-            type="text"
-            name="calories"
-            value={formData.calories}
-            onChange={handleChange}
-          />
-          {error.calories && <span className="error">{error.calories}</span>}
-        </div>
+          <div className="control">
+            <label>Calories</label>
+            <input
+              type="text"
+              name="calories"
+              value={formData.calories}
+              onChange={handleChange}
+            />
+            {error.calories && <span className="error">{error.calories}</span>}
+          </div>
 
-        <div className="control">
-          <label>Gras</label>
-          <input
-            type="text"
-            name="gras"
-            value={formData.gras}
-            onChange={handleChange}
-          />
-          {error.gras && <span className="error">{error.gras}</span>}
-        </div>
+          <div className="control">
+            <label>Gras</label>
+            <input
+              type="text"
+              name="gras"
+              value={formData.gras}
+              onChange={handleChange}
+            />
+            {error.gras && <span className="error">{error.gras}</span>}
+          </div>
 
-        <div className="control">
-          <label>Protéines</label>
-          <input
-            type="text"
-            name="protéines"
-            value={formData.proteines}
-            onChange={handleChange}
-          />
-          {error.proteines && <span className="error">{error.proteines}</span>}
-        </div>
+          <div className="control">
+            <label>Protéines</label>
+            <input
+              type="text"
+              name="protéines"
+              value={formData.proteines}
+              onChange={handleChange}
+            />
+            {error.proteines && (
+              <span className="error">{error.proteines}</span>
+            )}
+          </div>
 
-        <div className="control">
-          <label>Glucides</label>
-          <input
-            type="text"
-            name="glucides"
-            value={formData.glucides}
-            onChange={handleChange}
-          />
-          {error.glucides && <span className="error">{error.glucides}</span>}
-        </div>
+          <div className="control">
+            <label>Glucides</label>
+            <input
+              type="text"
+              name="glucides"
+              value={formData.glucides}
+              onChange={handleChange}
+            />
+            {error.glucides && <span className="error">{error.glucides}</span>}
+          </div>
 
-        <div className="control">
-          <label>Quantité</label>
-          <input
-            type="text"
-            name="quantite"
-            value={formData.quantite}
-            onChange={handleChange}
-            required
-          />
-          {error.quantite && <span className="error">{error.quantite}</span>}
-        </div>
+          <div className="control">
+            <label>Quantité</label>
+            <input
+              type="text"
+              name="quantite"
+              value={formData.quantite}
+              onChange={handleChange}
+              required
+            />
+            {error.quantite && <span className="error">{error.quantite}</span>}
+          </div>
 
-        <div className="btn_actions">
-          <button type="submit" className="btn_submit">
-            Enregistrer
-          </button>
-          <button type="button" className="btn_cancel" onClick={() => "/"}>
-            Annuler
-          </button>
-        </div>
-      </form>
+          <div className="btn_actions">
+            <button type="submit" className="btn_submit">
+              Enregistrer
+            </button>
+            <button type="button" className="btn_cancel" onClick={() => "/"}>
+              Annuler
+            </button>
+          </div>
+        </form>
     </div>
   );
 };

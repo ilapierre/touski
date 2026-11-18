@@ -1,92 +1,96 @@
 .form-container {
-    display: flex;
-    justify-content: center;
-    padding: 2rem;
-    max-width: 600px; 
-    margin: 0 auto; 
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  padding: 2rem;
+  max-width: 750px;
+  margin: 0 auto;
+  border: solid #1f2328;
+  border-width: thin;
+  border-radius: 8px;
 }
-
 
 .title {
-    text-align: center;
-    border-bottom: 2px solid #1f2328;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem; /
+  text-align: center;
+  border-bottom: 2px solid #1f2328;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
-
 .control {
-    margin-bottom: 1.5rem; 
-    display: flex;
-    flex-direction: column;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .control label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: #1f2328;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #1f2328;
 }
-
 
 .control input,
 .control select {
-    padding: 0.8rem;
-    border: 1px solid #d8dee4;
-    border-radius:8px;
-    outline: none;
-    transition: border #d8dee4, 0.2s ease, background #d4c6f2 0.2s ease; 
-    width: 100%; 
-    box-sizing: border-box; 
+  padding: 0.8rem;
+  border: 1px solid #d8dee4;
+  border-radius: 8px;
+  outline: none;
+  transition:
+    border #d8dee4,
+    0.2s ease,
+    background #adadad 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .control input:focus,
 .control select:focus {
-    border-color: #1f2328;
-    background-color: #d4c6f2;
+  border-color: #1f2328;
+  background-color: #dfdddd;
 }
 
 .error {
-    color: #e80c0c;
-    font-size: 0.8rem;
-    font-style: italic;
-    margin-top: 0.2rem; 
+  color: #e80c0c;
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-top: 0.2rem;
 }
 
 .btn_actions {
-    display: flex;
-    gap: 1rem;
-    border: 1px solid #1f2328;
-    padding: 1rem;
-    border-radius: 8px;
-    background-color: #ffffff;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #ffffff;
 }
 
 .btn_submit {
-    flex: 2;
-    background-color: #ffffff;
-    padding: 0.8rem;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    border: 1px solid #1f2328;
-    transition: background #d4c6f2 0.2s ease;
+  flex: 1;
+  background-color: #3b3b3b;
+  color: #ffffff;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #1f2328;
 }
 
 .btn_submit:hover {
-    background-color: #656566;
+  background-color: #656566;
 }
 
 .btn_cancel {
-    flex: 1;
-    background-color: #ffffff;
-    padding: 0.8rem;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    border: 1px solid #1f2328;
-    transition: background #d4c6f2 0.2s ease;
+  flex: 1;
+  background-color: #ff0202;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #1f2328;
 }
 
 .btn_cancel:hover {
-    background-color: #f41010;
+  background-color: #f83b3b;
 }
