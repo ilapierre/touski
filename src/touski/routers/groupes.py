@@ -86,8 +86,6 @@ def delete_groupe(groupe_id: int, response: Response, current_user: User = Depen
         response.status_code = status.HTTP_404_BAD_REQUEST
         return {"erreur" : "Groupe Introuvable"}
     
-    print("DATABASE URL:", db.bind.url)
-    
     db.query(GroupUser).filter(GroupUser.group_id == groupe_id).delete()
     db.delete(groupe)
     db.commit()
@@ -130,38 +128,6 @@ def list_membres(groupe_id: int, current_user: User = Depends(get_current_user),
         for g, u in membres
     ]
  
-#Ajouter un membre à un groupe
-# @router.post("/{groupe_id}/membres", status_code=201)
-# def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-#     user = db.query(User).filter(User.email == body.email).first()
-#     if not user:
-#         response.status_code = status.HTTP_404_NOT_FOUND
-#         return {"erreur": f"Aucun utilisateur trouvé avec le courriel '{body.email}'."}
-    
-#     existing = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user.id).first()
-#     if existing:
-#         response.status_code = status.HTTP_400_BAD_REQUEST
-#         return {"erreur" : "L'utilisateur est déjà membre de ce groupe."}
-    
-#     role_str = (body.role or "standard").lower()
-
-#     if role_str in ["propriétaire", "owner"]:
-#         role_to_save = UserRole.OWNER
-#     else:
-#         try:
-#             role_to_save = UserRole(role_str)
-#         except ValueError:
-#             role_to_save = UserRole.STANDARD
-
-#     new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=role_to_save, nickname=body.nickname)
-#     db.add(new_membre)
-#     db.commit()
-    
-#     return {
-#         "message" : f"Membre ajouté au groupe {groupe_id}",
-#         "membre" : {"id": user.id, "email": user.email, "role": body.role, "nickname" : new_membre.nickname}
-#     }
-
 #Ajouter un membre à un groupe
 @router.post("/{groupe_id}/membres", status_code=201)
 def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -225,6 +191,7 @@ def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response
         membre.role = UserRole.STANDARD
 
     db.commit()
+    
     return {"message": f"Membre {user_id} du groupe {groupe_id} mis à jour"}
 
 #Retirer un membre
@@ -244,4 +211,5 @@ def remove_membre(groupe_id: int, user_id: int, response: Response, current_user
     
     db.delete(member)
     db.commit()
+    
     return {"message": f"Membre {user_id} retiré"}
