@@ -25,7 +25,7 @@ export default function Groupes({ groupeId = 1 }) {
   const currentUserRole = getRoleString(
     membres.find((m) => m.email === currentUserEmail)?.role,
   );
-  const peutGererLesRoles = ["OWNER", "propriétaire"].includes(currentUserRole);
+  const peutGererLesRoles = ["owner", "propriétaire"].includes(currentUserRole);
 
   const [groupeIdAct, setGroupeIdAct] = useState(() => {
     const savedId = localStorage.getItem("activeGroupId");
@@ -279,7 +279,7 @@ export default function Groupes({ groupeId = 1 }) {
         throw new Error(data.erreur || "Échec de la suppression du groupe.");
       }
 
-      localStorage.removeItem(groupeId);
+      localStorage.removeItem("activeGroupId");
       setGroupeIdAct(null);
       setMembres([]);
       setShowCreateGroup(true);
@@ -373,19 +373,19 @@ export default function Groupes({ groupeId = 1 }) {
                           membre.role
                             ? typeof membre.role === "string"
                               ? membre.role
-                              : membre.role.value || "STANDARD"
-                            : "STANDARD"
+                              : membre.role.value || "standard"
+                            : "standard"
                         }
                         onChange={(e) =>
                           handleRoleChange(membre.id, e.target.value)
                         }
                       >
-                        <option value="OWNER">Propriétaire</option>
-                        <option value="PRIVILIGED">Privilégie</option>
-                        <option value="STANDARD">Standard</option>
+                        <option value="owner">Propriétaire</option>
+                        <option value="privileged">Privilégie</option>
+                        <option value="standard">Standard</option>
                       </select>
                     ) : (
-                      <span>{membre.role || "STANDARD"}</span>
+                      <span>{membre.role || "standard"}</span>
                     )}
                   </td>
                   {peutGererLesRoles && (
