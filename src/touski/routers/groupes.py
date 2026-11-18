@@ -131,18 +131,55 @@ def list_membres(groupe_id: int, current_user: User = Depends(get_current_user),
     ]
  
 #Ajouter un membre à un groupe
+# @router.post("/{groupe_id}/membres", status_code=201)
+# def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+#     user = db.query(User).filter(User.email == body.email).first()
+#     if not user:
+#         response.status_code = status.HTTP_404_NOT_FOUND
+#         return {"erreur": f"Aucun utilisateur trouvé avec le courriel '{body.email}'."}
+    
+#     existing = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user.id).first()
+#     if existing:
+#         response.status_code = status.HTTP_400_BAD_REQUEST
+#         return {"erreur" : "L'utilisateur est déjà membre de ce groupe."}
+    
+#     role_str = (body.role or "standard").lower()
+
+#     if role_str in ["propriétaire", "owner"]:
+#         role_to_save = UserRole.OWNER
+#     else:
+#         try:
+#             role_to_save = UserRole(role_str)
+#         except ValueError:
+#             role_to_save = UserRole.STANDARD
+
+#     new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=role_to_save, nickname=body.nickname)
+#     db.add(new_membre)
+#     db.commit()
+    
+#     return {
+#         "message" : f"Membre ajouté au groupe {groupe_id}",
+#         "membre" : {"id": user.id, "email": user.email, "role": body.role, "nickname" : new_membre.nickname}
+#     }
+
+#Ajouter un membre à un groupe
 @router.post("/{groupe_id}/membres", status_code=201)
 def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
+    if not current_membership or current_membership.role.value not in ["owner", "propriétaire"]:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"erreur": "Action non autorisée. Seul le propriétaire peut inviter des membres."}
+
     user = db.query(User).filter(User.email == body.email).first()
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"erreur": f"Aucun utilisateur trouvé avec le courriel '{body.email}'."}
-    
+
     existing = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user.id).first()
     if existing:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"erreur" : "L'utilisateur est déjà membre de ce groupe."}
-    
+
     role_str = (body.role or "standard").lower()
 
     if role_str in ["propriétaire", "owner"]:
@@ -156,10 +193,10 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, curren
     new_membre = GroupUser(group_id=groupe_id, user_id=user.id, role=role_to_save, nickname=body.nickname)
     db.add(new_membre)
     db.commit()
-    
+
     return {
         "message" : f"Membre ajouté au groupe {groupe_id}",
-        "membre" : {"id": user.id, "email": user.email, "role": body.role, "nickname" : new_membre.nickname}
+        "membre" : {"id": user.id, "email": user.email, "role": role_to_save.value, "nickname" : new_membre.nickname}
     }
 
 #modif d'un membre d un groupe
