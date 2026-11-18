@@ -12,16 +12,13 @@ export default function Abonnement() {
   const [cvv, setCVV] = useState("");
   const [showCancelModal, setShowCancelModal] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  const [subscription, setSubscription] = useState({
-    premium: true,
-    ends_at: new Date().toISOString(),
-    status: "active",
-  });
-
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
+
+  // Par défaut : pas abonné. On attend la réponse de l'API avant d'afficher quoi que ce soit.
+  const [loading, setLoading] = useState(isLoggedIn);
+  const [subscription, setSubscription] = useState({ premium: false });
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -35,7 +32,7 @@ export default function Abonnement() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setSubscription(data);
+        setSubscription({ ...data, premium: data.premium === true });
         if (data.premium) {
           setSelectedPlan("ia");
         } else {
