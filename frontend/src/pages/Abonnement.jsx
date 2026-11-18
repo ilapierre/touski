@@ -51,7 +51,8 @@ export default function Abonnement() {
   const handleSubscribeSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("/api/abonnements/", {
+    try {
+      const response = await fetch("/api/abonnements/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +63,15 @@ export default function Abonnement() {
     const data = await response.json();
     setSubscription({ premium: true, ends_at: data.ends_at, status: "active" });
     setSelectedPlan("ia");
+
     setShowCheckout(false);
+    setCardNumber("");
+    setExpired("");
+    setCVV("");
+    } catch {
+      alert("Une erreur est survenue lors du paiement.");
+    }
+    
   };
 
   const handleCancelSubscription = async () => {
