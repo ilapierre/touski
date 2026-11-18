@@ -247,3 +247,9 @@
 .btn-cancel:hover {
     background-color: #e2e8f0;
 }
+
+.plan-expirer {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 5px;
+}

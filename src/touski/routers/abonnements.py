@@ -12,21 +12,6 @@ from touski.models.groups_users import GroupUser
 router = APIRouter(prefix="/abonnements", tags=["abonnements"])
  
 #état de l'abonnement de l'utilisateur connecté
-# @router.get("/moi")
-# def get_mon_abonnement():
-#     return {"premium": False}
- 
-#acheter l'abonnement IA
-# @router.post("/", status_code=201)
-# def acheter_abonnement():
-#     return {"message": "Abonnement activé avec succès"}
- 
-#annuler l'abonnement
-@router.delete("/moi")
-def annuler_abonnement():
-    return {"message": "Abonnement annulé"}
- 
- 
 @router.get("/moi")
 def get_mon_abonnement(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     membership  = db.query(GroupUser).filter(GroupUser.user_id == current_user.id).first()
@@ -36,7 +21,7 @@ def get_mon_abonnement(current_user: User = Depends(get_current_user), db: Sessi
     subscription = db.query(Subscription).filter(
         Subscription.group_id == membership.group_id,
         Subscription.status == SubscriptionStatus.ACTIVE,
-        Subscription.ends_at > datetime.utcnow()
+        Subscription.ends_at > datetime.now()
     ).first()
     
     if subscription:
@@ -49,8 +34,9 @@ def get_mon_abonnement(current_user: User = Depends(get_current_user), db: Sessi
     return {
         "premium": False
     }
-    
-@router.get("/", status_code=201)
+ 
+#acheter l'abonnement IA
+@router.post("/", status_code=201)
 def acheter_abonnement(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     membership = db.query(GroupUser).filter(GroupUser.user_id == current_user.id).first()
     if not membership:
@@ -64,7 +50,7 @@ def acheter_abonnement(current_user: User = Depends(get_current_user), db: Sessi
         Subscription.status == SubscriptionStatus.ACTIVE
     ).first()
     
-    ends_at = datetime.now(timezone.utc) + timedelta(days=356)
+    ends_at = datetime.now() + timedelta(days=356)
     
     if existing_sub:
         existing_sub.ends_at = ends_at
@@ -83,3 +69,22 @@ def acheter_abonnement(current_user: User = Depends(get_current_user), db: Sessi
     
     return {"message": "Abonnement activé avec succès",
             "ends_at" : subscription.ends_at.isoformat()}
+ 
+#annuler l'abonnement
+@router.delete("/moi")
+def annuler_abonnement(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    membership = db.query(GroupUser).filter(GroupUser.user_id == current_user.id).first()
+    if not membership:
+        return {"message": "Aucun groupe trouvé pour l'utilisateur."}
+    
+    subscription = db.query(Subscription).filter(
+        Subscription.group_id == membership.group_id,
+        Subscription.status == SubscriptionStatus.ACTIVE
+    ).first()
+    
+    if subscription:
+        subscription.status = SubscriptionStatus.CANCELLED
+        db.commit()
+        return {"message": "Abonnement annulé avec succès."}
+    
+    return {"message": "Abonnement annulé"}

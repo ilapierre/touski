@@ -5,11 +5,19 @@ import "./Abonnement.css";
 export default function Abonnement() {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [showCheckout, setShowCheckout] = useState(false);
-  const [subscription, setSubscription] = useState({ premium: false });
-  const [loading, setLoading] = useState(true);
+  // const [subscription, setSubscription] = useState({ premium: false });
+  // const [loading, setLoading] = useState(true);
   const [cardNumber, setCardNumber] = useState("");
   const [expired, setExpired] = useState("");
   const [cvv, setCVV] = useState("");
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [subscription, setSubscription] = useState({
+    premium: true,
+    ends_at: new Date().toISOString(),
+    status: "active",
+  });
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -53,25 +61,29 @@ export default function Abonnement() {
 
     try {
       const response = await fetch("/api/abonnements/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const data = await response.json();
-    setSubscription({ premium: true, ends_at: data.ends_at, status: "active" });
-    setSelectedPlan("ia");
+      const data = await response.json();
+      
+      setSubscription({
+        premium: true,
+        ends_at: data.ends_at,
+        status: "active",
+      });
+      setSelectedPlan("ia");
 
-    setShowCheckout(false);
-    setCardNumber("");
-    setExpired("");
-    setCVV("");
+      setShowCheckout(false);
+      setCardNumber("");
+      setExpired("");
+      setCVV("");
     } catch {
       alert("Une erreur est survenue lors du paiement.");
     }
-    
   };
 
   const handleCancelSubscription = async () => {
@@ -84,6 +96,7 @@ export default function Abonnement() {
 
     setSubscription({ premium: false });
     setSelectedPlan("gratuit");
+    setShowCancelModal(false);
   };
 
   if (loading) {
@@ -141,26 +154,61 @@ export default function Abonnement() {
               <li>Recettes de base</li>
               <li>IA</li>
             </ul>
-            <p className="plan-passage">
+            <div className="plan-passage">
               {isLoggedIn ? (
                 subscription.premium ? (
-                  <span> Plan Actif </span>
+                  <div className="active-plan-info">
+                    <span className="plan-actif">Plan Actif</span>
+                    {console.log("Current subscription state:", subscription)}
+
+                    {subscription.ends_at && (
+                      <p className="plan-expirer">
+                        Expire le :{" "}
+                        {new Date(subscription.ends_at).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
                 ) : (
                   "Acheter maintenant"
                 )
               ) : (
                 "Connectez-vous ou inscrivez-vous pour abonner votre groupe. "
               )}
-            </p>
+            </div>
           </div>
         </div>
       </div>
 
       {subscription.premium && isLoggedIn && (
         <div>
-          <button onClick={handleCancelSubscription}>
+          <button onClick={() => setShowCancelModal(true)}>
             Annuler l'abonnement
           </button>
+        </div>
+      )}
+
+      {showCancelModal && (
+        <div className="checkout-container">
+          <div className="checkout-form">
+            <h2>Confirmation d'annulation</h2>
+            <p>Êtes-vous sûr de vouloir annuler votre abonnement?</p>
+          </div>
+          <div className="btn-action">
+            <button
+              type="button"
+              className="btn-submit"
+              onClick={handleCancelSubscription}
+            >
+              Oui, annuler
+            </button>
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={() => setShowCancelModal(false)}
+            >
+              Retour
+            </button>
+          </div>
         </div>
       )}
 
