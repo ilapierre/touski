@@ -1,20 +1,43 @@
 import { useEffect, useState } from "react";
 import "./RestrictionModal.css";
 
-export default function RestrictionModal({ onClose }) {
-  const foods = [
-    { id: 1, name: "Arachides" },
-    { id: 2, name: "Lait" },
-  ];
+export default function RestrictionModal({ userId, onClose, onAdded }) {
+  const [foods, setFoods] = useState([]);
   const [foodId, setFoodId] = useState("");
   const [note, setNote] = useState("");
   const [erreur, setErreur] = useState("");
+  //adresse du backend
+  const API_URL = "http://localhost:8000";
+
+  // Charger la liste des aliments au montage du composant
+  useEffect(() => {
+    fetch(`${API_URL}/foods`) // adapte à ta route d'aliments
+      .then((res) => res.json())
+      .then(setFoods)
+      .catch(() => setErreur("Impossible de charger les aliments"));
+  }, []);
+
+  // Soumettre le formulaire pour ajouter une restriction
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!foodId) return setErreur("Choisis un aliment");
+
+    const res = await fetch(`${API_URL}/users/${userId}/allergies`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ food_id: Number(foodId), note: note || null }),
+    });
+
+    if (!res.ok) return setErreur("Erreur lors de l'ajout");
+    onAdded(await res.json());
+    onClose();
+  }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h3>Ajouter une restriction</h3>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>
             Aliment
             <select value={foodId} onChange={(e) => setFoodId(e.target.value)}>
