@@ -253,3 +253,26 @@
   color: #666;
   margin-top: 5px;
 }
+
+.btn-cancel-abon-container {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-cancel-abon {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-cancel-abon:hover {
+    background-color: #f5c6cb;
+    color: #491217;
+}

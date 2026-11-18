@@ -5,8 +5,6 @@ import "./Abonnement.css";
 export default function Abonnement() {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [showCheckout, setShowCheckout] = useState(false);
-  // const [subscription, setSubscription] = useState({ premium: false });
-  // const [loading, setLoading] = useState(true);
   const [cardNumber, setCardNumber] = useState("");
   const [expired, setExpired] = useState("");
   const [cvv, setCVV] = useState("");
@@ -16,7 +14,6 @@ export default function Abonnement() {
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
 
-  // Par défaut : pas abonné. On attend la réponse de l'API avant d'afficher quoi que ce soit.
   const [loading, setLoading] = useState(isLoggedIn);
   const [subscription, setSubscription] = useState({ premium: false });
 
@@ -177,8 +174,12 @@ export default function Abonnement() {
       </div>
 
       {subscription.premium && isLoggedIn && (
-        <div>
-          <button onClick={() => setShowCancelModal(true)}>
+        <div className="btn-cancel-abon-container">
+          <button 
+            type="button"
+            className="btn-cancel-abon"
+            onClick={() => setShowCancelModal(true)}
+            >
             Annuler l'abonnement
           </button>
         </div>
