@@ -26,11 +26,10 @@ export default function Abonnement() {
     (typeof role === "string" ? role : role?.value || "").toLowerCase();
 
   const currentUserRole = getRoleString(
-    membres.find((m) => m.email === currentUserEmail)?.role
+    membres.find((m) => m.email === currentUserEmail)?.role,
   );
   const isOwner = ["owner", "propriétaire"].includes(currentUserRole);
   useEffect(() => {
-
     if (!isLoggedIn) {
       return;
     }
@@ -55,9 +54,12 @@ export default function Abonnement() {
         }
 
         if (groupeIdAct) {
-          const membresRes = await fetch(`/api/groupes/${groupeIdAct}/membres`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const membresRes = await fetch(
+            `/api/groupes/${groupeIdAct}/membres`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
           if (membresRes.ok) {
             const membresData = await membresRes.json();
             setMembres(membresData);
@@ -78,7 +80,7 @@ export default function Abonnement() {
     if (!isLoggedIn) {
       navigate("/connexion");
     } else if (!isOwner) {
-      setErrorMsg("Seul le propriétaire du groupe peut gérer l'abonnement.")
+      setErrorMsg("Seul le propriétaire du groupe peut gérer l'abonnement.");
     } else if (!subscription.premium) {
       setShowCheckout(true);
     }
@@ -146,11 +148,7 @@ export default function Abonnement() {
         </p>
       </div>
 
-      {errorMsg && (
-        <div className="abon-error">
-            {errorMsg}
-        </div>
-      )}
+      {errorMsg && <div className="abon-error">{errorMsg}</div>}
 
       <div className="plans">
         <div
@@ -192,7 +190,10 @@ export default function Abonnement() {
               {!isLoggedIn ? (
                 "Connectez-vous ou inscrivez-vous pour abonner votre groupe."
               ) : !isOwner ? (
-                <span className="plan-restreint"> Réservé au propriétaire du groupe</span>
+                <span className="plan-restreint">
+                  {" "}
+                  Réservé au propriétaire du groupe
+                </span>
               ) : subscription.premium ? (
                 <div className="active-plan-info">
                   <span className="plan-actif">Plan Actif</span>
@@ -211,7 +212,7 @@ export default function Abonnement() {
         </div>
       </div>
 
-      {subscription.premium && isLoggedIn && isOwner &&(
+      {subscription.premium && isLoggedIn && isOwner && (
         <div className="btn-cancel-abon-container">
           <button
             type="button"
@@ -228,22 +229,22 @@ export default function Abonnement() {
           <div className="checkout-form">
             <h2>Confirmation d'annulation</h2>
             <p>Êtes-vous sûr de vouloir annuler votre abonnement?</p>
-          
-          <div className="btn-action">
-            <button
-              type="button"
-              className="btn-submit"
-              onClick={handleCancelSubscription}
-            >
-              Oui, annuler
-            </button>
-            <button
-              type="button"
-              className="btn-cancel"
-              onClick={() => setShowCancelModal(false)}
-            >
-              Retour
-            </button>
+
+            <div className="btn-action">
+              <button
+                type="button"
+                className="btn-submit"
+                onClick={handleCancelSubscription}
+              >
+                Oui, annuler
+              </button>
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={() => setShowCancelModal(false)}
+              >
+                Retour
+              </button>
             </div>
           </div>
         </div>
