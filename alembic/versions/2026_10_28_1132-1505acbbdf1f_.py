@@ -25,17 +25,10 @@ def upgrade() -> None:
     op.add_column('foods', sa.Column('fat', sa.Integer(), nullable=True))
     op.add_column('foods', sa.Column('proteins', sa.Integer(), nullable=True))
     op.add_column('foods', sa.Column('carbohydrates', sa.Integer(), nullable=True))
-    # SQLite can't ALTER TABLE ADD CONSTRAINT, so use batch mode (table recreate)
-    with op.batch_alter_table('users_restrictions') as batch_op:
-        batch_op.create_foreign_key('fk_users_restrictions_user_id', 'users', ['user_id'], ['id'])
-        batch_op.create_foreign_key('fk_users_restrictions_food_id', 'foods', ['food_id'], ['id'])
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    with op.batch_alter_table('users_restrictions') as batch_op:
-        batch_op.drop_constraint('fk_users_restrictions_food_id', type_='foreignkey')
-        batch_op.drop_constraint('fk_users_restrictions_user_id', type_='foreignkey')
     op.drop_column('foods', 'carbohydrates')
     op.drop_column('foods', 'proteins')
     op.drop_column('foods', 'fat')

@@ -17,6 +17,16 @@ if config.config_file_name is not None:
 
 target_metadata = Base.metadata
 
+# Options communes, compatibles MySQL et SQLite.
+COMMON_CONFIG = {
+    # SQLite ne supporte pas la plupart des ALTER TABLE: le mode batch recrée la table.
+    "render_as_batch": True,
+    # Détecte aussi les changements de type de colonne.
+    "compare_type": True,
+    # MySQL n'a pas de DDL transactionnel.
+    "transaction_per_migration": True,
+}
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
@@ -41,7 +51,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        render_as_batch=True,
+        **COMMON_CONFIG,
     )
 
     with context.begin_transaction():
@@ -63,9 +73,9 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, 
+            connection=connection,
             target_metadata=target_metadata,
-            render_as_batch=True,
+            **COMMON_CONFIG,
         )
 
         with context.begin_transaction():

@@ -1,6 +1,7 @@
 from datetime import datetime
 from contextlib import contextmanager
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session, sessionmaker, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import DateTime
 from touski.core.config import DATABASE_URL
@@ -21,13 +22,30 @@ class Base(DeclarativeBase):
     )
 
 
-engine = create_engine(
-    DATABASE_URL,
-    pool_size=10,
-    max_overflow=20,
-    pool_pre_ping=True,
-    pool_recycle=3600,
-)
+IS_SQLITE = make_url(DATABASE_URL).get_backend_name() == "sqlite"
+
+if IS_SQLITE:
+    # check_same_thread: FastAPI utilise la connexion depuis plusieurs threads.
+    engine_kwargs = {"connect_args": {"check_same_thread": False}}
+else:
+    engine_kwargs = {
+        "pool_size": 10,
+        "max_overflow": 20,
+        "pool_pre_ping": True,
+        "pool_recycle": 3600,
+    }
+
+engine = create_engine(DATABASE_URL, **engine_kwargs)
+
+
+@event.listens_for(engine, "connect")
+def _enable_sqlite_foreign_keys(dbapi_connection, _connection_record):
+    # SQLite ignore les clés étrangères par défaut.
+    if IS_SQLITE:
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
