@@ -2,6 +2,7 @@ import "./Profil.css";
 import photoProfilDefault from "../assets/photo-profil-vide.jpg";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import RestrictionModal from "../components/RestrictionModal";
 
 const API_URL = "/api";
 
