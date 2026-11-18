@@ -13,6 +13,10 @@ function Profil() {
   const [erreur, setErreur] = useState("");
   const navigate = useNavigate();
 
+  //pour les restrictions
+  const [showModal, setShowModal] = useState(false);
+  const [restrictions, setRestrictions] = useState([]);
+
   useEffect(() => {
     async function chargerProfil() {
       const res = await fetch(`${API_URL}/auth/moi`, {
@@ -175,8 +179,27 @@ function Profil() {
 
       <section className="profil-section">
         <h3>Mes restrictions alimentaires :</h3>
-        <p className="profil-vide">Aucune restriction pour l'instant.</p>
+        {restrictions.length === 0 ? (
+          <p className="profil-vide">Aucune restriction pour l'instant.</p>
+        ) : (
+          <ul>
+            {restrictions.map((r) => (
+              <li key={r.id}>
+                {r.food_id} {r.note && `— ${r.note}`}
+              </li>
+            ))}
+          </ul>
+        )}
+        <button onClick={() => setShowModal(true)}>+ Ajouter</button>
       </section>
+
+      {showModal && (
+        <RestrictionModal
+          userId={user.id}
+          onClose={() => setShowModal(false)}
+          onAdded={(r) => setRestrictions([...restrictions, r])}
+        />
+      )}
 
       <section className="profil-section">
         <h3>Groupe :</h3>
