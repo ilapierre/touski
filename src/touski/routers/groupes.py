@@ -132,7 +132,9 @@ def list_membres(groupe_id: int, current_user: User = Depends(get_current_user),
 @router.post("/{groupe_id}/membres", status_code=201)
 def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
-    if not current_membership or current_membership.role.value not in ["owner", "propriétaire"]:
+    
+    allowed_roles = ["owner", "propriétaire", "privileged", "privilégié"]
+    if not current_membership or current_membership.role.value not in allowed_roles:
         response.status_code = status.HTTP_403_FORBIDDEN
         return {"erreur": "Action non autorisée. Seul le propriétaire peut inviter des membres."}
 
@@ -198,9 +200,11 @@ def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response
 @router.delete("/{groupe_id}/membres/{user_id}")
 def remove_membre(groupe_id: int, user_id: int, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
-    is_owner = current_membership and current_membership.role.value in ["owner", "propriétaire"]
     
-    if not is_owner:
+    allowed_roles = ["owner", "propriétaire", "privileged", "privilégié"];
+    roleChangement = current_membership and current_membership.role.value in allowed_roles
+    
+    if not roleChangement:
         response.status_code = status.HTTP_403_FORBIDDEN
         return {"erreur": "Action non autorisée. Seul le propriétaire peut retirer des membres."}
     
