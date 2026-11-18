@@ -178,6 +178,7 @@
     margin-bottom: 0.25rem;
 }
 
+/* Formulaire du carte */
 .form-group {
     margin-bottom: 1rem;
     display: flex;
@@ -210,6 +211,7 @@
     gap: 12px;
 }
 
+/* Bouton poour confirmer or non l'annulation */
 .btn-action {
     display: flex;
     gap: 20px;
@@ -254,6 +256,7 @@
   margin-top: 5px;
 }
 
+/* Bouton pour annuler */
 .btn-cancel-abon-container {
     margin-top: 25px;
     display: flex;
@@ -277,6 +280,7 @@
     color: #491217;
 }
 
+/* Message d'erreur pour abonnement */
 .abon-error {
   color: #d9534f;
   background-color: #f8d7da;
