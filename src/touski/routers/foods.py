@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from touski.db.database import get_session_dependency
 from touski.models import Food
 from touski.services.static_service import with_image_url
+from touski.db import SessionLocal
 
 router = APIRouter(prefix="/foods", tags=["foods"])
 
@@ -52,9 +53,9 @@ def get_food(food_id: int, request: Request, session=Depends(get_session_depende
 
 # POST Créer un aliment (ajout manuel)
 @router.post("/addFood", status_code=201)
-def create_food(Food: Food, db: Session = Depends(get_db)):
+def create_food(Food: Food, db: Session = Depends(get_food)):
  try:
-   db_food = Food(**food.dict())
+   db_food = Food(**Food.dict())
    db.add(db_food)
    db.commit()
    db.refresh(db_food)
@@ -72,15 +73,15 @@ def create_food(Food: Food, db: Session = Depends(get_db)):
 
 # PUT Modification d'un aliment
 @router.put("/{food_id}")
-def update_food(food_id: int, Food: Food, db: Session = Depends(get_db)):
-try:
+def update_food(food_id: int, Food: Food, db: Session = Depends(get_food)):
+ try:
      db_food = db.query(Food).filter(Food.id == food_id).first()
      if not db_food:
          raise HTTPException(
              status_code=status.HTTP_404_NOT_FOUND,
               detail=f"Aliment avec l'ID {food_id} non trouvé."
             )
-     for key, value in food.dict().items():
+     for key, value in Food.dict().items():
           setattr(db_food, key, value)       
      db.commit()
      db.refresh(db_food)
@@ -88,9 +89,9 @@ try:
         "message": f"Aliment {food_id} mis à jour avec succès !",
         "data": db_food
     }
-except HTTPException:
+ except HTTPException:
     raise
-except Exception as e:
+ except Exception as e:
     db.rollback()
     raise HTTPException(
      status_code=status.HTTP_400_BAD_REQUEST,
