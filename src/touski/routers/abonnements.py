@@ -50,7 +50,7 @@ def acheter_abonnement(current_user: User = Depends(get_current_user), db: Sessi
         Subscription.status == SubscriptionStatus.ACTIVE
     ).first()
     
-    ends_at = datetime.now() + timedelta(days=356)
+    ends_at = datetime.now() + timedelta(days=365)
     
     if existing_sub:
         existing_sub.ends_at = ends_at
