@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import './FoodCard.css'
+import { useState } from "react";
+import "./FoodCard.css";
 
 const macros = [
-  { key: 'proteins', label: 'Protéines' },
-  { key: 'carbohydrates', label: 'Glucides' },
-  { key: 'fat', label: 'Lipides' },
-]
+  { key: "proteins", label: "Protéines" },
+  { key: "carbohydrates", label: "Glucides" },
+  { key: "fat", label: "Lipides" },
+];
 
 function FoodImage({ food }) {
-  const [failed, setFailed] = useState(false)
+  const [failed, setFailed] = useState(false);
 
   return (
     <div className="food-image">
@@ -23,34 +23,59 @@ function FoodImage({ food }) {
         <span aria-hidden="true">{food.name?.charAt(0).toUpperCase()}</span>
       )}
     </div>
-  )
+  );
 }
 
-function FoodCard({ food, onSelect }) {
+function FoodCard({ food, onSelect, onAdd }) {
+  const [added, setAdded] = useState(false);
+
+  async function handleAdd() {
+    const ok = await onAdd(food);
+    if (ok) {
+      setAdded(true);
+    }
+  }
+
   return (
     <article className="food-card">
       <FoodImage food={food} />
       <div className="food-body">
         <div className="food-header">
           <h3 title={food.name}>
-            <button type="button" className="food-open" onClick={() => onSelect(food)}>
+            <button
+              type="button"
+              className="food-open"
+              onClick={() => onSelect(food)}
+            >
               {food.name}
             </button>
           </h3>
-          {food.kcal != null && <span className="kcal-badge">{food.kcal} kcal</span>}
+          {food.kcal != null && (
+            <span className="kcal-badge">{food.kcal} kcal</span>
+          )}
         </div>
         <p className="food-per">{food.per && `pour ${food.per}`}</p>
         <dl className="macros">
           {macros.map(({ key, label }) => (
             <div key={key}>
               <dt>{label}</dt>
-              <dd>{food[key] != null ? `${food[key]} g` : '—'}</dd>
+              <dd>{food[key] != null ? `${food[key]} g` : "—"}</dd>
             </div>
           ))}
         </dl>
+        {onAdd && (
+          <button
+            type="button"
+            className="food-add"
+            onClick={handleAdd}
+            disabled={added}
+          >
+            {added ? "Ajouté" : "+ Ajouter au frigo"}
+          </button>
+        )}
       </div>
     </article>
-  )
+  );
 }
 
-export default FoodCard
+export default FoodCard;

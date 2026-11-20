@@ -1,66 +1,78 @@
-import { useEffect, useState } from 'react'
-import FoodCard from '../components/FoodCard'
-import FoodModal from '../components/FoodModal'
-import './Foods.css'
+import { useEffect, useState } from "react";
+import FoodCard from "../components/FoodCard";
+import FoodModal from "../components/FoodModal";
+import "./Foods.css";
 
-const PAGE_SIZE = 24
+const PAGE_SIZE = 24;
 
 function Foods() {
-  const [foods, setFoods] = useState([])
-  const [page, setPage] = useState(0)
-  const [input, setInput] = useState('')
-  const [query, setQuery] = useState('')
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [selected, setSelected] = useState(null)
+  const [foods, setFoods] = useState([]);
+  const [page, setPage] = useState(0);
+  const [input, setInput] = useState("");
+  const [query, setQuery] = useState("");
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
     const params = new URLSearchParams({
       limit: PAGE_SIZE,
       offset: page * PAGE_SIZE,
-    })
-    if (query) params.set('q', query)
+    });
+    if (query) params.set("q", query);
 
     fetch(`/api/foods/?${params}`, { signal: controller.signal })
       .then((res) => {
-        if (!res.ok) throw new Error(`Erreur ${res.status}`)
-        return res.json()
+        if (!res.ok) throw new Error(`Erreur ${res.status}`);
+        return res.json();
       })
       .then((data) => {
-        setTotal(data.total)
-        setFoods(data.foods)
-        setLoading(false)
+        setTotal(data.total);
+        setFoods(data.foods);
+        setLoading(false);
       })
       .catch((err) => {
-        if (err.name === 'AbortError') return
-        setError(err.message)
-        setLoading(false)
-      })
+        if (err.name === "AbortError") return;
+        setError(err.message);
+        setLoading(false);
+      });
 
-    return () => controller.abort()
-  }, [page, query])
+    return () => controller.abort();
+  }, [page, query]);
 
   const goToPage = (next) => {
-    setLoading(true)
-    setError(null)
-    setPage(next)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    setLoading(true);
+    setError(null);
+    setPage(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleSearch = (e) => {
-    e.preventDefault()
-    const next = input.trim()
-    if (next === query) return
-    setLoading(true)
-    setError(null)
-    setPage(0)
-    setQuery(next)
+    e.preventDefault();
+    const next = input.trim();
+    if (next === query) return;
+    setLoading(true);
+    setError(null);
+    setPage(0);
+    setQuery(next);
+  };
+  const token = localStorage.getItem("token");
+  async function handleAdd(food) {
+    const res = await fetch(`/api/frigo/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ food_id: food.id }),
+    });
+    return res.ok;
   }
 
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const pagination = (
     <nav className="pagination" aria-label="Pagination">
@@ -84,7 +96,7 @@ function Foods() {
         →
       </button>
     </nav>
-  )
+  );
 
   return (
     <main className="foods">
@@ -100,10 +112,16 @@ function Foods() {
         <button type="submit">Rechercher</button>
       </form>
       {loading && <p className="status">Chargement…</p>}
-      {error && <p className="status error">Impossible de charger les aliments : {error}</p>}
+      {error && (
+        <p className="status error">
+          Impossible de charger les aliments : {error}
+        </p>
+      )}
       {!loading && !error && foods.length === 0 && (
         <p className="status">
-          {query ? `Aucun résultat pour « ${query} ».` : 'Aucun aliment pour le moment.'}
+          {query
+            ? `Aucun résultat pour « ${query} ».`
+            : "Aucun aliment pour le moment."}
         </p>
       )}
       <ul className="foods-grid">
@@ -114,9 +132,15 @@ function Foods() {
         ))}
       </ul>
       {pagination}
-      {selected && <FoodModal food={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <FoodModal
+          food={selected}
+          onClose={() => setSelected(null)}
+          onAdd={token ? handleAdd : undefined}
+        />
+      )}
     </main>
-  )
+  );
 }
 
-export default Foods
+export default Foods;
