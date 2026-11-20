@@ -169,7 +169,7 @@ function FoodModal({ food, onClose, onAdd }) {
         {onAdd && (
           <button
             type="button"
-            className="food-add"
+            className="food-modal-add"
             onClick={handleAdd}
             disabled={added}
           >

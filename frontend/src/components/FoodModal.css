@@ -109,11 +109,22 @@
   text-transform: uppercase;
 }
 
-.nutriscore-a { background: #038141; }
-.nutriscore-b { background: #85bb2f; }
-.nutriscore-c { background: #fecb02; color: #1f2328; }
-.nutriscore-d { background: #ee8100; }
-.nutriscore-e { background: #e63e11; }
+.nutriscore-a {
+  background: #038141;
+}
+.nutriscore-b {
+  background: #85bb2f;
+}
+.nutriscore-c {
+  background: #fecb02;
+  color: #1f2328;
+}
+.nutriscore-d {
+  background: #ee8100;
+}
+.nutriscore-e {
+  background: #e63e11;
+}
 
 .food-modal-details,
 .food-modal-macros {
@@ -187,4 +198,34 @@
   color: #bc4c00;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.food-modal-add {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #1f2328;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+
+.food-modal-add:hover:not(:disabled) {
+  background: #32383f;
+}
+
+.food-modal-add:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.food-modal-add:disabled {
+  background: #038141;
+  cursor: default;
 }
