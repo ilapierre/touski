@@ -1,25 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import './FoodModal.css'
-
-// Libellés des allergènes (tags OFF normalisés, sans préfixe de langue)
-const ALLERGENS = {
-  gluten: 'Gluten',
-  milk: 'Lait',
-  eggs: 'Œufs',
-  nuts: 'Fruits à coque',
-  peanuts: 'Arachides',
-  soybeans: 'Soja',
-  fish: 'Poisson',
-  crustaceans: 'Crustacés',
-  molluscs: 'Mollusques',
-  celery: 'Céleri',
-  mustard: 'Moutarde',
-  'sesame-seeds': 'Sésame',
-  'sulphur-dioxide-and-sulphites': 'Sulfites',
-  lupin: 'Lupin',
-}
-
-const allergenLabel = (tag) => ALLERGENS[tag] ?? tag.replaceAll('-', ' ')
+import { useRestrictions } from '../restrictions'
 
 const details = [
   { key: 'quantity', label: 'Quantité' },
@@ -46,6 +27,7 @@ const macros = [
 function FoodModal({ food, onClose }) {
   const dialogRef = useRef(null)
   const [failed, setFailed] = useState(false)
+  const { label } = useRestrictions()
 
   const shownDetails = details.filter(({ key }) => food[key])
   const hasNutrition = food.kcal != null || macros.some(({ key }) => food[key] != null)
@@ -142,7 +124,7 @@ function FoodModal({ food, onClose }) {
             <h3>Allergènes</h3>
             <ul className="food-modal-allergens">
               {allergens.map((tag) => (
-                <li key={tag}>{allergenLabel(tag)}</li>
+                <li key={tag}>{label(tag)}</li>
               ))}
             </ul>
           </section>

@@ -131,7 +131,6 @@ erDiagram
     foods_restrictions {
         int food_id PK, FK
         string restriction PK "32, clé de Restriction"
-        string kind "contains ou may_contain"
     }
 ```
 
@@ -149,13 +148,11 @@ erDiagram
 | `recipes_foods` | Ingrédients d'une recette (quantité et unité) |
 | `subscriptions` | Abonnement d'un groupe (statut : `active`, `cancelled`, `expired`, et `ends_at`) |
 | `payments` | Paiements d'un utilisateur pour un abonnement (montant, statut : `pending`, `paid`, `failed`) |
-| `users_restrictions` | Restrictions (allergènes) d'un utilisateur: clé courte `restriction` (ex. `nuts`), clé primaire (`user_id`, `restriction`) |
-| `foods_restrictions` | Allergènes d'un aliment: `restriction` et `kind` (`contains` ou `may_contain`), clé primaire (`food_id`, `restriction`) |
+| `users_restrictions` | Restrictions (allergènes) d'un utilisateur: clé `restriction` (nom OFF sans `en:`, ex. `nuts`), clé primaire (`user_id`, `restriction`) |
+| `foods_restrictions` | Allergènes d'un aliment: clé `restriction` (nom OFF sans `en:`), clé primaire (`food_id`, `restriction`) |
 
 ## Restrictions alimentaires
 
-Les 14 allergènes réglementaires de l'UE sont codés en dur dans `src/touski/restrictions.py` (enum `Restriction`: `milk`, `eggs`, `gluten`, `peanuts`, `nuts`, `soybeans`, `fish`, `crustaceans`, `molluscs`, `celery`, `mustard`, `sesame`, `sulphites`, `lupin`). Il n'y a pas de table de référence: `users_restrictions` et `foods_restrictions` stockent la clé courte en `varchar`, validée par l'enum (API) et par le scraper.
+Les 14 allergènes réglementaires de l'UE sont codés en dur dans `src/touski/restrictions.py` (enum `Restriction`). Le backend est la source de vérité: `GET /restrictions/` retourne les 14 clés avec leurs libellés (`{"milk": {"fr": "Lait", "en": "Milk"}, ...}`) et le frontend les charge de là. Il n'y a pas de table de référence: `users_restrictions` et `foods_restrictions` stockent la clé (le nom Open Food Facts sans le préfixe `en:`, ex. `nuts` ou `sulphur-dioxide-and-sulphites`) en `varchar`.
 
-Les tags Open Food Facts sont convertis par `parse_off_tag()` (insensible à la casse et aux accents, ignore le préfixe de langue, accepte des synonymes comme `en:sesame-seeds` ou `fr:lait`). Les tags inconnus sont ignorés.
-
-Un aliment est sécuritaire pour un groupe si aucune des restrictions de ses membres n'y apparaît (voir `services/restriction_service.py`).
+Le scraper convertit les tags `en:...` de `allergens_tags` avec `parse_off_tag()`. Tout autre tag est ignoré. Un aliment est sécuritaire pour un groupe si aucune restriction de ses membres n'y apparaît (voir `services/restriction_service.py`).

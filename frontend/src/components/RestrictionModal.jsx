@@ -1,117 +1,108 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRestrictions } from "../restrictions";
 import "./RestrictionModal.css";
 
-export default function RestrictionModal({ userId, onClose, onAdded }) {
-  const [foodId, setFoodId] = useState("");
+const API_URL = "/api";
+
+// Choix des restrictions de l'utilisateur
+export default function RestrictionModal({ userId, selected, onClose, onSaved }) {
+  const dialogRef = useRef(null);
+  const { restrictions: liste, label } = useRestrictions();
+  const [choix, setChoix] = useState(new Set(selected));
   const [erreur, setErreur] = useState("");
-  //adresse du backend
-  const API_URL = "http://localhost:8000";
 
-  //faire un map d allergie possible manuellement
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
+  }, []);
 
-  const allergens = [
-    { id: 1, name: "Arachides" },
-    { id: 2, name: "Noix (amandes, noix de cajou, noisettes, etc ...)" },
-    { id: 3, name: "Lait" },
-    { id: 4, name: "Oeufs" },
-    { id: 5, name: "Poissons" },
-    { id: 6, name: "Crustacés et mollusques" },
-    { id: 7, name: "Soya" },
-    { id: 8, name: "Blé et triticale" },
-    { id: 9, name: "Sésame" },
-    { id: 10, name: "Moutarde" },
-    { id: 11, name: "Céleri" },
-    { id: 12, name: "Sulfites" },
-    { id: 13, name: "Kiwi" },
-  ];
+  // Clic sur l'arrière-plan (le <dialog> lui-même) = fermeture
+  function handleBackdropClick(e) {
+    if (e.target === dialogRef.current) onClose();
+  }
 
-  const intolerances = [
-    { id: 1, name: "Gluten" },
-    { id: 2, name: "Lactose" },
-    { id: 3, name: "Fructose" },
-    { id: 4, name: "Histamine" },
-    { id: 5, name: "Caféine" },
-    { id: 6, name: "Aspartame" },
-  ];
+  function basculer(key) {
+    const suivant = new Set(choix);
+    if (suivant.has(key)) suivant.delete(key);
+    else suivant.add(key);
+    setChoix(suivant);
+  }
 
-  const autresRestrictions = [
-    { id: 1, name: "Végétarien" },
-    { id: 2, name: "Vegan" },
-    { id: 3, name: "Pescétarien" },
-    { id: 4, name: "Flexitarien" },
-    { id: 5, name: "Halal" },
-    { id: 6, name: "Casher" },
-  ];
-
-  // Soumettre le formulaire pour ajouter une restriction
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!foodId) return setErreur("Choisis un aliment");
+    setErreur("");
 
-    const res = await fetch(`${API_URL}/users/${userId}/allergies`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ food_id: Number(foodId), note: note || null }),
+    const res = await fetch(`${API_URL}/restrictions/${userId}/restrictions`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ restrictions: [...choix] }),
     });
 
-    if (!res.ok) return setErreur("Erreur lors de l'ajout");
-    onAdded(await res.json());
+    if (!res.ok) return setErreur("Erreur lors de l'enregistrement");
+    onSaved((await res.json()).restrictions);
     onClose();
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h3>Ajouter une ou plusieurs restrictions</h3>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Allergies
-            <select value={foodId} onChange={(e) => setFoodId(e.target.value)}>
-              <option value="">-- Choisir --</option>
-              {allergens.map((allergen) => (
-                <option key={allergen.id} value={allergen.id}>
-                  {allergen.name}
-                </option>
-              ))}
-            </select>
-          </label>
+    <dialog
+      ref={dialogRef}
+      className="restriction-modal"
+      aria-labelledby="restriction-modal-title"
+      onClose={onClose}
+      onClick={handleBackdropClick}
+    >
+      <button
+        type="button"
+        className="restriction-modal-close"
+        onClick={onClose}
+        aria-label="Fermer"
+      >
+        ×
+      </button>
 
-          <label>
-            Intolérances
-            <select value={foodId} onChange={(e) => setFoodId(e.target.value)}>
-              <option value="">-- Choisir --</option>
-              {intolerances.map((intolerance) => (
-                <option key={intolerance.id} value={intolerance.id}>
-                  {intolerance.name}
-                </option>
-              ))}
-            </select>
-          </label>
+      <form className="restriction-modal-body" onSubmit={handleSubmit}>
+        <header className="restriction-modal-header">
+          <h2 id="restriction-modal-title">Mes restrictions alimentaires</h2>
+          <p>
+            Sélectionnez les allergènes à éviter. Ils serviront à filtrer les
+            aliments et les recettes proposés.
+          </p>
+        </header>
 
-          <label>
-            Autres restrictions
-            <select value={foodId} onChange={(e) => setFoodId(e.target.value)}>
-              <option value="">-- Choisir --</option>
-              {autresRestrictions.map((restriction) => (
-                <option key={restriction.id} value={restriction.id}>
-                  {restriction.name}
-                </option>
-              ))}
-            </select>
-          </label>
+        <div className="restriction-modal-choix">
+          {Object.keys(liste).map((key) => (
+            <label key={key} className="restriction-chip">
+              <input
+                type="checkbox"
+                checked={choix.has(key)}
+                onChange={() => basculer(key)}
+              />
+              <span>{label(key)}</span>
+            </label>
+          ))}
+        </div>
 
-          {erreur && <p className="modal-erreur">{erreur}</p>}
+        {erreur && <p className="restriction-modal-erreur">{erreur}</p>}
 
-          <div className="modal-actions">
-            <button type="button" onClick={onClose}>
+        <footer className="restriction-modal-footer">
+          <span className="restriction-modal-compte">
+            {choix.size === 0
+              ? "Aucune restriction"
+              : `${choix.size} sélectionnée${choix.size > 1 ? "s" : ""}`}
+          </span>
+          <div className="restriction-modal-actions">
+            <button type="button" className="restriction-btn" onClick={onClose}>
               Annuler
             </button>
-            <button type="submit" onClick={handleSubmit}>
-              Ajouter
+            <button type="submit" className="restriction-btn restriction-btn-primary">
+              Enregistrer
             </button>
           </div>
-        </form>
-      </div>
-    </div>
+        </footer>
+      </form>
+    </dialog>
   );
 }

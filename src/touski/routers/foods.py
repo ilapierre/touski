@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import HTTPException, Request, APIRouter, Depends, Query
+from sqlalchemy.orm import selectinload
 from touski.db.database import get_session_dependency
 from touski.models import Food
 from touski.services.static_service import with_image_url
@@ -10,6 +11,13 @@ router = APIRouter(prefix="/foods", tags=["foods"])
 # Pagination: nombre d'éléments à retourner et position de départ
 Limit = Annotated[int, Query(ge=1, le=100, description="Nombre max d'aliments")]
 Offset = Annotated[int, Query(ge=0, description="Nombre d'aliments à sauter")]
+
+
+def food_out(food: Food, base_url: str) -> dict:
+    allergens = sorted(r.restriction for r in food.restrictions)
+    data = with_image_url(food, base_url)
+    data.pop("restrictions", None)
+    return {**data, "allergens": allergens}
 
 
 # GET les aliments (paginés), avec le total pour calculer le nombre de pages
@@ -25,7 +33,13 @@ def list_foods(
     if q:
         query = query.filter(Food.name.like(f"%{q}%"))
     total = query.count()
-    foods = query.order_by(Food.id).limit(limit).offset(offset).all()
+    foods = (
+        query.options(selectinload(Food.restrictions))
+        .order_by(Food.id)
+        .limit(limit)
+        .offset(offset)
+        .all()
+    )
 
     base_url = str(request.base_url)
 
@@ -33,7 +47,7 @@ def list_foods(
         "limit": limit,
         "offset": offset,
         "total": total,
-        "foods": [with_image_url(f, base_url) for f in foods],
+        "foods": [food_out(f, base_url) for f in foods],
     }
 
 
@@ -41,7 +55,7 @@ def list_foods(
 @router.get("/{food_id}")
 def get_food(food_id: int, request: Request, session=Depends(get_session_dependency)):
     if food := session.get(Food, food_id):
-        return {"food": with_image_url(food, str(request.base_url))}
+        return {"food": food_out(food, str(request.base_url))}
 
     raise HTTPException(404, detail="Food not found")
 

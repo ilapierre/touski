@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from touski.routers.auth import get_current_user, hash_password
 from touski.models.users import User
 from touski.db.database import get_session_dependency
-from touski.routers.restriction import RestrictionCreate
 
     
 class UserUpdate(BaseModel):

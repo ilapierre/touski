@@ -3,6 +3,7 @@ import photoProfilDefault from "../assets/photo-profil-vide.jpg";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import RestrictionModal from "../components/RestrictionModal";
+import { useRestrictions } from "../restrictions";
 
 const API_URL = "/api";
 
@@ -16,7 +17,8 @@ function Profil() {
 
   //pour les restrictions
   const [showModal, setShowModal] = useState(false);
-  const [restrictions, setRestrictions] = useState([]);
+  const [restrictions, setRestrictions] = useState([]); // clés (ex. "nuts")
+  const { label: libelle } = useRestrictions();
 
   useEffect(() => {
     async function chargerProfil() {
@@ -32,6 +34,18 @@ function Profil() {
     }
     chargerProfil();
   }, [navigate]);
+
+  const userId = user?.id;
+  useEffect(() => {
+    if (!userId) return;
+    async function chargerRestrictions() {
+      const res = await fetch(`${API_URL}/restrictions/${userId}/restrictions`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      if (res.ok) setRestrictions((await res.json()).restrictions);
+    }
+    chargerRestrictions();
+  }, [userId]);
 
   function ouvrirEdition() {
     setForm({ name: user.name, email: user.email, password: "" });
@@ -184,21 +198,26 @@ function Profil() {
           <p className="profil-vide">Aucune restriction pour l'instant.</p>
         ) : (
           <ul>
-            {restrictions.map((r) => (
-              <li key={r.id}>
-                {r.food_id} {r.note && `— ${r.note}`}
-              </li>
+            {restrictions.map((key) => (
+              <li key={key}>{libelle(key)}</li>
             ))}
           </ul>
         )}
-        <button onClick={() => setShowModal(true)}>+ Ajouter</button>
+        <button
+          type="button"
+          className="profil-restrictions-btn"
+          onClick={() => setShowModal(true)}
+        >
+          <span aria-hidden="true">✎</span> Modifier
+        </button>
       </section>
 
       {showModal && (
         <RestrictionModal
           userId={user.id}
+          selected={restrictions}
           onClose={() => setShowModal(false)}
-          onAdded={(r) => setRestrictions([...restrictions, r])}
+          onSaved={setRestrictions}
         />
       )}
 
