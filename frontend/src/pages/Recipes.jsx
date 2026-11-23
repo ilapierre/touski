@@ -110,6 +110,7 @@ function Recipes() {
       <RestrictionFilter
         excluded={excluded}
         onToggle={toggleRestriction}
+        onSelect={setExcluded}
         onReset={() => setExcluded([])}
       />
       {loading && <p className="status">Chargement…</p>}

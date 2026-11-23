@@ -2,9 +2,54 @@
   margin-bottom: 1.5rem;
 }
 
-.filters h3 {
-  margin: 0 0 0.6rem;
+.filters summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
   font-size: 0.95rem;
+  font-weight: 600;
+  color: #57606a;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filters summary::-webkit-details-marker {
+  display: none;
+}
+
+.filters summary::before {
+  content: '▸';
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.filters[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.filters summary:hover {
+  color: #1f2328;
+}
+
+.filters:not([open]) summary {
+  margin-bottom: 0;
+}
+
+.filters-count {
+  min-width: 1.4rem;
+  padding: 0 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1.4rem;
+  text-align: center;
+  color: #1f2328;
+  background: #8bc98b;
+  border-radius: 999px;
+}
+
+.filters-message {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
   color: #57606a;
 }
 
@@ -40,7 +85,24 @@
   background: #aae4aa;
 }
 
+.filter-mine {
+  padding: 0.3rem 0.85rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2328;
+  background: #fff;
+  border: 1px solid #1f2328;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.filter-mine:hover {
+  background: #aae4aa;
+}
+
 .filter-chip:focus-visible,
+.filter-mine:focus-visible,
 .filter-reset:focus-visible {
   outline: 2px solid #0969da;
   outline-offset: 2px;
