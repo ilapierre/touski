@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from touski.db.database import get_session_dependency
 from touski.models import Food
 from touski.services.static_service import with_image_url
-from touski.db import SessionLocal
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/foods", tags=["foods"])
 
@@ -14,6 +14,29 @@ router = APIRouter(prefix="/foods", tags=["foods"])
 Limit = Annotated[int, Query(ge=1, le=100, description="Nombre max d'aliments")]
 Offset = Annotated[int, Query(ge=0, description="Nombre d'aliments à sauter")]
 
+#Modèles Pydantic pour la validation des données
+class AddFood(BaseModel): 
+    id: int
+    name: str
+    image_url: str | None = None
+    per: str | None = None
+    calories: int | None = None
+    fat: int | None = None
+    proteines: int | None = None
+    carbohydrates: int | None = None
+    quantity: int | None = None
+    
+    class UpdateFood(BaseModel): 
+     id: int
+     name: str
+     image_url: str | None = None
+     per: str | None = None
+     calories: int | None = None
+     fat: int | None = None
+     proteines: int | None = None
+     carbohydrates: int | None = None
+     quantity: int | None = None
+    
 
 # GET les aliments (paginés), avec le total pour calculer le nombre de pages
 @router.get("/")
@@ -53,7 +76,7 @@ def get_food(food_id: int, request: Request, session=Depends(get_session_depende
 
 # POST Créer un aliment (ajout manuel)
 @router.post("/addFood", status_code=201)
-def create_food(Food: Food, db: Session = Depends(get_food)):
+def create_food(data: AddFood, db: Session = Depends(get_session_dependency)):
  try:
    db_food = Food(**Food.dict())
    db.add(db_food)
@@ -73,7 +96,7 @@ def create_food(Food: Food, db: Session = Depends(get_food)):
 
 # PUT Modification d'un aliment
 @router.put("/{food_id}")
-def update_food(food_id: int, Food: Food, db: Session = Depends(get_food)):
+def update_food(food_id: int, Food: Food, db: Session = Depends(get_session_dependency)):
  try:
      db_food = db.query(Food).filter(Food.id == food_id).first()
      if not db_food:
