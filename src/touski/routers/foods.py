@@ -4,6 +4,8 @@ from fastapi import HTTPException, Request, APIRouter, Depends, Query
 from sqlalchemy.orm import selectinload
 from touski.db.database import get_session_dependency
 from touski.models import Food
+from touski.restrictions import Restriction
+from touski.services.restriction_service import blocked_food_ids
 from touski.services.static_service import with_image_url
 
 router = APIRouter(prefix="/foods", tags=["foods"])
@@ -25,6 +27,9 @@ def food_out(food: Food, base_url: str) -> dict:
 def list_foods(
     request: Request,
     q: Annotated[str | None, Query(description="Search food by name")] = None,
+    exclude: Annotated[
+        list[Restriction], Query(description="Exclure les aliments avec ces restrictions")
+    ] = [],
     limit: Limit = 50,
     offset: Offset = 0,
     session=Depends(get_session_dependency),
@@ -32,6 +37,8 @@ def list_foods(
     query = session.query(Food)
     if q:
         query = query.filter(Food.name.like(f"%{q}%"))
+    if exclude:
+        query = query.filter(Food.id.not_in(blocked_food_ids(exclude)))
     total = query.count()
     foods = (
         query.options(selectinload(Food.restrictions))
