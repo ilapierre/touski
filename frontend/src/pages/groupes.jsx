@@ -396,12 +396,15 @@ export default function Groupes({ groupeId = 1 }) {
                   {peutGererMembres && (
                     <td>
                       {!isCurrentUserOwner ? (
+                        !["owner", "propriétaire"].includes(getRoleString(membre.role)) && !isOwner) ? (
                         <button
                           className="g-btn g-btn-dlt"
                           onClick={() => handleRemoveMember(membre.id)}
                         >
                           Retirer
                         </button>
+                      ) : (
+                        <span className="g-owner">-</span>
                       ) : (
                         <span className="g-owner">-</span>
                       )}

@@ -136,7 +136,7 @@ def add_membre(groupe_id: int, body: AddMemberSchema, response: Response, curren
     allowed_roles = ["owner", "propriétaire", "privileged", "privilégié"]
     if not current_membership or current_membership.role.value not in allowed_roles:
         response.status_code = status.HTTP_403_FORBIDDEN
-        return {"erreur": "Action non autorisée. Seul le propriétaire peut inviter des membres."}
+        return {"erreur": "Action non autorisée. Seul le propriétaire ou un privilégié peut inviter des membres."}
 
     user = db.query(User).filter(User.email == body.email).first()
     if not user:
@@ -201,17 +201,27 @@ def update_membre(groupe_id: int, user_id: int, body: UpdateRoleSchema, response
 def remove_membre(groupe_id: int, user_id: int, response: Response, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     current_membership = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=current_user.id).first()
     
-    allowed_roles = ["owner", "propriétaire", "privileged", "privilégié"];
+    allowed_roles = ["owner", "propriétaire", "privileged", "privilégié"]
     roleChangement = current_membership and current_membership.role.value in allowed_roles
     
     if not roleChangement:
         response.status_code = status.HTTP_403_FORBIDDEN
-        return {"erreur": "Action non autorisée. Seul le propriétaire peut retirer des membres."}
+        return {"erreur": "Action non autorisée. Seul le propriétaire ou un privilégié peut retirer des membres."}
     
     member = db.query(GroupUser).filter_by(group_id=groupe_id, user_id=user_id).first()
     if not member:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"erreur": "Membre introuvable."}
+    
+    target_role = member.role.value if hasattr(member.role, "value") else str(member.role)
+    current_role = current_membership.role.value if hasattr(current_membership.role, "value") else str(current_membership.role)
+    
+    is_target_owner = target_role.lower() in ["owner", "propriétaire"]
+    is_current_owner = current_role.lower() in ["owner", "propriétaire"]
+    
+    if is_target_owner and not is_current_owner:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"erreur": "Un membre privilégié ne peut pas retirer le propriétaire du groupe."}
     
     db.delete(member)
     db.commit()
