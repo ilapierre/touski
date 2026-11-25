@@ -6,7 +6,9 @@ import { MemoryRouter } from "react-router";
 
 describe("Composant groupes", () => {
     beforeEach(() => {
+        vi.clearAllMocks();
         localStorage.clear();
+        globalThis.fetch = vi.fn();
     });
 
     // Affichage de la création de groupe
@@ -39,5 +41,29 @@ describe("Composant groupes", () => {
         expect(input.value).toBe("Mon Groupe");
     });
 
-    it("")
+    it("affiche la liste apès avoir saisi un nom et l'appui sur le bouton", async () => {
+       fetch
+        .mockResolvedValueOnce({
+            ok: true,
+            text: () => JSON.stringify({ id: 1, name: "Mon Groupe"}),
+        })
+        .mockResolvedValueOnce({
+            ok: true,
+            text: () => JSON.stringify({ members: [] }),
+        })
+       
+        render(
+            <MemoryRouter>
+                <Groupes groupeId={null}/>
+            </MemoryRouter>
+        );
+
+        const input = screen.getByPlaceholderText("Nom du groupe");
+        const bouton = screen.getByText("Créer");
+
+        fireEvent.change(input, { target: {value: "Mon Groupe"}});
+        fireEvent.click(bouton);
+
+        expect(await screen.findByText("Membres")).toBeInTheDocument();
+    });
 })
