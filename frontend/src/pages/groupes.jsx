@@ -25,13 +25,18 @@ export default function Groupes({ groupeId = 1 }) {
   const currentUserRole = getRoleString(
     membres.find((m) => m.email === currentUserEmail)?.role,
   );
-  const peutGererLesRoles = ["owner", "propriétaire"].includes(currentUserRole);
 
   const [groupeIdAct, setGroupeIdAct] = useState(() => {
     const savedId = localStorage.getItem("activeGroupId");
     return savedId ? parseInt(savedId, 10) : groupeId;
   });
   const [groupeNomAct, setGroupeNomAct] = useState("");
+
+  const isOwner = ["owner", "propriétaire"].includes(currentUserRole);
+  const isPrivileged =["privileged", "privilégié"].includes(currentUserRole);
+
+  const peutGererMembres = isOwner || isPrivileged;
+  const peutGererRolesGroupe = isOwner;
 
   useEffect(() => {
     if (!groupeIdAct) return;
@@ -342,7 +347,7 @@ export default function Groupes({ groupeId = 1 }) {
             <th>Membres</th>
             <th>Surnom</th>
             <th>Rôle</th>
-            {peutGererLesRoles && <th>Actions</th>}
+            {peutGererMembres && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -366,7 +371,7 @@ export default function Groupes({ groupeId = 1 }) {
                     <span>{membre.nickname || "-"}</span>
                   </td>
                   <td>
-                    {peutGererLesRoles && !isCurrentUserOwner ? (
+                    {peutGererRolesGroupe && !isCurrentUserOwner ? (
                       <select
                         className="g-select"
                         value={
@@ -388,15 +393,18 @@ export default function Groupes({ groupeId = 1 }) {
                       <span>{membre.role || "standard"}</span>
                     )}
                   </td>
-                  {peutGererLesRoles && (
+                  {peutGererMembres && (
                     <td>
                       {!isCurrentUserOwner ? (
+                        !["owner", "propriétaire"].includes(getRoleString(membre.role)) && !isOwner) ? (
                         <button
                           className="g-btn g-btn-dlt"
                           onClick={() => handleRemoveMember(membre.id)}
                         >
                           Retirer
                         </button>
+                      ) : (
+                        <span className="g-owner">-</span>
                       ) : (
                         <span className="g-owner">-</span>
                       )}
@@ -408,7 +416,8 @@ export default function Groupes({ groupeId = 1 }) {
         </tbody>
       </table>
 
-      {peutGererLesRoles && (
+      {/* {peutGererLesRoles && ( */}
+      {peutGererMembres && (
         <div className="g-admin-actions">
           {!showAdd ? (
             <button
@@ -454,8 +463,9 @@ export default function Groupes({ groupeId = 1 }) {
           {addError && <div className="g-status g-error">{addError}</div>}
         </div>
       )}
+
       <div>
-        {peutGererLesRoles && !showDeleteConfirm && (
+        {peutGererRolesGroupe && !showDeleteConfirm && (
           <button
             onClick={() => setShowDeleteConfirm(true)}
             className="g-btn g-btn-dlt"
