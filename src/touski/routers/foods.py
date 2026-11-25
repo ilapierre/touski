@@ -26,17 +26,6 @@ class AddFood(BaseModel):
     carbohydrates: int | None = None
     quantity: int | None = None
     
-    class UpdateFood(BaseModel): 
-     id: int
-     name: str
-     image_url: str | None = None
-     per: str | None = None
-     calories: int | None = None
-     fat: int | None = None
-     proteines: int | None = None
-     carbohydrates: int | None = None
-     quantity: int | None = None
-    
 
 # GET les aliments (paginés), avec le total pour calculer le nombre de pages
 @router.get("/")
@@ -76,15 +65,24 @@ def get_food(food_id: int, request: Request, session=Depends(get_session_depende
 
 # POST Créer un aliment (ajout manuel)
 @router.post("/addFood", status_code=201)
-def create_food(data: AddFood, db: Session = Depends(get_session_dependency)):
+def create_food(data: Food, db: Session = Depends(get_session_dependency)):
  try:
-   db_food = Food(**Food.dict())
-   db.add(db_food)
-   db.commit()
-   db.refresh(db_food)
-   return {
+  new_food = Food(
+    name = data.name,
+    image_url = data.image_url,
+    per = data.per,
+    calories = data.calories,
+    fat = data.fat,
+    proteines = data.proteines,
+    carbohydrates = data.carbohydrates,
+    quantity = data.quantity,
+)
+  db.add(new_food)
+  db.commit()
+  db.refresh(new_food)
+  return {
          "message": "Aliment créé avec succès !",
-         "data": db_food
+         "data": new_food
     }
  except Exception as e:
      db.rollback()
