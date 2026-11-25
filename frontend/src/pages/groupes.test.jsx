@@ -46,14 +46,26 @@ describe("Composant groupes", () => {
 
     // Affichage de la page liste groupe
     it("affiche la liste apès avoir saisi un nom et l'appui sur le bouton", async () => {
-       fetch
+       localStorage.setItem("token", "test-token");
+
+        fetch
         .mockResolvedValueOnce({
             ok: true,
             text: () => JSON.stringify({ id: 1, name: "Mon Groupe"}),
         })
         .mockResolvedValueOnce({
             ok: true,
-            text: () => JSON.stringify({ members: [] }),
+            json: async () => [
+                { id: 1, email: "test1@test.com", nickname: null, role: "owner"},
+            ],
+        })
+        .mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ email: "test1@test.com"}),
+        })
+        .mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ name : "Mon Groupe"}),
         })
        
         render(
@@ -69,5 +81,8 @@ describe("Composant groupes", () => {
         fireEvent.click(bouton);
 
         expect(await screen.findByText("Membres")).toBeInTheDocument();
+        expect(await screen.findByText("Profile")).toBeInTheDocument();
+        expect(await screen.findByText("Supprimer Groupe")).toBeInTheDocument();
+        expect(await screen.findByText("Inviter un membre")).toBeInTheDocument();
     });
 })
