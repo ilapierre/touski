@@ -10,7 +10,7 @@ class GroupFood(Base):
     __tablename__ = "groups_foods"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-
+    quantity: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey(Group.id))
     food_id: Mapped[int] = mapped_column(Integer, ForeignKey(Food.id))
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from touski.models.groups import Group
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from touski.core.dependencies import get_current_user
 from touski.db.database import get_session_dependency as get_db
@@ -14,8 +14,12 @@ router = APIRouter(prefix="/frigo", tags=["frigo"])
 
 class FrigoAdd(BaseModel):
     food_id: int
+    quantity: int = Field(default=1, ge=1)
     group_id: int | None = None
     expires_at: datetime | None = None
+
+class FrigoUpdate(BaseModel):
+    quantity: int = Field(ge=1)
 
 
 @router.post("/", status_code=201)
@@ -77,3 +81,39 @@ def get_frigo(
         }
         for gf, food in rows
     ]
+    
+    
+def get_item_du_user(db: Session, frigo_id: int, user) -> GroupFood:
+    item = (
+        db.query(GroupFood)
+        .join(GroupUser, GroupUser.group_id == GroupFood.group_id)
+        .filter(GroupFood.id == frigo_id, GroupUser.user_id == user.id)
+        .first()
+    )
+    if not item:
+        raise HTTPException(404, "Aliment introuvable dans le frigo")
+    return item
+
+
+@router.patch("/{frigo_id}")
+def update_quantite(
+    frigo_id: int,
+    data: FrigoUpdate,
+    db: Session = Depends(get_db),
+    user = Depends(get_current_user),
+):
+    item = get_item_du_user(db, frigo_id, user)
+    item.quantity = data.quantity
+    db.commit()
+    return {"frigo_id": item.id, "quantity": item.quantity}
+
+
+@router.delete("/{frigo_id}", status_code=204)
+def supprimer_du_frigo(
+    frigo_id: int,
+    db: Session = Depends(get_db),
+    user = Depends(get_current_user),
+):
+    item = get_item_du_user(db, frigo_id, user)
+    db.delete(item)
+    db.commit()
