@@ -20,6 +20,41 @@ export default function Frigo() {
     chargerFrigo();
   }, []);
 
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
+
+  async function changerQuantite(food, delta) {
+    const quantity = food.quantity + delta;
+    if (quantity < 1) return;
+
+    const res = await fetch(`/api/frigo/${food.frigo_id}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ quantity }),
+    });
+    if (res.ok) {
+      setFoods((prev) =>
+        prev.map((f) =>
+          f.frigo_id === food.frigo_id ? { ...f, quantity } : f,
+        ),
+      );
+    }
+  }
+
+  async function supprimer(food) {
+    if (!window.confirm(`Retirer « ${food.name} » du frigo ?`)) return;
+
+    const res = await fetch(`/api/frigo/${food.frigo_id}`, {
+      method: "DELETE",
+      headers,
+    });
+    if (res.ok) {
+      setFoods((prev) => prev.filter((f) => f.frigo_id !== food.frigo_id));
+    }
+  }
+
   const foodsFiltres = foods.filter((f) =>
     f.name?.toLowerCase().includes(recherche.toLowerCase()),
   );
@@ -45,7 +80,41 @@ export default function Frigo() {
       ) : (
         <div className="frigo-grid">
           {foodsFiltres.map((food) => (
-            <FoodCard key={food.id} food={food} onSelect={setSelectedFood} />
+            <div key={food.frigo_id} className="frigo-item">
+              <FoodCard food={food} onSelect={setSelectedFood} />
+
+              <div className="frigo-actions">
+                <div className="frigo-quantite">
+                  <span>Quantité</span>
+                  <div className="stepper">
+                    <button
+                      type="button"
+                      onClick={() => changerQuantite(food, -1)}
+                      disabled={food.quantity <= 1}
+                      aria-label="Diminuer la quantité"
+                    >
+                      −
+                    </button>
+                    <span className="stepper-valeur">{food.quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => changerQuantite(food, 1)}
+                      aria-label="Augmenter la quantité"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="frigo-supprimer"
+                  onClick={() => supprimer(food)}
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       )}
