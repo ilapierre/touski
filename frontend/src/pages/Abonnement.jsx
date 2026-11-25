@@ -85,6 +85,13 @@ export default function Abonnement() {
     if (!/^\d{3,4}$/.test(cvv.trim())) {
       return "Erreur de code de sécurité."
     }
+
+    const [mois, annee] = expired.trim().split("/").map(Number);
+    const dateExp = new Date(2000 + annee, mois, 0);
+
+    if(dateExp < new Date()) {
+      return "Cette carte est expirée.";
+    }
     
     return "";
   }
