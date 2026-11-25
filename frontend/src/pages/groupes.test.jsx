@@ -26,8 +26,11 @@ describe("Composant groupes", () => {
         expect(screen.getByText("Créer un groupe")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Nom du groupe")).toBeInTheDocument();
         expect(screen.getByText("Créer")).toBeInTheDocument();
+
+        // Erreur dans la gestion du groupes d'utilisateur : [UPD]Erreur où le owner ne pouvait pas supprimer.
     });
 
+    // Insertion du nom de groupe
     it("insertion d'un nom de groupe", () => {
         render(
             <MemoryRouter>
@@ -41,6 +44,7 @@ describe("Composant groupes", () => {
         expect(input.value).toBe("Mon Groupe");
     });
 
+    // Affichage de la page liste groupe
     it("affiche la liste apès avoir saisi un nom et l'appui sur le bouton", async () => {
        fetch
         .mockResolvedValueOnce({
