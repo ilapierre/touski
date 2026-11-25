@@ -77,6 +77,7 @@ def get_frigo(
         {
             **{c.name: getattr(food, c.name) for c in Food.__table__.columns},
             "frigo_id": gf.id,
+            "frigo_quantity": gf.quantity,
             "expires_at": gf.expires_at,
         }
         for gf, food in rows

@@ -26,7 +26,7 @@ export default function Frigo() {
   };
 
   async function changerQuantite(food, delta) {
-    const quantity = food.quantity + delta;
+    const quantity = food.frigo_quantity + delta;
     if (quantity < 1) return;
 
     const res = await fetch(`/api/frigo/${food.frigo_id}`, {
@@ -37,7 +37,7 @@ export default function Frigo() {
     if (res.ok) {
       setFoods((prev) =>
         prev.map((f) =>
-          f.frigo_id === food.frigo_id ? { ...f, quantity } : f,
+          f.frigo_id === food.frigo_id ? { ...f, frigo_quantity: quantity } : f,
         ),
       );
     }
@@ -90,12 +90,14 @@ export default function Frigo() {
                     <button
                       type="button"
                       onClick={() => changerQuantite(food, -1)}
-                      disabled={food.quantity <= 1}
+                      disabled={food.frigo_quantity <= 1}
                       aria-label="Diminuer la quantité"
                     >
                       −
                     </button>
-                    <span className="stepper-valeur">{food.quantity}</span>
+                    <span className="stepper-valeur">
+                      {food.frigo_quantity}
+                    </span>
                     <button
                       type="button"
                       onClick={() => changerQuantite(food, 1)}
