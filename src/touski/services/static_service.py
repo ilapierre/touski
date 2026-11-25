@@ -10,6 +10,10 @@ def image_type(content_type) -> str:
             return ".jpg"
         case "image/png":
             return ".png"
+        case "image/gif":
+            return ".gif"
+        case "image/webp":
+            return ".webp"
         case _:
             return ".jpg"
 
@@ -34,3 +38,11 @@ def with_image_url(obj: Any, base_url: str) -> dict:
     if obj.image_url:
         data["image_url"] = f"{base_url}static/images/{obj.image_url}"
     return data
+
+
+def store_image_bytes(content: bytes, content_type: str | None, folder: str) -> str:
+    filename = hashlib.sha256(content).hexdigest() + image_type(content_type)
+    directory = Path("static/images") / folder
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / filename).write_bytes(content)
+    return f"{folder}/{filename}"

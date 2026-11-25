@@ -20,9 +20,11 @@
   background: transparent;
   color: inherit;
   font: inherit;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
   margin-left: 1rem;
+  margin-right: 1rem;
   background-color: #8bc98b;
 }
 
@@ -44,15 +46,37 @@
   border-radius: 8px;
 }
 
-.subs {
-  text-decoration: none;
-  color: inherit;
+.topbar-menu-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 1.5rem;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.subs:hover,
-.subs:focus,
-.subs:active,
-.subs:visited {
-  text-decoration: none;
-  color: inherit;
+.topbar-menu-btn span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: #333;
+  border-radius: 2px;
+}
+.drawer-marque {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+  margin-left: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .topbar-actions {
+    display: none;
+  }
+  .topbar-menu-btn {
+    display: flex;
+  }
 }

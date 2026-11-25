@@ -1,47 +1,55 @@
-import { useEffect, useRef, useState } from 'react'
-import './FoodModal.css'
-import { useRestrictions } from '../restrictions'
+import { useEffect, useRef, useState } from "react";
+import "./FoodModal.css";
+import { useRestrictions } from "../restrictions";
 
 const details = [
-  { key: 'quantity', label: 'Quantité' },
-  { key: 'serving_size', label: 'Portion' },
-  { key: 'origin', label: 'Origine' },
-  { key: 'source', label: 'Source', link: true },
-]
+  { key: "quantity", label: "Quantité" },
+  { key: "serving_size", label: "Portion" },
+  { key: "origin", label: "Origine" },
+  { key: "source", label: "Source", link: true },
+];
 
 // "https://world.openfoodfacts.org/product/123" -> "world.openfoodfacts.org"
 const hostname = (url) => {
   try {
-    return new URL(url).hostname
+    return new URL(url).hostname;
   } catch {
-    return url
+    return url;
   }
-}
+};
 
 const macros = [
-  { key: 'proteins', label: 'Protéines' },
-  { key: 'carbohydrates', label: 'Glucides' },
-  { key: 'fat', label: 'Lipides' },
-]
+  { key: "proteins", label: "Protéines" },
+  { key: "carbohydrates", label: "Glucides" },
+  { key: "fat", label: "Lipides" },
+];
 
-function FoodModal({ food, onClose }) {
-  const dialogRef = useRef(null)
-  const [failed, setFailed] = useState(false)
-  const { label } = useRestrictions()
+function FoodModal({ food, onClose, onAdd }) {
+  const dialogRef = useRef(null);
+  const [failed, setFailed] = useState(false);
+  const { label } = useRestrictions();
 
-  const shownDetails = details.filter(({ key }) => food[key])
-  const hasNutrition = food.kcal != null || macros.some(({ key }) => food[key] != null)
-  const allergens = food.allergens ?? []
+  const shownDetails = details.filter(({ key }) => food[key]);
+  const hasNutrition =
+    food.kcal != null || macros.some(({ key }) => food[key] != null);
+  const allergens = food.allergens ?? [];
 
+  const [added, setAdded] = useState(false);
+  async function handleAdd() {
+    const ok = await onAdd(food);
+    if (ok) {
+      setAdded(true);
+    }
+  }
   useEffect(() => {
-    const dialog = dialogRef.current
-    if (dialog && !dialog.open) dialog.showModal()
-  }, [])
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
+  }, []);
 
   // Clic sur l'arrière-plan (le <dialog> lui-même) = fermeture
   const handleBackdropClick = (e) => {
-    if (e.target === dialogRef.current) onClose()
-  }
+    if (e.target === dialogRef.current) onClose();
+  };
 
   return (
     <dialog
@@ -51,13 +59,22 @@ function FoodModal({ food, onClose }) {
       onClose={onClose}
       onClick={handleBackdropClick}
     >
-      <button type="button" className="food-modal-close" onClick={onClose} aria-label="Fermer">
+      <button
+        type="button"
+        className="food-modal-close"
+        onClick={onClose}
+        aria-label="Fermer"
+      >
         ×
       </button>
 
       <div className="food-modal-image">
         {food.image_url && !failed ? (
-          <img src={food.image_url} alt={food.name} onError={() => setFailed(true)} />
+          <img
+            src={food.image_url}
+            alt={food.name}
+            onError={() => setFailed(true)}
+          />
         ) : (
           <span aria-hidden="true">{food.name?.charAt(0).toUpperCase()}</span>
         )}
@@ -80,7 +97,9 @@ function FoodModal({ food, onClose }) {
           )}
         </div>
 
-        {food.description && <p className="food-modal-description">{food.description}</p>}
+        {food.description && (
+          <p className="food-modal-description">{food.description}</p>
+        )}
 
         {shownDetails.length > 0 && (
           <dl className="food-modal-details">
@@ -107,12 +126,12 @@ function FoodModal({ food, onClose }) {
             <dl className="food-modal-macros">
               <div>
                 <dt>Calories</dt>
-                <dd>{food.kcal != null ? `${food.kcal} kcal` : '—'}</dd>
+                <dd>{food.kcal != null ? `${food.kcal} kcal` : "—"}</dd>
               </div>
               {macros.map(({ key, label }) => (
                 <div key={key}>
                   <dt>{label}</dt>
-                  <dd>{food[key] != null ? `${food[key]} g` : '—'}</dd>
+                  <dd>{food[key] != null ? `${food[key]} g` : "—"}</dd>
                 </div>
               ))}
             </dl>
@@ -129,9 +148,19 @@ function FoodModal({ food, onClose }) {
             </ul>
           </section>
         )}
+        {onAdd && (
+          <button
+            type="button"
+            className="food-modal-add"
+            onClick={handleAdd}
+            disabled={added}
+          >
+            {added ? "Ajouté ✓" : "+ Ajouter au frigo"}
+          </button>
+        )}
       </div>
     </dialog>
-  )
+  );
 }
 
-export default FoodModal
+export default FoodModal;
