@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import FoodCard from '../components/FoodCard'
 import FoodModal from '../components/FoodModal'
+import RestrictionFilter from '../components/RestrictionFilter'
 import './Foods.css'
 
 const PAGE_SIZE = 24
@@ -14,6 +15,7 @@ function Foods() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selected, setSelected] = useState(null)
+  const [excluded, setExcluded] = useState([])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -23,6 +25,7 @@ function Foods() {
       offset: page * PAGE_SIZE,
     })
     if (query) params.set('q', query)
+    excluded.forEach((key) => params.append('exclude', key))
 
     fetch(`/api/foods/?${params}`, { signal: controller.signal })
       .then((res) => {
@@ -41,7 +44,7 @@ function Foods() {
       })
 
     return () => controller.abort()
-  }, [page, query])
+  }, [page, query, excluded])
 
   const goToPage = (next) => {
     setLoading(true)
@@ -59,6 +62,18 @@ function Foods() {
     setPage(0)
     setQuery(next)
   }
+
+  const changeExcluded = (update) => {
+    setLoading(true)
+    setError(null)
+    setPage(0)
+    setExcluded(update)
+  }
+
+  const toggleRestriction = (key) =>
+    changeExcluded((current) =>
+      current.includes(key) ? current.filter((k) => k !== key) : [...current, key],
+    )
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
 
@@ -99,11 +114,19 @@ function Foods() {
         />
         <button type="submit">Rechercher</button>
       </form>
+      <RestrictionFilter
+        excluded={excluded}
+        onToggle={toggleRestriction}
+        onSelect={changeExcluded}
+        onReset={() => changeExcluded([])}
+      />
       {loading && <p className="status">Chargement…</p>}
       {error && <p className="status error">Impossible de charger les aliments : {error}</p>}
       {!loading && !error && foods.length === 0 && (
         <p className="status">
-          {query ? `Aucun résultat pour « ${query} ».` : 'Aucun aliment pour le moment.'}
+          {query || excluded.length > 0
+            ? 'Aucun aliment ne correspond à votre recherche.'
+            : 'Aucun aliment pour le moment.'}
         </p>
       )}
       <ul className="foods-grid">
