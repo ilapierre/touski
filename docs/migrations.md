@@ -1,7 +1,6 @@
 ---
 title: Migrations
-parent: Base de données
-nav_order: 1
+nav_order: 5
 ---
 
 # Migrations (Alembic)

@@ -1,7 +1,6 @@
 ---
 title: Scraper
-parent: Base de données
-nav_order: 2
+nav_order: 6
 ---
 
 # Scraper (Open Food Facts)
@@ -17,20 +16,18 @@ scrape = "touski.scripts:scraper.main"
 
 ## Utilisation
 
-Prérequis : `.env` configuré (`DATABASE_URL`) et migrations appliquées (`make migrate`). Voir [Installation]({{ site.baseurl }}{% link installation.md %}).
+Prérequis : `.env` configuré (`DATABASE_URL`) et migrations appliquées (`make migrate`). Voir [installation.md](../installation.md).
 
 ```bash
 uv run scrape -f docs/assets/openfoodsfacts_sample.jsonl  # 100 premières lignes (défaut)
 uv run scrape -f foods.jsonl -m 5000        # 5000 premières lignes
 uv run scrape -f foods.jsonl -m 0           # tout le fichier
-uv run scrape -f foods.jsonl --nostatic     # sans télécharger les images
 ```
 
 | Option | Description |
 |---|---|
 | `-f`, `--file` | Fichier JSONL à traiter (obligatoire). |
 | `-m`, `--max` | Nombre max de lignes à lire (défaut : `100`, `0` = aucune limite). |
-| `--nostatic` | Ne télécharge pas les images (`image_url` reste vide). |
 
 > Le dump complet d'Open Food Facts pèse plusieurs dizaines de Go. Utiliser `docs/assets/openfoodsfacts_sample.jsonl` (extrait du dump) pour le développement. Comme tous les produits sont gardés en mémoire avant l'insertion, éviter `-m 0` sur le dump complet.
 
@@ -60,9 +57,8 @@ uv run scrape -f foods.jsonl --nostatic     # sans télécharger les images
 | `serving_size` | `serving_size` |
 | `nutriscore` | `nutriscore_grade` (`A` à `E`, `None` si inconnu) |
 | `origin` | `origins_tags` (ex. `France, Spain`) |
+| `allergens` | `allergens_tags` sans préfixe de langue (ex. `["milk", "nuts"]`) |
 | `source` | URL de la page du produit (`https://world.openfoodfacts.org/product/{code}`) |
-
-Les allergènes (`allergens_tags`) ne sont plus une colonne de `foods`: ils sont enregistrés dans `foods_restrictions` (voir `docs/database.md`). Les tags qui ne correspondent à aucun des 14 allergènes sont ignorés, et les plus fréquents sont affichés à la fin de l'exécution.
 
 Ces champs sont normalisés par `normalize_off_details()` : les valeurs vides ou inconnues (`""`, `unknown`, `not-applicable`, `en:null`) deviennent `None`, les textes sont nettoyés (espaces) et tronqués à la taille de la colonne.
 | `image_url` | Image de face du produit (voir ci-dessous) |

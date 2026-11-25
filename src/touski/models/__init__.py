@@ -1,5 +1,4 @@
 from .foods import Food
-from .foods_restrictions import FoodRestriction
 from .groups import Group
 from .groups_foods import GroupFood
 from .groups_recipes import GroupeRecipe
@@ -9,4 +8,4 @@ from .recipes import Recipe
 from .recipes_foods import RecipesFoods
 from .subscriptions import Subscription
 from .users import User
-from .users_restrictions import UserRestriction
+from .users_restrictions import UserRestrictions
