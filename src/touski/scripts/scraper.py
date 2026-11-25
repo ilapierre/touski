@@ -1,12 +1,19 @@
 from touski.services.static_service import store_image_from_url
 from touski.db.database import get_session
 from sqlalchemy import select
-from touski.models import Food
+from touski.models import Food, FoodRestriction
+from touski.restrictions import parse_off_tag
+from collections import Counter
 import argparse
 import json
 
+# Tags d'allergènes OFF ignorés (aucune restriction correspondante)
+unmatched_tags: Counter[str] = Counter()
 
-def scrape_data(file_path: str, extract_size: int | None = None):
+
+def scrape_data(
+    file_path: str, extract_size: int | None = None, fetch_images: bool = True
+):
     foods = []
     seen_ids = set()
 
@@ -36,7 +43,8 @@ def scrape_data(file_path: str, extract_size: int | None = None):
             else:
                 continue
 
-            if image_url := extract_image_url(data):
+            image_url = None
+            if fetch_images and (image_url := extract_image_url(data)):
                 image_url = store_image_from_url(image_url, "foods")
 
             foods.append(
@@ -46,6 +54,7 @@ def scrape_data(file_path: str, extract_size: int | None = None):
                     image_url=image_url,
                     **(macros or {}),
                     **normalize_off_details(data),
+                    restrictions=extract_restrictions(data),
                 )
             )
 
@@ -56,6 +65,9 @@ def scrape_data(file_path: str, extract_size: int | None = None):
                     break
                 i += 1
 
+
+    if unmatched_tags:
+        print("Tags d'allergènes ignorés (les plus fréquents):", unmatched_tags.most_common(10))
 
     # Ajout à la BD
     with get_session() as session:
@@ -179,6 +191,18 @@ def clean_tags(tags) -> list[str]:
     return names
 
 
+def extract_restrictions(data: dict) -> list[FoodRestriction]:
+    restrictions = set()
+
+    for tag in data.get("allergens_tags") or []:
+        if restriction := parse_off_tag(tag):
+            restrictions.add(restriction)
+        else:
+            unmatched_tags[str(tag).lower()] += 1
+
+    return [FoodRestriction(restriction=r.value) for r in restrictions]
+
+
 def normalize_off_details(data: dict) -> dict:
     # Formatte les informations d'un produit OFF pour Touski (None si absent ou inconnu)
 
@@ -219,7 +243,6 @@ def normalize_off_details(data: dict) -> dict:
         "serving_size": clean_text(data.get("serving_size"), 50),
         "nutriscore": nutriscore if nutriscore in ("A", "B", "C", "D", "E") else None,
         "origin": origin[:255] or None,
-        "allergens": clean_tags(data.get("allergens_tags")) or None,
         "source": f"https://world.openfoodfacts.org/product/{code}" if code else None,
     }
 
@@ -237,5 +260,11 @@ def main():
         type=int,
     )
 
+    parser.add_argument(
+        "--nostatic",
+        help="Ne pas télécharger les images des produits",
+        action="store_false",
+    )
+
     args = parser.parse_args()
-    scrape_data(args.file, extract_size=args.max)
+    scrape_data(args.file, extract_size=args.max, fetch_images=args.nostatic)
