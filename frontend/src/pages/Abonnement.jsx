@@ -8,6 +8,7 @@ export default function Abonnement() {
   const [cardNumber, setCardNumber] = useState("");
   const [expired, setExpired] = useState("");
   const [cvv, setCVV] = useState("");
+  const [checkoutErr, setCheckoutErr] = useState("");
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -75,6 +76,19 @@ export default function Abonnement() {
     fetchData();
   }, [isLoggedIn, token, groupeIdAct]);
 
+  const validateCard = () => {
+    const trimCarte = cardNumber.trim();
+    if (!/^(\d{16}|(\d{4}\s){3}\d{4})$/.test(trimCarte)) {
+      return "Entrer un numéro de carte valide.";
+    }
+
+    if (!/^\d{3,4}$/.test(cvv.trim())) {
+      return "Erreur de code de sécurité."
+    }
+    
+    return "";
+  }
+
   const handleIaAction = () => {
     setErrorMsg("");
     if (!isLoggedIn) {
@@ -82,12 +96,20 @@ export default function Abonnement() {
     } else if (!isOwner) {
       setErrorMsg("Seul le propriétaire du groupe peut gérer l'abonnement.");
     } else if (!subscription.premium) {
+      setCheckoutErr("");
       setShowCheckout(true);
     }
   };
 
   const handleSubscribeSubmit = async (e) => {
     e.preventDefault();
+    setCheckoutErr("");
+
+    const validation = validateCard();
+    if(validation) {
+      setCheckoutErr(validation);
+      return;
+    }
 
     try {
       const response = await fetch("/api/abonnements/", {
@@ -97,6 +119,11 @@ export default function Abonnement() {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.detail || "Erreur d'achat");
+      }
 
       const data = await response.json();
 
@@ -111,8 +138,10 @@ export default function Abonnement() {
       setCardNumber("");
       setExpired("");
       setCVV("");
-    } catch {
-      alert("Une erreur est survenue lors du paiement.");
+    } catch (err){
+      setCheckoutErr(
+        err.message || "Une erreur est survenue lors du paiement."
+      );
     }
   };
 
@@ -297,6 +326,8 @@ export default function Abonnement() {
                 />
               </div>
             </div>
+
+            {checkoutErr && <div className="abon-error">{checkoutErr}</div>}
 
             <div className="btn-action">
               <button type="submit" className="btn-submit">
