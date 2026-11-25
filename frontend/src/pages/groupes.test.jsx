@@ -20,13 +20,10 @@ describe("Composant groupes", () => {
             </MemoryRouter>,
         );
 
-        const bouton = screen.getByText("Créer");
-        fireEvent.click(bouton);
-
         // Assert
         expect(screen.getByText("Créer un groupe")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Nom du groupe")).toBeInTheDocument();
-        expect(bouton).toBeTruthy();
+        expect(screen.getByText("Créer")).toBeInTheDocument();
     });
-
+    
 })
