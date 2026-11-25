@@ -25,5 +25,18 @@ describe("Composant groupes", () => {
         expect(screen.getByPlaceholderText("Nom du groupe")).toBeInTheDocument();
         expect(screen.getByText("Créer")).toBeInTheDocument();
     });
-    
+
+    it("permet d'insérer un nom de groupe dans le champ", () => {
+        render(
+            <MemoryRouter>
+                <Groupes groupeId={null} />
+            </MemoryRouter>
+        );
+
+        const input = screen.getByPlaceholderText("Nom du groupe");
+        fireEvent.click(input, { target: {value: "Mon Groupe"}});
+
+        expect(input.value).toBe("Mon Groupe");
+    });
+
 })
