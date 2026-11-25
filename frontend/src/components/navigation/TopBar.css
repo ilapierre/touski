@@ -80,16 +80,3 @@
     display: flex;
   }
 }
-
-.subs {
-  text-decoration: none;
-  color: inherit;
-}
-
-.subs:hover,
-.subs:focus,
-.subs:active,
-.subs:visited {
-  text-decoration: none;
-  color: inherit;
-}

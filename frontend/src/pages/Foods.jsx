@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import FoodCard from "../components/FoodCard";
 import FoodModal from "../components/FoodModal";
-import RestrictionFilter from "../components/RestrictionFilter";
 import "./Foods.css";
 
 const PAGE_SIZE = 24;
@@ -15,7 +14,6 @@ function Foods() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState(null);
-  const [excluded, setExcluded] = useState([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -25,7 +23,6 @@ function Foods() {
       offset: page * PAGE_SIZE,
     });
     if (query) params.set("q", query);
-    excluded.forEach((key) => params.append("exclude", key));
 
     fetch(`/api/foods/?${params}`, { signal: controller.signal })
       .then((res) => {
@@ -44,7 +41,7 @@ function Foods() {
       });
 
     return () => controller.abort();
-  }, [page, query, excluded]);
+  }, [page, query]);
 
   const goToPage = (next) => {
     setLoading(true);
@@ -75,19 +72,7 @@ function Foods() {
     return res.ok;
   }
 
-  const changeExcluded = (update) => {
-    setLoading(true)
-    setError(null)
-    setPage(0)
-    setExcluded(update)
-  }
-
-  const toggleRestriction = (key) =>
-    changeExcluded((current) =>
-      current.includes(key) ? current.filter((k) => k !== key) : [...current, key],
-    )
-
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const pagination = (
     <nav className="pagination" aria-label="Pagination">
@@ -126,12 +111,6 @@ function Foods() {
         />
         <button type="submit">Rechercher</button>
       </form>
-      <RestrictionFilter
-        excluded={excluded}
-        onToggle={toggleRestriction}
-        onSelect={changeExcluded}
-        onReset={() => changeExcluded([])}
-      />
       {loading && <p className="status">Chargement…</p>}
       {error && (
         <p className="status error">
@@ -140,8 +119,8 @@ function Foods() {
       )}
       {!loading && !error && foods.length === 0 && (
         <p className="status">
-          {query || excluded.length > 0
-            ? "Aucun aliment ne correspond à votre recherche."
+          {query
+            ? `Aucun résultat pour « ${query} ».`
             : "Aucun aliment pour le moment."}
         </p>
       )}

@@ -1,5 +1,5 @@
 from sqlalchemy import JSON, Double, String, Integer, Text, null
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from touski.db.database import Base
 
 
@@ -31,7 +31,4 @@ class Food(Base):
 
     nutriscore: Mapped[str | None] = mapped_column(String(1), nullable=True)
 
-    # Allergènes: voir `foods_restrictions`
-    restrictions: Mapped[list["FoodRestriction"]] = relationship(
-        "FoodRestriction", cascade="all, delete-orphan", passive_deletes=True
-    )
+    allergens: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)

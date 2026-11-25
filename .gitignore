@@ -221,11 +221,3 @@ __marimo__/
 
 # Static files
 static/
-
-# SQLite
-*.sqlite
-*.sqlite3
-*.db
-*.db3
-*.s3db
-*.sl3

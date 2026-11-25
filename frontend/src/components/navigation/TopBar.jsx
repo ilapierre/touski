@@ -34,7 +34,7 @@ function TopBar() {
       <Link to="/groupes" className="login-button">
         Groupes
       </Link>
-      <Link to="/abonnements" className="login-button">
+      <Link to="/abonnement" className="login-button">
         Abonnement
       </Link>
       <button type="button" className="login-button" onClick={deconnexion}>

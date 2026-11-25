@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import "./FoodModal.css";
-import { useRestrictions } from "../restrictions";
 
 // Libellés des allergènes (tags OFF normalisés, sans préfixe de langue)
 const ALLERGENS = {
@@ -47,7 +46,6 @@ const macros = [
 function FoodModal({ food, onClose, onAdd }) {
   const dialogRef = useRef(null);
   const [failed, setFailed] = useState(false);
-  const { label } = useRestrictions();
 
   const shownDetails = details.filter(({ key }) => food[key]);
   const hasNutrition =
@@ -163,7 +161,7 @@ function FoodModal({ food, onClose, onAdd }) {
             <h3>Allergènes</h3>
             <ul className="food-modal-allergens">
               {allergens.map((tag) => (
-                <li key={tag}>{label(tag)}</li>
+                <li key={tag}>{allergenLabel(tag)}</li>
               ))}
             </ul>
           </section>

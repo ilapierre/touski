@@ -52,9 +52,8 @@ src/touski/
 | Préfixe | Fichier | Contenu |
 |---|---|---|
 | `/auth` | `routers/auth.py` | Inscription, connexion, déconnexion, utilisateur courant |
-| `/users` | `routers/users.py` | Gestion des utilisateurs, de leur profil, de leurs groupes |
+| `/users` | `routers/users.py` | Gestion des utilisateurs, de leur profil, de leurs groupes et de leurs allergies |
 | `/foods` | `routers/foods.py` | CRUD des aliments |
-| `/restrictions` | `routers/restrictions.py` | Liste des 14 restrictions (allergènes) et restrictions d'un utilisateur |
 | `/recipes` | `routers/recipes.py` | CRUD des recettes, génération de recettes |
 | `/groupes` | `routers/groupes.py` | CRUD des groupes et gestion de leurs membres |
 | `/abonnements` | `routers/abonnements.py` | Abonnements utilisateurs |

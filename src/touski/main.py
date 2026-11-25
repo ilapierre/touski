@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from touski.routers import users, foods, recipes, abonnements, auth, groupes, frigo, restrictions
+from touski.routers import users, foods, recipes, abonnements, auth, groupes, frigo
 
 app = FastAPI(title="Touski API")
 
@@ -11,6 +11,5 @@ app.include_router(abonnements.router)
 app.include_router(auth.router)
 app.include_router(groupes.router)
 app.include_router(frigo.router)
-app.include_router(restrictions.router)
 
 app.mount("/static", StaticFiles(directory="static"), name="static") 
