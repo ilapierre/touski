@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach} from "vitest";
 import Groupes from "./groupes";
 import "@testing-library/jest-dom";
@@ -20,9 +20,13 @@ describe("Composant groupes", () => {
             </MemoryRouter>,
         );
 
+        const bouton = screen.getByText("Créer");
+        fireEvent.click(bouton);
+
         // Assert
         expect(screen.getByText("Créer un groupe")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Nom du groupe")).toBeInTheDocument();
+        expect(bouton).toBeTruthy();
     });
 
 })
