@@ -9,7 +9,15 @@ export default function Frigo() {
   const [recherche, setRecherche] = useState("");
 
   useEffect(() => {
-    // TODO: charger les aliments du frigo avec setFoods (réutiliser les fonctions de Foods)
+    async function chargerFrigo() {
+      const res = await fetch("/api/frigo/", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (res.ok) setFoods(await res.json());
+    }
+    chargerFrigo();
   }, []);
 
   const foodsFiltres = foods.filter((f) =>
