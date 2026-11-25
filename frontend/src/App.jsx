@@ -35,8 +35,8 @@ function App() {
             </RouteProtegee>
           }
         />
-        <Route path="/groupes" element={<Groupes />} />
-        <Route path="/abonnement" element={<Abonnement />} />
+        <Route path="/groupes" element={<Groupes/>}/>
+        <Route path="/abonnements" element={<Abonnement />} />
       </Routes>
     </>
   );
