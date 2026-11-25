@@ -55,3 +55,25 @@ def add_to_frigo(
     db.refresh(item)
 
     return {"id": item.id, "group_id": item.group_id, "food_id": item.food_id}
+
+@router.get("/")
+def get_frigo(
+    db: Session = Depends(get_db),
+    user = Depends(get_current_user),
+):
+    rows = (
+        db.query(GroupFood, Food)
+        .join(Food, Food.id == GroupFood.food_id)
+        .join(GroupUser, GroupUser.group_id == GroupFood.group_id)
+        .filter(GroupUser.user_id == user.id)
+        .all()
+    )
+
+    return [
+        {
+            **{c.name: getattr(food, c.name) for c in Food.__table__.columns},
+            "frigo_id": gf.id,
+            "expires_at": gf.expires_at,
+        }
+        for gf, food in rows
+    ]
