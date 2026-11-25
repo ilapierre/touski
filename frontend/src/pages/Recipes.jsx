@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import RecipeCard from '../components/RecipeCard'
 import RecipeModal from '../components/RecipeModal'
+import RestrictionFilter from '../components/RestrictionFilter'
 import './Recipes.css'
 
 const PAGE_SIZE = 24
@@ -14,6 +15,8 @@ function Recipes() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selected, setSelected] = useState(null)
+  // TODO: pas encore branché au backend (les recettes n'ont pas de restrictions)
+  const [excluded, setExcluded] = useState([])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -60,6 +63,11 @@ function Recipes() {
     setQuery(next)
   }
 
+  const toggleRestriction = (key) =>
+    setExcluded((current) =>
+      current.includes(key) ? current.filter((k) => k !== key) : [...current, key],
+    )
+
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
 
   const pagination = (
@@ -99,6 +107,12 @@ function Recipes() {
         />
         <button type="submit">Rechercher</button>
       </form>
+      <RestrictionFilter
+        excluded={excluded}
+        onToggle={toggleRestriction}
+        onSelect={setExcluded}
+        onReset={() => setExcluded([])}
+      />
       {loading && <p className="status">Chargement…</p>}
       {error && <p className="status error">Impossible de charger les recettes : {error}</p>}
       {!loading && !error && recipes.length === 0 && (

@@ -45,7 +45,7 @@ function App() {
           }
         />
         <Route path="/groupes" element={<Groupes />} />
-        <Route path="/abonnement" element={<Abonnement />} />
+        <Route path="/abonnements" element={<Abonnement />} />
       </Routes>
     </>
   );
