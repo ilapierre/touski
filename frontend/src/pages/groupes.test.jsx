@@ -17,6 +17,5 @@ describe("Composant groupes", () => {
 
         expect(screen.getByText("Créer un groupe")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Nom du groupe")).toBeInTheDocument();
-
     });
 })
