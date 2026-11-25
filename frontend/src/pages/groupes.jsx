@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 export default function Groupes({ groupeId = 1 }) {
   const [membres, setMembres] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [showAdd, setShowAdd] = useState(false);
@@ -160,7 +160,7 @@ export default function Groupes({ groupeId = 1 }) {
       const response = await fetch(`/api/groupes/${groupeIdAct}/membres`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json ",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -395,8 +395,7 @@ export default function Groupes({ groupeId = 1 }) {
                   </td>
                   {peutGererMembres && (
                     <td>
-                      {!isCurrentUserOwner ? (
-                        !["owner", "propriétaire"].includes(getRoleString(membre.role)) && !isOwner) ? (
+                      {!isCurrentUserOwner ? !["owner", "propriétaire"].includes(getRoleString(membre.role)) ? (
                         <button
                           className="g-btn g-btn-dlt"
                           onClick={() => handleRemoveMember(membre.id)}
