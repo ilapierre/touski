@@ -27,7 +27,7 @@ export default function Frigo() {
 
   async function changerQuantite(food, delta) {
     const quantity = food.frigo_quantity + delta;
-    if (quantity < 1) return;
+    if (quantity <= 0) return;
 
     const res = await fetch(`/api/frigo/${food.frigo_id}`, {
       method: "PATCH",
@@ -89,14 +89,14 @@ export default function Frigo() {
                   <div className="stepper">
                     <button
                       type="button"
-                      onClick={() => changerQuantite(food, -1)}
-                      disabled={food.frigo_quantity <= 1}
+                      onClick={() => changerQuantite(food, -0.25)}
+                      disabled={food.frigo_quantity <= 0.25}
                       aria-label="Diminuer la quantité"
                     >
                       −
                     </button>
                     <span className="stepper-valeur">
-                      {food.frigo_quantity}
+                      {food.frigo_quantity.toLocaleString("fr-CA")}
                     </span>
                     <button
                       type="button"

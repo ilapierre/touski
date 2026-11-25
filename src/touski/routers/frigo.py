@@ -19,7 +19,7 @@ class FrigoAdd(BaseModel):
     expires_at: datetime | None = None
 
 class FrigoUpdate(BaseModel):
-    quantity: int = Field(ge=1)
+    quantity: float = Field(gt=0)
 
 
 @router.post("/", status_code=201)
@@ -49,16 +49,26 @@ def add_to_frigo(
             role=UserRole.OWNER,
         )
         db.add(membership)
-    item = GroupFood(
-        group_id=membership.group_id,
-        food_id=data.food_id,
-        expires_at=data.expires_at,
+    item = (
+        db.query(GroupFood)
+        .filter_by(group_id=membership.group_id, food_id=data.food_id)
+        .first()
     )
-    db.add(item)
+    if item:
+        item.quantity += data.quantity
+    else:
+        item = GroupFood(
+            group_id=membership.group_id,
+            food_id=data.food_id,
+            expires_at=data.expires_at,
+            quantity=data.quantity,
+        )
+        db.add(item)
+
     db.commit()
     db.refresh(item)
 
-    return {"id": item.id, "group_id": item.group_id, "food_id": item.food_id}
+    return {"frigo_id": item.id, "group_id": item.group_id, "quantity": item.quantity}
 
 @router.get("/")
 def get_frigo(
