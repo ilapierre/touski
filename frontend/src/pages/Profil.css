@@ -1,76 +1,32 @@
+/* ===== Page ===== */
 .profil {
-  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
   box-sizing: border-box;
-  padding: 2rem 4rem;
-}
-
-.profil-entete {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #d8dee4;
 }
 
-.profil-photo {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.profil-infos {
-  flex: 1;
-}
-
-.profil-email {
-  margin: 0.25rem 0 0;
-  font-size: 0.9rem;
-  color: #59636e;
-}
-
-.profil-section {
-  margin-top: 2rem;
-}
-
-.profil-section h3 {
-  margin: 0 0 0.75rem;
-  font-size: 1.1rem;
-}
-
-.profil-vide {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #59636e;
-}
-
-.profil-frigo {
+/* ===== En-tête ===== */
+.profil-entete {
+  grid-column: 1 / -1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-}
-
-.profil-frigo-carte {
-  display: flex;
-  align-items: flex-end;
-  width: 9rem;
-  height: 7rem;
-  padding: 0.75rem;
-  border: 1px solid #1f2328;
-  border-radius: 12px;
-  color: inherit;
-  text-decoration: none;
-  background-color: #8bc98b;
-}
-
-.profil-frigo-carte:hover {
-  background: #aae4aa;
+  gap: 1.75rem;
+  padding: 2rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #eaf6ea 0%, #f3f9fc 100%);
+  border: 1px solid #d9ebdc;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .profil-photo-conteneur {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
 }
 
 .profil-photo {
@@ -78,64 +34,222 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  background: #fff;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
 }
 
 .profil-photo-plus {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 28px;
-  height: 28px;
+  bottom: 4px;
+  right: 4px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #1f5f3f;
-  color: white;
+  color: #fff;
   font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 2px solid white;
+  border: 3px solid #fff;
+  transition: transform 0.15s;
 }
 
+.profil-photo-plus:hover {
+  transform: scale(1.1);
+}
+
+.profil-infos {
+  flex: 1;
+  min-width: 0;
+}
+
+.profil-infos h2 {
+  margin: 0;
+  font-size: 1.9rem;
+  color: #1f2328;
+}
+
+.profil-email {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  color: #59636e;
+}
+
+/* Formulaire d'édition */
 .profil-infos label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 8px;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.profil-infos input {
+  width: 100%;
+  max-width: 360px;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #cfe3d0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: #fff;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.profil-infos input:focus {
+  outline: none;
+  border-color: #7fc47f;
+  box-shadow: 0 0 0 3px rgba(127, 196, 127, 0.25);
 }
 
 .profil-erreur {
+  margin: 0.4rem 0 0;
   color: #c0392b;
+  font-size: 0.9rem;
 }
 
 .profil-boutons {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-@media (max-width: 600px) {
+.profil-boutons button[type="button"] {
+  padding: 0.5rem 1rem;
+  border: 1px solid #cfd8dc;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.profil-boutons button[type="button"]:hover {
+  background: #f3f5f6;
+}
+
+/* ===== Sections (cartes) ===== */
+.profil-section {
+  margin: 0;
+  padding: 1.5rem;
+  background: #fff;
+  border: 1px solid #e6ecef;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.profil-section h3 {
+  margin: 0 0 0.9rem;
+  padding-left: 0.75rem;
+  font-size: 1.1rem;
+  border-left: 4px solid #7fc47f;
+  line-height: 1.3;
+}
+
+.profil-vide {
+  margin: 0;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #6b7a80;
+  text-align: center;
+  background: #f7f9fa;
+  border: 1px dashed #d6e0e4;
+  border-radius: 10px;
+}
+
+/* ===== Mon frigo ===== */
+.profil-frigo {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, #f3f9fc 0%, #e8f2f7 100%);
+  border-color: #d6e6ee;
+}
+
+.profil-frigo h3 {
+  border-left: none;
+  padding-left: 0;
+}
+
+/* Le frigo dessiné */
+.profil-frigo-carte {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 9rem;
+  height: 13rem;
+  padding-bottom: 1.2rem;
+  box-sizing: border-box;
+  border: 3px solid #b9d3de;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f0f7fa 100%);
+  color: #1f5f3f;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+
+/* Séparation congélateur */
+.profil-frigo-carte::before {
+  content: "";
+  position: absolute;
+  top: 32%;
+  left: 0;
+  right: 0;
+  border-top: 3px solid #b9d3de;
+}
+
+/* Poignées */
+.profil-frigo-carte::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 12%;
+  width: 5px;
+  height: 52%;
+  border-radius: 3px;
+  background:
+    linear-gradient(#9fbccb, #9fbccb) top / 100% 30% no-repeat,
+    linear-gradient(#9fbccb, #9fbccb) bottom / 100% 50% no-repeat;
+}
+
+.profil-frigo-carte:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  border-color: #7fc47f;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 700px) {
   .profil {
-    padding: 1.5rem 1rem;
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem 3rem;
   }
 
   .profil-entete {
     flex-direction: column;
     text-align: center;
+    padding: 1.5rem;
   }
 
-  .profil-entete button {
+  .profil-infos input {
+    max-width: none;
+  }
+
+  .profil-entete button,
+  .profil-boutons {
     width: 100%;
   }
 
   .profil-infos h2 {
     font-size: 1.5rem;
-  }
-
-  .profil-section {
-    margin-top: 1.5rem;
-  }
-
-  .profil-frigo-carte {
-    width: 100%;
   }
 }
