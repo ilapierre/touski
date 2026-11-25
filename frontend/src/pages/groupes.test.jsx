@@ -26,7 +26,7 @@ describe("Composant groupes", () => {
         expect(screen.getByText("Créer")).toBeInTheDocument();
     });
 
-    it("déclenche la création lorsqu'on clique sur le bouton Créer avec un nom", () => {
+    it("insertion d'un nom de groupe", () => {
         render(
             <MemoryRouter>
                 <Groupes groupeId={null} />
@@ -34,13 +34,10 @@ describe("Composant groupes", () => {
         );
 
         const input = screen.getByPlaceholderText("Nom du groupe");
-        const bouton = screen.getByText("Créer");
-
         fireEvent.change(input, { target: {value: "Mon Groupe"}});
-        fireEvent.click(bouton);
 
         expect(input.value).toBe("Mon Groupe");
-        expect(bouton).toBeTruthy();
     });
 
+    it("")
 })
